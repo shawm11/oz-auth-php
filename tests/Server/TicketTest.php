@@ -5,7 +5,6 @@ namespace Shawm11\Oz\Tests;
 use PHPUnit\Framework\TestCase;
 use Shawm11\Oz\Server\Ticket;
 use Shawm11\Oz\Server\ServerException;
-use Shawm11\Oz\Server\InternalException;
 use Shawm11\Oz\Server\ForbiddenException;
 use Shawm11\Oz\Server\BadRequestException;
 use Shawm11\Hawk\Utils\Utils as HawkUtils;
@@ -66,7 +65,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on missing app', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid application object',
                     function() {
         	           (new Ticket($this->password))->issue(null, null);
@@ -76,7 +75,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid app', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid application object',
                     function() {
         	           (new Ticket($this->password))->issue('', null);
@@ -86,7 +85,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid grant (missing id)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->issue(['id' => 'abc'], []);
@@ -96,7 +95,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid grant (missing user)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->issue(['id' => 'abc'], ['id' => '123']);
@@ -106,7 +105,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid grant (missing exp)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->issue(['id' => 'abc'], ['id' => '123', 'user' => 'steve']);
@@ -116,7 +115,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid grant (scope outside app)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Grant scope is not a subset of the application scope',
                     function() {
                         (new Ticket($this->password))->issue(
@@ -147,7 +146,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid password', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid encryption password',
                     function() {
                       (new Ticket(''))->issue(['id' => 'abc'], null);
@@ -225,7 +224,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on missing parent ticket', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid parent ticket object',
                     function() {
                        (new Ticket($this->password))->reissue(null, null);
@@ -235,7 +234,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on missing password', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid encryption password',
                     function() {
                        (new Ticket(''))->reissue([], null);
@@ -275,7 +274,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid grant (missing id)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->reissue([], []);
@@ -285,7 +284,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid grant (missing user)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->reissue([], ['id' => 'abc']);
@@ -295,7 +294,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid grant (missing exp)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->reissue([], ['id' => 'abc', 'user' => 'steve']);
@@ -315,7 +314,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on mismatching grants (missing grant)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Parent ticket grant does not match options.grant',
                     function() {
                         (new Ticket($this->password))->reissue(['grant' => '123'], null);
@@ -325,7 +324,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on mismatching grants (missing parent)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Parent ticket grant does not match options.grant',
                     function() {
                         (new Ticket($this->password))->reissue(
@@ -338,7 +337,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on mismatching grants (different)', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Parent ticket grant does not match options.grant',
                     function() {
                         (new Ticket($this->password))->reissue(
@@ -357,7 +356,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on missing app', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid application object',
                     function() {
                         (new Ticket($this->password))->rsvp(
@@ -370,7 +369,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid app', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid application object',
                     function() {
                         (new Ticket($this->password))->rsvp(
@@ -383,7 +382,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on missing grant', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->rsvp(
@@ -396,7 +395,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on invalid grant', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->rsvp(
@@ -409,7 +408,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on missing password', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid encryption password',
                     function() {
                         (new Ticket(''))->rsvp(
@@ -535,7 +534,7 @@ class TicketTest extends TestCase
 
             $this->it('errors on missing password', function () {
                 $this->assertThrowsWithMessage(
-                    InternalException::class,
+                    ServerException::class,
                     'Invalid encryption password',
                     function() {
                          (new Ticket(''))->parse('abc');

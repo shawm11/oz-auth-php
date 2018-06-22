@@ -42,7 +42,7 @@ class Ticket implements TicketInterface
     public function issue($app, $grant)
     {
         if (!$app || !(isset($app['id']) && $app['id'])) {
-            throw new InternalException('Invalid application object');
+            throw new ServerException('Invalid application object');
         }
 
         if (($grant || $grant === []) &&
@@ -52,11 +52,11 @@ class Ticket implements TicketInterface
                 !(isset($grant['exp']) && $grant['exp'])
             )
         ) {
-            throw new InternalException('Invalid grant object');
+            throw new ServerException('Invalid grant object');
         }
 
         if (!$this->encryptionPassword) {
-            throw new InternalException('Invalid encryption password');
+            throw new ServerException('Invalid encryption password');
         }
 
         $scope = ($grant && isset($grant['scope']) && $grant['scope'])
@@ -71,7 +71,7 @@ class Ticket implements TicketInterface
             (isset($app['scope']) && $app['scope']) &&
             !$scopeClass->isSubset($app['scope'], $grant['scope'])
         ) {
-            throw new InternalException('Grant scope is not a subset of the application scope');
+            throw new ServerException('Grant scope is not a subset of the application scope');
         }
 
         /*
@@ -109,11 +109,11 @@ class Ticket implements TicketInterface
     public function reissue($parentTicket, $grant)
     {
         if (!$parentTicket && $parentTicket !== []) {
-            throw new InternalException('Invalid parent ticket object');
+            throw new ServerException('Invalid parent ticket object');
         }
 
         if (!$this->encryptionPassword) {
-            throw new InternalException('Invalid encryption password');
+            throw new ServerException('Invalid encryption password');
         }
 
         $scopeClass = new Scope;
@@ -156,7 +156,7 @@ class Ticket implements TicketInterface
                 !(isset($grant['exp']) && $grant['exp'])
             )
         ) {
-            throw new InternalException('Invalid grant object');
+            throw new ServerException('Invalid grant object');
         }
 
         if ($grant || (isset($parentTicket['grant']) && $parentTicket['grant'])) {
@@ -164,7 +164,7 @@ class Ticket implements TicketInterface
                 !(isset($parentTicket['grant']) && $parentTicket['grant']) ||
                 $parentTicket['grant'] !== $grant['id']
             ) {
-                throw new InternalException('Parent ticket grant does not match options.grant');
+                throw new ServerException('Parent ticket grant does not match options.grant');
             }
         }
 
@@ -219,15 +219,15 @@ class Ticket implements TicketInterface
     public function rsvp($app, $grant)
     {
         if (!$app || !(isset($app['id']) && $app['id'])) {
-            throw new InternalException('Invalid application object');
+            throw new ServerException('Invalid application object');
         }
 
         if (!$grant || !(isset($grant['id']) && $grant['id'])) {
-            throw new InternalException('Invalid grant object');
+            throw new ServerException('Invalid grant object');
         }
 
         if (!$this->encryptionPassword) {
-            throw new InternalException('Invalid encryption password');
+            throw new ServerException('Invalid encryption password');
         }
 
         $this->options['ttl'] = (isset($this->options['ttl']) && $this->options['ttl'])
@@ -332,7 +332,7 @@ class Ticket implements TicketInterface
     public function parse($id)
     {
         if (!$this->encryptionPassword) {
-            throw new InternalException('Invalid encryption password');
+            throw new ServerException('Invalid encryption password');
         }
 
         try {
