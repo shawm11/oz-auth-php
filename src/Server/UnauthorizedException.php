@@ -1,6 +1,6 @@
 <?php
 
-namespace Shawm11\Hawk\Server;
+namespace Shawm11\Oz\Server;
 
 class UnauthorizedException extends ServerException
 {
@@ -27,7 +27,7 @@ class UnauthorizedException extends ServerException
     {
         parent::__construct($message, $code, $previous);
 
-        $this->$wwwAuthenticateHeaderAttributes = $wwwAuthenticateHeaderAttributes;
+        $this->wwwAuthenticateHeaderAttributes = $wwwAuthenticateHeaderAttributes;
     }
 
     /**

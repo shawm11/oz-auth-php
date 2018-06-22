@@ -6,12 +6,12 @@ class Scope implements ScopeInterface
 {
     public function validate($scope)
     {
-        if (!$scope) {
-            throw new InternalException('null scope');
+        if (!$scope && $scope !== []) {
+            throw new ServerException('null scope');
         }
 
         if (gettype($scope) !== 'array') {
-            throw new InternalException('scope not an array');
+            throw new ServerException('scope not an array');
         }
 
         $hash = [];
@@ -25,12 +25,14 @@ class Scope implements ScopeInterface
                 throw new BadRequestException('scope item is not a string');
             }
 
-            if ($hash[$scopeItem]) {
+            if (isset($hash[$scopeItem])) {
                 throw new BadRequestException('scope includes duplicated item');
             }
 
             $hash[$scopeItem] = true;
         }
+
+        return null;
     }
 
     public function isSubset($scope, $subset)

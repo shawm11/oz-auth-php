@@ -45,7 +45,7 @@ class Connection implements ConnectionInterface
         $code = $response['code'];
         $result = $response['result'];
 
-        if ($code !== 401 || !$result || !$result['expired']) {
+        if ($code !== 401 || !$result) {
             // No need to reissue ticket
             return [
                 'code' => $code,
@@ -160,9 +160,7 @@ class Connection implements ConnectionInterface
             throw new ClientException($e->getMessage());
         }
 
-
-
-        $response = $this->httpRequest($method, $uri, $headers);
+        $response = $this->httpRequest('POST', $uri, ['Authorization' => $header]);
 
         if ($response['statusCode'] !== 200) {
             throw new ClientException('Client registration failed with unexpected response');

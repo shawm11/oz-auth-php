@@ -30,5 +30,5 @@ interface ServerInterface
      * @return array  Contains the application ticket (`ticket`) and Hawk
      *                artifacts (`artifacts`)
      */
-    protected function authenticate($request, $encryptionPassword, $checkExpiration = true, $options = []);
+    public function authenticate($request, $encryptionPassword, $checkExpiration = true, $options = []);
 }

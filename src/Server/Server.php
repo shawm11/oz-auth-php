@@ -4,6 +4,7 @@ namespace Shawm11\Oz\Server;
 
 use Shawm11\Hawk\Server\ServerInterface as HawkServerInterface;
 use Shawm11\Hawk\Server\Server as HawkServer;
+use Shawm11\Hawk\Utils\Utils as HawkUtils;
 use Shawm11\Hawk\Server\BadRequestException as HawkBadRequestException;
 use Shawm11\Hawk\Server\UnauthorizedException as HawkUnauthorizedException;
 
@@ -19,7 +20,7 @@ class Server implements ServerInterface
     public function authenticate($request, $encryptionPassword, $checkExpiration = true, $options = [])
     {
         if (!$encryptionPassword) {
-            throw new InternalException('Invalid encryption password');
+            throw new ServerException('Invalid encryption password');
         }
 
         /*
@@ -39,7 +40,7 @@ class Server implements ServerInterface
              */
 
             if ($checkExpiration && ($ticket['exp'] <= (new HawkUtils)->now())) {
-                throw new UnauthorizedExeption('Expired ticket');
+                throw new UnauthorizedException('Expired ticket');
             }
 
             return $ticket;
@@ -58,7 +59,7 @@ class Server implements ServerInterface
         } catch (HawkUnauthorizedException $e) {
             throw new UnauthorizedException($e->getMessage(), $e->getWwwAuthenticateHeaderAttributes());
         } catch (\Exception $e) {
-            throw new ServerException($e->getMessage());
+            throw new ServerException($e->getMessage(), null, $e);
         }
 
         $credentials = $result['credentials'];
@@ -69,16 +70,16 @@ class Server implements ServerInterface
          */
 
         if ($credentials['app'] !== $artifacts['app']) {
-            throw new UnauthorizedExeption('Mismatching application ID');
+            throw new UnauthorizedException('Mismatching application ID');
         }
 
-        if ((
-                (isset($credentials['dlg']) && $credentials['dlg']) ||
-                (isset($artifacts['dlg']) && $artifacts['dlg'])
-            ) &&
-            $credentials['dlg'] !== $artifacts['dlg']
+        $credentialsDlg = isset($credentials['dlg']) ? $credentials['dlg'] : null;
+        $artifactsDlg = isset($artifacts['dlg']) ? $artifacts['dlg'] : null;
+
+        if (($credentialsDlg || $artifactsDlg ) &&
+            $credentialsDlg !== $artifactsDlg
         ) {
-            throw new UnauthorizedExeption('Mismatching delegated application ID');
+            throw new UnauthorizedException('Mismatching delegated application ID');
         }
 
         /*

@@ -18,8 +18,8 @@ class Client implements ClientInterface
     {
         $settings = $options;
         $settings['credentials'] = $ticket;
-        $settings['app'] = $ticket['app'];
-        $settings['dlg'] = $ticket['dlg'];
+        $settings['app'] = isset($ticket['app']) ? $ticket['app'] : null;
+        $settings['dlg'] = isset($ticket['dlg']) ? $ticket['dlg'] : null;
 
         try {
             $hawkHeader = $this->hawkClient->header($uri, $method, $settings);

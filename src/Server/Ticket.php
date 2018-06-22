@@ -45,7 +45,7 @@ class Ticket implements TicketInterface
             throw new InternalException('Invalid application object');
         }
 
-        if ($grant &&
+        if (($grant || $grant === []) &&
             (
                 !(isset($grant['id']) && $grant['id']) ||
                 !(isset($grant['user']) && $grant['user']) ||
@@ -108,7 +108,7 @@ class Ticket implements TicketInterface
 
     public function reissue($parentTicket, $grant)
     {
-        if (!$parentTicket) {
+        if (!$parentTicket && $parentTicket !== []) {
             throw new InternalException('Invalid parent ticket object');
         }
 
@@ -117,15 +117,17 @@ class Ticket implements TicketInterface
         }
 
         $scopeClass = new Scope;
+        $parentScope = isset($parentTicket['scope']) ? $parentTicket['scope'] : [];
+        $optionScope = isset($this->options['scope']) ? $this->options['scope'] : [];
 
-        if (isset($parentTicket['scope']) && $parentTicket['scope']) {
-            $scopeClass->validate($parentTicket['scope']);
+        if ($parentScope) {
+            $scopeClass->validate($parentScope);
         }
 
-        if (isset($this->options['scope']) && $this->options['scope']) {
-            $scopeClass->validate($this->options['scope']);
+        if ($optionScope) {
+            $scopeClass->validate($optionScope);
 
-            if (!$scopeClass->isSubset($parentTicket['scope'], $this->options['scope'])) {
+            if (!$scopeClass->isSubset($parentScope, $optionScope)) {
                 throw new ForbiddenException('New scope is not a subset of the parent ticket scope');
             }
         }
@@ -147,7 +149,7 @@ class Ticket implements TicketInterface
             }
         }
 
-        if ($grant &&
+        if (($grant || $grant === []) &&
             (
                 !(isset($grant['id']) && $grant['id']) ||
                 !(isset($grant['user']) && $grant['user']) ||
@@ -184,9 +186,7 @@ class Ticket implements TicketInterface
             'app' => (isset($this->options['issueTo']) && $this->options['issueTo'])
                 ? $this->options['issueTo']
                 : $parentTicket['app'],
-            'scope' => (isset($this->options['scope']) && $this->options['scope'])
-                ? $this->options['scope']
-                : $parentTicket['scope']
+            'scope' => $optionScope ? $optionScope : $parentScope
         ];
 
         if (!(isset($this->options['ext']) && $this->options['ext']) &&
@@ -307,7 +307,7 @@ class Ticket implements TicketInterface
          * Seal ticket
          */
         try {
-            $sealed = $this->iron($ticket, $this->encryptionPassowrd);
+            $sealed = $this->iron->seal($ticket, $this->encryptionPassword);
         } catch (\Exception $e) {
             throw new ServerException($e->getMessage());
         }
@@ -336,7 +336,7 @@ class Ticket implements TicketInterface
         }
 
         try {
-            $ticket = $this->iron->seal($id, $this->encryptionPassword);
+            $ticket = $this->iron->unseal($id, $this->encryptionPassword);
         } catch (\Exception $e) {
             throw new ServerException($e->getMessage());
         }

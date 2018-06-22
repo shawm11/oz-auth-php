@@ -26,8 +26,8 @@ class Endpoints implements EndpointsInterface
 
     public function app($request, $options)
     {
-        $loadAppFunc = $options['loadAppFunc'] ? $options['loadAppFunc'] : null;
-        $hawkOptions = $options['hawk'] ? $options['hawk'] : null;
+        $loadAppFunc = isset($options['loadAppFunc']) ? $options['loadAppFunc'] : null;
+        $hawkOptions = isset($options['hawk']) ? $options['hawk'] : null;
 
         try {
             $credentials = $this->hawkServer
@@ -40,7 +40,9 @@ class Endpoints implements EndpointsInterface
             throw new ServerException($e->getMessage());
         }
 
-        return (new Ticket($options['encryptionPassword'], $options['ticket'], $this->iron))
+        $ticketOptions = isset($options['ticket']) ? $options['ticket'] : null;
+
+        return (new Ticket($options['encryptionPassword'], $ticketOptions, $this->iron))
                     ->issue($credentials, null);
     }
 
@@ -48,7 +50,7 @@ class Endpoints implements EndpointsInterface
     {
         $payload = $payload ? $payload : [];
 
-        $encryptionPassword = $options['encryptionPassword'] ? $options['encryptionPassword'] : null;
+        $encryptionPassword = isset($options['encryptionPassword']) ? $options['encryptionPassword'] : null;
 
         $ticket = (new Server($this->hawkServer))
                     ->authenticate($request, $encryptionPassword, false, $options)['ticket'];
@@ -63,12 +65,14 @@ class Endpoints implements EndpointsInterface
             throw new UnauthorizedException('Invalid application');
         }
 
-        if ($payload['issueTo'] && !(isset($app['delegate']) && $app['delegate'])) {
+        if ((isset($payload['issueTo']) && $payload['issueTo']) &&
+            !(isset($app['delegate']) && $app['delegate'])
+        ) {
             throw new ForbiddenException('Application has no delegation rights');
         }
 
-        $reissue = function ($grant, $ext) use ($options, $payload, $encryptionPassword) {
-            $ticketOptions = $options['ticket'] ? $options['ticket'] : [];
+        $reissue = function ($grant = null, $ext = null) use ($options, $payload, $encryptionPassword, $ticket) {
+            $ticketOptions = isset($options['ticket']) ? $options['ticket'] : [];
 
             if ($ext) {
                 $ticketOptions['ext'] = $ext;
@@ -89,7 +93,7 @@ class Endpoints implements EndpointsInterface
          * Application ticket
          */
 
-        if (!$ticket['grant']) {
+        if (!(isset($ticket['grant']) && $ticket['grant'])) {
             return $reissue();
         }
 
@@ -99,10 +103,11 @@ class Endpoints implements EndpointsInterface
 
         $grantResult = $options['loadGrantFunc']($ticket['grant']);
         $grant = $grantResult['grant'];
-        $ext = $grantResult['ext'];
+        $ext = isset($grantResult['ext']) ? $grantResult['ext'] : null;
+        $ticketDlg = isset($ticket['dlg']) ? $ticket['dlg'] : null;
 
         if (!$grant ||
-            ($grant['app'] !== $ticket['app'] && $grant['app'] !== $ticket['dlg']) ||
+            ($grant['app'] !== $ticket['app'] && $grant['app'] !== $ticketDlg) ||
             $grant['user'] !== $ticket['user'] ||
             !(isset($grant['exp']) && $grant['exp']) ||
             $grant['exp'] <= (new HawkUtils)->now()
@@ -119,17 +124,19 @@ class Endpoints implements EndpointsInterface
             throw new BadRequestException('Missing required payload');
         }
 
+        $encryptionPassword = isset($options['encryptionPassword']) ? $options['encryptionPassword'] : null;
+
         $ticket = (new Server($this->hawkServer))
                     ->authenticate($request, $encryptionPassword, true, $options)['ticket'];
 
         if (isset($ticket['user']) && $ticket['user']) {
-            throw new UnauthorizedExeption('User ticket cannot be used on an application endpoint');
+            throw new UnauthorizedException('User ticket cannot be used on an application endpoint');
         }
 
-        $ticketOptions = $options['ticket'] ? $options['ticket'] : [];
-        $rsvp = $payload['rsvp'] ? $payload['rsvp'] : null;
+        $ticketOptions = isset($options['ticket']) ? $options['ticket'] : [];
+        $rsvp = isset($payload['rsvp']) ? $payload['rsvp'] : null;
 
-        $ticketClass = (new Ticket($option['encryptionPassword'], $ticketOptions));
+        $ticketClass = (new Ticket($encryptionPassword, $ticketOptions));
 
         $envelope = $ticketClass->parse($rsvp);
 
@@ -150,7 +157,7 @@ class Endpoints implements EndpointsInterface
         }
 
         $grant = $grantResult['grant'];
-        $ext = $grantResult['ext'];
+        $ext = isset($grantResult['ext']) ? $grantResult['ext'] : null;
 
         if (!$grant ||
             $grant['app'] !== $ticket['app'] ||
