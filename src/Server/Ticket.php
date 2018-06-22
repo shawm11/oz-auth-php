@@ -251,7 +251,7 @@ class Ticket implements TicketInterface
         try {
             $result = $this->iron->seal($envelope, $this->encryptionPassword);
         } catch (\Exception $e) {
-            throw new ServerException($e->getMessage());
+            throw new ServerException($e->getMessage(), $e->getCode(), $e);
         }
 
         return $result;
@@ -274,7 +274,7 @@ class Ticket implements TicketInterface
                 $numOfBytes
             );
         } catch (\Exception $e) {
-            throw new ServerException($e->getMessage());
+            throw new ServerException($e->getMessage(), $e->getCode(), $e);
         }
 
         $ticket['key'] = $random;
@@ -309,7 +309,7 @@ class Ticket implements TicketInterface
         try {
             $sealed = $this->iron->seal($ticket, $this->encryptionPassword);
         } catch (\Exception $e) {
-            throw new ServerException($e->getMessage());
+            throw new ServerException($e->getMessage(), $e->getCode(), $e);
         }
 
         $ticket['id'] = $sealed;
@@ -338,7 +338,7 @@ class Ticket implements TicketInterface
         try {
             $ticket = $this->iron->unseal($id, $this->encryptionPassword);
         } catch (\Exception $e) {
-            throw new ServerException($e->getMessage());
+            throw new ServerException($e->getMessage(), $e->getCode(), $e);
         }
 
         $ticket['id'] = $id;

@@ -55,11 +55,16 @@ class Server implements ServerInterface
         try {
             $result = $this->hawkServer->authenticate($request, $credentialsFunc, $hawkOptions);
         } catch (HawkBadRequestException $e) {
-            throw new BadRequestException($e->getMessage());
+            throw new BadRequestException($e->getMessage(), $e->getCode(), $e);
         } catch (HawkUnauthorizedException $e) {
-            throw new UnauthorizedException($e->getMessage(), $e->getWwwAuthenticateHeaderAttributes());
+            throw new UnauthorizedException(
+                $e->getMessage(),
+                $e->getWwwAuthenticateHeaderAttributes(),
+                $e->getCode(),
+                $e
+            );
         } catch (\Exception $e) {
-            throw new ServerException($e->getMessage(), null, $e);
+            throw new ServerException($e->getMessage(), $e->getCode(), $e);
         }
 
         $credentials = $result['credentials'];

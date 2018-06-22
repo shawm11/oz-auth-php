@@ -33,11 +33,16 @@ class Endpoints implements EndpointsInterface
             $credentials = $this->hawkServer
                                 ->authenticate($request, $loadAppFunc, $hawkOptions)['credentials'];
         } catch (HawkBadRequestException $e) {
-            throw new BadRequestException($e->getMessage());
+            throw new BadRequestException($e->getMessage(), $e->getCode(), $e);
         } catch (HawkUnauthorizedException $e) {
-            throw new UnauthorizedException($e->getMessage(), $e->getWwwAuthenticateHeaderAttributes());
+            throw new UnauthorizedException(
+                $e->getMessage(),
+                $e->getWwwAuthenticateHeaderAttributes(),
+                $e->getCode(),
+                $e
+            );
         } catch (\Exception $e) {
-            throw new ServerException($e->getMessage());
+            throw new ServerException($e->getMessage(), $e->getCode(), $e);
         }
 
         $ticketOptions = isset($options['ticket']) ? $options['ticket'] : null;

@@ -118,7 +118,7 @@ class Connection implements ConnectionInterface
         try {
             $headerOutput = (new Client($this->hawkClient))->header($uri, $method, $ticket);
         } catch (\Exception $e) {
-            throw new ClientException($e->getMessage());
+            throw new ClientException($e->getMessage(), $e->getCode(), $e);
         }
 
         $headers['Authorization'] = $headerOutput['header'];
@@ -132,7 +132,7 @@ class Connection implements ConnectionInterface
                 $headerOutput['artifacts']
             );
         } catch (\Exception $e) {
-            throw new ClientException($e->getMessage());
+            throw new ClientException($e->getMessage(), $e->getCode(), $e);
         }
 
         return [
@@ -157,7 +157,7 @@ class Connection implements ConnectionInterface
                 $this->settings['credentials']
             );
         } catch (\Exception $e) {
-            throw new ClientException($e->getMessage());
+            throw new ClientException($e->getMessage(), $e->getCode(), $e);
         }
 
         $response = $this->httpRequest('POST', $uri, ['Authorization' => $header]);
