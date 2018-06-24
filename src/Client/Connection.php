@@ -100,19 +100,20 @@ class Connection implements ConnectionInterface
      * @param  string  $method  HTTP method of the request
      * @param  string  $path  URL of the request relative to the host (e.g.
      *                        `/resource`)
-     * @param  string  $payload  Request body
+     * @param  string|array  $payload  Request body
      * @param  array  $ticket
      * @return array  The requested resource (parsed to array if JSON), HTTP
      *                response code, and the ticket used to make the request
      */
     protected function makeRequest($method, $path, $payload, $ticket)
     {
-        $body = $payload !== null ? json_encode($payload) : null;
+        $body = ($payload !== null) ? $payload : null;
         $uri = $this->settings['uri'] . $path;
         $headers = [];
 
         if (gettype($payload) === 'array') {
             $headers['Content-Type'] = 'application/json';
+            json_encode($payload);
         }
 
         try {

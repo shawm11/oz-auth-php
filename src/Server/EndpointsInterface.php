@@ -44,8 +44,8 @@ interface EndpointsInterface
     public function reissue($request, $payload, $options);
 
     /**
-     * Authenticate an application request and if valid, exchanges the provided
-     * RSVP with a user ticket
+     * Authenticate an application request and if valid and exchange the
+     * provided RSVP with a user ticket
      *
      * @param  array  $request  Request data, which contains `method`, `url`,
      *                          `host`, `port`, `authorization`, and

@@ -63,10 +63,9 @@ interface TicketInterface
     public function generate($ticket);
 
     /**
-     * Decodes a ticket identifier (an iron-sealed string) into a ticket
+     * Decode a ticket identifier (an iron-sealed string) into a ticket
      *
-     * @param  string  $id  Ticket ID (iron-sealed string) which contains the
-     * `                    encoded ticket information
+     * @param  string  $id  Ticket ID (iron-sealed string) is the encoded ticket
      * @throws ServerException
      * @return array  Ticket information that was encoded in $id
      */

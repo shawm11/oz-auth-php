@@ -990,13 +990,13 @@ _array_ — Set of credentials that contains the following:
 
 -   _string_ `key` — (Required) Secret key for the client
 
+-   _string_ `algorithm` — (Required) Algorithm to be used for HMAC. Must be
+    either `sha1` or `sha256`.
+
 -   _array_ `scope` — (Optional) Scope of the ticket to be issued
 
 -   _boolean_ `delegate` — (Optional) If the application is allowed to delegate
     a ticket to another application. Defaults to `false`.
-
--   _string_ `algorithm` — (Required) Algorithm to be used for HMAC. Must be
-    either `sha1` or `sha256`.
 
 ### Grant
 

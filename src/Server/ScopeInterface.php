@@ -5,7 +5,7 @@ namespace Shawm11\Oz\Server;
 interface ScopeInterface
 {
     /**
-     * Validates a scope for proper structure (an array of unique strings)
+     * Validate a scope for proper structure (an array of unique strings)
      *
      * @param  array  $scope  The array being validated
      * @throws ServerException
@@ -18,7 +18,7 @@ interface ScopeInterface
      *
      * @param array  $scope  The superset
      * @param array  $subset  The subset
-     * @return boolean  If the $subset is fully contained with $scope
+     * @return boolean  If $subset is fully contained with $scope
      */
     public function isSubset($scope, $subset);
 

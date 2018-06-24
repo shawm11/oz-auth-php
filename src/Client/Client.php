@@ -16,13 +16,12 @@ class Client implements ClientInterface
 
     public function header($uri, $method, $ticket, $options = [])
     {
-        $settings = $options;
-        $settings['credentials'] = $ticket;
-        $settings['app'] = isset($ticket['app']) ? $ticket['app'] : null;
-        $settings['dlg'] = isset($ticket['dlg']) ? $ticket['dlg'] : null;
+        $options['credentials'] = $ticket;
+        $options['app'] = isset($ticket['app']) ? $ticket['app'] : null;
+        $options['dlg'] = isset($ticket['dlg']) ? $ticket['dlg'] : null;
 
         try {
-            $hawkHeader = $this->hawkClient->header($uri, $method, $settings);
+            $hawkHeader = $this->hawkClient->header($uri, $method, $options);
         } catch (\Exception $e) {
             throw new ClientException($e->getMessage());
         }

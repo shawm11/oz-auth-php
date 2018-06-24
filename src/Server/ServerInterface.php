@@ -14,7 +14,7 @@ interface ServerInterface
     /**
      * Validate an incoming request using Hawk and performs additional
      * Oz-specific validations. If the request is valid, an application ticket
-     * is issued.
+     * is issued
      *
      * @param  array  $request  Request data, which contains `method`, `url`,
      *                          `host`, `port`, `authorization`, and

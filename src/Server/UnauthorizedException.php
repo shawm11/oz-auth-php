@@ -15,13 +15,12 @@ class UnauthorizedException extends ServerException
      * @param string  $message  The Exception message to throw. It is also
      *                          included in the `WWW-Authenticate` header.
      * @param array  $wwwAuthenticateHeaderAttributes  Associative array of keys
-     *                                                 & values the include in
+     *                                                 & values to include in
      *                                                 the `WWW-Authenticate`
-     *                                                 header in the format:
-     *                                                 `<key>:"<value>"`
+     *                                                 header
      * @param integer  $code  HTTP status code that the response should have
-     * @param \Throwable  $previous  The previous exception used for the
-     *                               exception chaining
+     * @param \Throwable  $previous  The previous exception used for exception
+     *                               chaining
      */
     public function __construct($message = '', $wwwAuthenticateHeaderAttributes = [], $code = 401, $previous = null)
     {
