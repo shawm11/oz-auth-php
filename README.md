@@ -64,11 +64,31 @@ usage is more common than the "Client" usage.
 <?php
 
 use Shawm11\Oz\Server\Endpoints as OzEndpoints;
+use Shawm11\Oz\Server\Server as OzServer;
 use Shawm11\Oz\Server\ServerException as OzServerException;
 use Shawm11\Oz\Server\BadRequestException as OzBadRequestException;
 use Shawm11\Oz\Server\UnauthorizedException as OzUnauthorizedException;
 use Shawm11\Oz\Server\ForbiddenException as OzForbiddenException;
 use Shawm11\Oz\Server\InternalException as OzInternalException;
+
+/*
+ * A fictional function that handles an authenticated request to a resource
+ */
+function handleAuthRequest() {
+    // Pretend to somehow get the request data
+	$requestData = [
+		'method' => 'GET',
+		'url' => '/resource/4?a=1&b=2',
+		'host' => 'example.com',
+		'port' => 8080,
+		'authorization' => 'Hawk id="Fe26.2**some-user-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
+	];
+	$encryptionPassword = 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters';
+
+	$ticket = (new OzServer)->authenticate($requestData, $encryptionPassword);
+
+	// Authentication successful! Now do some stuff with the ticket...
+}
 
 /*
  * A fictional function that handle requests to /oz/app
@@ -97,31 +117,12 @@ function handleAppRequest() {
 		}
 	];
 
-	$ozEndpoints = new OzEndpoints($options);
-
     try {
-        $appTicket = $ozEndpoints->app($requestData);
-    } catch (OzBadRequestException $e) {
-        $httpStatusCode = $e->getCode();
-        // Send HTTP status 400 (Bad Request) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    } catch (OzUnauthorizedException $e) {
-        $httpStatusCode = $e->getCode();
-        // A fictional function that sets the header
-        setHeaderSomehow('WWWW-Authenticate', $e->getWwwAuthenticateHeader());
-        // Send HTTP status 401 (Unauthorized) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    } catch (OzInternalException $e) {
-        $httpStatusCode = $e->getCode();
-        // A fictional function that sets the header
-        setHeaderSomehow('WWWW-Authenticate', $e->getWwwAuthenticateHeader());
-        // Send HTTP status 500 (Interal Server Error) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
+        $appTicket = (new OzEndpoints)->app($requestData, $options);
     } catch (OzServerException $e) {
-        echo 'ERROR: ' . $e->getMessage();
+        $httpStatusCode = $e->getCode();
+        // Send error response...
+    	send($httpStatusCode, $e->getMessage()); // Fictional function
         return;
     }
 
@@ -143,13 +144,13 @@ function handleReissueRequest() {
 		'url' => '/resource/4?a=1&b=2',
 		'host' => 'example.com',
 		'port' => 8080,
-		'authorization' => 'Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
+		'authorization' => 'Hawk id="Fe26.2**some-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
 	];
 	$options = [
 		'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
 		// Function for retrieving app credentials
 		'loadAppFunc' => function ($id) {
-			// Pretend to somehow retrieve the app credentials using the given ID ($id)
+			// Pretend to somehow retrieve the credentials using the given ID ($id)
 			$appCredentials = [
 				'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
 				'algorithm' => 'sha256'
@@ -170,38 +171,12 @@ function handleReissueRequest() {
 		}
 	];
 
-	$ozEndpoints = new OzEndpoints($options);
-
     try {
-        $reissuedTicket = $ozEndpoints->reissue($requestData);
-    } catch (OzBadRequestException $e) {
-        $httpStatusCode = $e->getCode();
-        // Send HTTP status 400 (Bad Request) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    } catch (OzUnauthorizedException $e) {
-        $httpStatusCode = $e->getCode();
-        // A fictional function that sets the header
-        setHeaderSomehow('WWWW-Authenticate', $e->getWwwAuthenticateHeader());
-        // Send HTTP status 401 (Unauthorized) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    } catch (OzForbiddenException $e) {
-        $httpStatusCode = $e->getCode();
-        // A fictional function that sets the header
-        setHeaderSomehow('WWWW-Authenticate', $e->getWwwAuthenticateHeader());
-        // Send HTTP status 403 (Forbidden) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    } catch (OzInternalException $e) {
-        $httpStatusCode = $e->getCode();
-        // A fictional function that sets the header
-        setHeaderSomehow('WWWW-Authenticate', $e->getWwwAuthenticateHeader());
-        // Send HTTP status 500 (Interal Server Error) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
+        $reissuedTicket = (new OzEndpoints)->reissue($requestData, [], $options);
     } catch (OzServerException $e) {
-        echo 'ERROR: ' . $e->getMessage();
+        $httpStatusCode = $e->getCode();
+        // Send error response...
+    	send($httpStatusCode, $e->getMessage()); // Fictional function
         return;
     }
 
@@ -223,7 +198,7 @@ function handleRsvpRequest() {
 		'url' => '/resource/4?a=1&b=2',
 		'host' => 'example.com',
 		'port' => 8080,
-		'authorization' => 'Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
+		'authorization' => 'Hawk id="Fe26.2**some-app-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
 	];
 	// Pretend to somehow get the request body
 	$requestBody = [
@@ -234,7 +209,7 @@ function handleRsvpRequest() {
 		'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
 		// Function for retrieving app credentials
 		'loadAppFunc' => function ($id) {
-			// Pretend to somehow retrieve the app credentials using the given ID ($id)
+			// Pretend to somehow retrieve the credentials using the given ID ($id)
 			$appCredentials = [
 				'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
 				'algorithm' => 'sha256'
@@ -255,38 +230,12 @@ function handleRsvpRequest() {
 		}
 	];
 
-	$ozEndpoints = new OzEndpoints($options);
-
     try {
-        $userTicket = $ozEndpoints->rsvp($requestData, $requestBody);
-    } catch (OzBadRequestException $e) {
-        $httpStatusCode = $e->getCode();
-        // Send HTTP status 400 (Bad Request) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    } catch (OzUnauthorizedException $e) {
-        $httpStatusCode = $e->getCode();
-        // A fictional function that sets the header
-        setHeaderSomehow('WWWW-Authenticate', $e->getWwwAuthenticateHeader());
-        // Send HTTP status 401 (Unauthorized) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    } catch (OzForbiddenException $e) {
-        $httpStatusCode = $e->getCode();
-        // A fictional function that sets the header
-        setHeaderSomehow('WWWW-Authenticate', $e->getWwwAuthenticateHeader());
-        // Send HTTP status 403 (Forbidden) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    } catch (OzInternalException $e) {
-        $httpStatusCode = $e->getCode();
-        // A fictional function that sets the header
-        setHeaderSomehow('WWWW-Authenticate', $e->getWwwAuthenticateHeader());
-        // Send HTTP status 500 (Interal Server Error) response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
+        $userTicket = (new OzEndpoints)->rsvp($requestData, $requestBody, $options);
     } catch (OzServerException $e) {
-        echo 'ERROR: ' . $e->getMessage();
+        $httpStatusCode = $e->getCode();
+        // Send error response...
+    	send($httpStatusCode, $e->getMessage()); // Fictional function
         return;
     }
 
@@ -303,7 +252,7 @@ function handleRsvpRequest() {
 ```php
 <?php
 
-use Shawm11\Oz\Client\Client as OzClient;
+use Shawm11\Oz\Client\Connection as OzConnection;
 use Shawm11\Oz\Client\ClientException as OzClientException;
 
 /*
@@ -321,11 +270,9 @@ function makeRequest() {
 		]
 	];
 
-	$ozClient = new OzClient($options);
-
     try {
 		// Send request & wait for response
-        $response = $ozClient->connection->app($requestData);
+        $response = (new OzConnection($options))->app($requestData);
     } catch (OzClientException $e) {
         echo 'ERROR: ' . $e->getMessage();
         return;
