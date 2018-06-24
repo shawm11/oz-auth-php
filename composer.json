@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.6.0",
         "nategood/httpful": "^0.2.20",
-        "shawm11/hawk-auth": "dev-master",
+        "shawm11/hawk-auth": "^1.0",
         "shawm11/iron-crypto": "^1.0"
     },
     "require-dev": {

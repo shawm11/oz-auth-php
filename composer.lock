@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6987470fd2a3a8b3c4ef742187f23ec0",
+    "content-hash": "09cd55969385fffc237817b3d40a8169",
     "packages": [
         {
             "name": "nategood/httpful",
@@ -58,16 +58,16 @@
         },
         {
             "name": "shawm11/hawk-auth",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shawm11/hawk-auth-php.git",
-                "reference": "6e6a330798ffb79193152e44c15b36b8bacbaa6b"
+                "reference": "9557b2f78b5d4017e33b66327ce969bfe003b7c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shawm11/hawk-auth-php/zipball/6e6a330798ffb79193152e44c15b36b8bacbaa6b",
-                "reference": "6e6a330798ffb79193152e44c15b36b8bacbaa6b",
+                "url": "https://api.github.com/repos/shawm11/hawk-auth-php/zipball/9557b2f78b5d4017e33b66327ce969bfe003b7c4",
+                "reference": "9557b2f78b5d4017e33b66327ce969bfe003b7c4",
                 "shasum": ""
             },
             "require": {
@@ -94,7 +94,7 @@
                 "MIT"
             ],
             "description": "PHP implementation of the Hawk HTTP authentication scheme",
-            "time": "2018-06-20T17:10:00+00:00"
+            "time": "2018-06-24T05:26:02+00:00"
         },
         {
             "name": "shawm11/iron-crypto",
@@ -2965,9 +2965,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "shawm11/hawk-auth": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
