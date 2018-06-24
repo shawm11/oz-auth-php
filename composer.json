@@ -3,7 +3,7 @@
     "description": "PHP implementation of the Oz web authorization protocol",
     "type": "library",
     "license": "MIT",
-    "version": "0.0.0",
+    "version": "1.0.0-beta",
     "require": {
         "php": ">=5.6.0",
         "nategood/httpful": "^0.2.20",
