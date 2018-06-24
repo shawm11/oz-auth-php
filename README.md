@@ -19,7 +19,7 @@ Table of Contents
     - [Server](#server)
     - [Client](#client)
 
--   [API](#api)
+-   [Documentation](#documentation)
 
 -   [Security Considerations](#security-considerations)
 
@@ -286,10 +286,13 @@ function makeRequest() {
 }
 ```
 
-API
----
+Documentation
+-------------
 
-See the [API Reference](docs/api-reference.md) for details about the API.
+-   [API Reference](docs/api-reference.md) — Details about the API
+
+-   [Oz Workflow (Without Delegation)](docs/oz-workflow-without-delegation.md) —
+    General overview of the Oz workflow when delegation is not being used
 
 Security Considerations
 -----------------------
