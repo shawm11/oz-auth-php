@@ -1,7 +1,5 @@
-Oz Workflow (Without Delegation)
-================================
-
-The Oz workflow provides "Log in with..." capability for a web API.
+RSVP Workflow (Without Delegation)
+==================================
 
 Table of Contents
 -----------------
@@ -16,22 +14,24 @@ Table of Contents
 
 -   [Vocabulary](#vocabulary)
     - [Application](#application)
+    - [Application Authorization](#application-authorization)
     - [Resource (User's Resource)](#resource-users-resource)
     - [Server](#server)
     - [User](#user)
+    - [User Authentication](#user-authentication)
 
 Steps of the Workflow
 ---------------------
 
 The steps of the workflow assume that the default Oz options are used.
 
-1.  (Before the workflow starts) The application is registered with the server
-    and is assigned a [set of credentials](api-reference.md#app)
+1.  (Before the workflow starts) The application is assigned Hawk credentials,
+    which include an application ID and a randomly-generated key.
 
-    - _NOTE: The method in which this is done is not part of the Oz protocol_
+    - _NOTE: How this is done is not part of the Oz protocol_
 
-1.  Application: Make a `POST /oz/app` request to Server. In this request, the
-    Application…
+1.  Application: Make a `POST /oz/app` request to the Server. In this request,
+    the Application…
 
     -   Sends its [credentials](api-reference.md#app)
 
@@ -40,8 +40,8 @@ The steps of the workflow assume that the default Oz options are used.
     -   _NOTE: This step allows the application to manage its own resources on
 	    the Server_
 
-1.  Application: Make a `POST /oz/reissue` request to Server. In this request,
-    the Application…
+1.  Application: Make a `POST /oz/reissue` request to the Server. In this
+    request, the Application…
 
     -   Sends the scope array (optional) and the application [ticket](api-reference.md#ticket)
         ID (as a Hawk-authenticated requested using the application ticket)
@@ -92,15 +92,15 @@ The steps of the workflow assume that the default Oz options are used.
 
 1.  User: Receive RSVP from server
 
-    - _NOTE: The method in which this is done is not part of the Oz protocol_
+    -   _NOTE: The method in which this is done is not part of the Oz protocol_
+
+    -   If the application will receive the RSVP from the server on behalf of
+	    the user (by redirecting back to the application), then this step is not
+        necessary.
 
 1.  User: Give RSVP to application
 
-    -   _NOTE: The method in which this is done is not part of the Oz protocol_
-
-    -   If the application received the RSVP from the server on behalf of the
-	    user (by redirecting back to the application), then the previous step
-        is not necessary.
+    - _NOTE: The method in which this is done is not part of the Oz protocol_
 
 1.  Application: Make `POST /oz/rsvp` request to Server. In this request, the
     Application…
@@ -150,6 +150,10 @@ Pros and Cons
 Usage
 -----
 
+The RSVP workflow is for [**application authorization**](#application-authorization),
+not [**user authentication**](#user-authentication). The most common use of this
+workflow is to provide a "Log in with {APP NAME HERE}" capability.
+
 This flow is best used when...
 
 -   The server has some sort of UI that users can interact with.
@@ -169,6 +173,10 @@ Vocabulary
 The client. It is the machine that is requesting to use the services provided by
 the [server](#server).
 
+### Application Authorization
+
+Permission for the application to access a resource.
+
 ### Resource (User's Resource)
 
 Data stored on the [server](#server) that belongs to or associated with the
@@ -183,3 +191,8 @@ provides the services the [client](#application) uses.
 
 The human who has resources stored on the [server](#server) and is using the
 [client](#application).
+
+### User Authentication
+
+Verifying that a user's identity, typically by asking the user to "log in" or
+"sign in"

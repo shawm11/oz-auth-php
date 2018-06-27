@@ -142,7 +142,7 @@ Returns the application [ticket](#ticket) for the client as an array.
     -   _integer_ `port` — (Required) Port number the request was sent to
 
     -   _string_ `authorization` — (Optional) Value of the `Authorization`
-        header in the request. See [`header()` for the `Client` class](#headeruri-method-options).
+        header in the request.
 
     -   _string_ `contentType` — (Optional) Payload content type. It is usually
         the value of the `Content-Type` header in the request. Only used for
@@ -237,7 +237,7 @@ Returns the reissued [ticket](#ticket) as an array.
     -   _integer_ `port` — (Required) Port number the request was sent to
 
     -   _string_ `authorization` — (Optional) Value of the `Authorization`
-        header in the request. See [`header()` for the `Client` class](#headeruri-method-options).
+        header in the request.
 
     -   _string_ `contentType` — (Optional) Payload content type. It is usually
         the value of the `Content-Type` header in the request. Only used for
@@ -377,7 +377,7 @@ Returns the user [ticket](#ticket) as an array.
     -   _integer_ `port` — (Required) Port number the request was sent to
 
     -   _string_ `authorization` — (Optional) Value of the `Authorization`
-        header in the request. See [`header()` for the `Client` class](#headeruri-method-options).
+        header in the request.
 
     -   _string_ `contentType` — (Optional) Payload content type. It is usually
         the value of the `Content-Type` header in the request. Only used for
