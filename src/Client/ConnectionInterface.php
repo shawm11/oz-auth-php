@@ -49,4 +49,26 @@ interface ConnectionInterface
      * @return array  Reissued ticket
      */
     public function reissue($ticket);
+
+    /**
+     * Request a user ticket using the given user credentials
+     *
+     * @param  mixed  $userCredentials
+     * @param  string  $flow  Type of Oz flow to use to attempt to retrieve a
+     *                        user ticket.
+     *                        Options:
+     *                          -  `auto` - Automatically determine based on
+     *                             application credentials in the settings. If
+     *                             application credentials are set, use User
+     *                             Credentials flow; otherwise, use Implicit
+     *                             flow
+     *                          -  `implicit` - Attempt to retrieve user ticket
+     *                             without application authentication
+     *                          -  `user_credentials` - Attempt to retrieve user
+     *                             ticket with application authentication
+     * @throws ClientException
+     * @return array  The response, which contains the status code, response
+     *                body, and headers
+     */
+    public function requestUserTicket($userCredentials, $flow = 'auto');
 }

@@ -19,6 +19,8 @@ class Ticket implements TicketInterface
         'hmacAlgorithm' => 'sha256'
     ];
 
+    protected $grantTypes = ['rsvp', 'user_credentials', 'implicit'];
+
     protected $iron;
 
     protected $encryptionPassword;
@@ -41,7 +43,13 @@ class Ticket implements TicketInterface
 
     public function issue($app, $grant)
     {
-        if (!$app || !(isset($app['id']) && $app['id'])) {
+        if ($grant) {
+            $grant['type'] = (isset($grant['type'])) ? $grant['type'] : 'rsvp';
+        }
+
+        if (!(isset($grant['type']) && $grant['type'] === 'implicit') &&
+            !($app && (isset($app['id']) && $app['id']))
+        ) {
             throw new ServerException('Invalid application object');
         }
 
@@ -49,7 +57,8 @@ class Ticket implements TicketInterface
             (
                 !(isset($grant['id']) && $grant['id']) ||
                 !(isset($grant['user']) && $grant['user']) ||
-                !(isset($grant['exp']) && $grant['exp'])
+                !(isset($grant['exp']) && $grant['exp']) ||
+                !in_array($grant['type'], $this->grantTypes)
             )
         ) {
             throw new ServerException('Invalid grant object');
@@ -67,6 +76,7 @@ class Ticket implements TicketInterface
         $scopeClass->validate($scope);
 
         if ($grant &&
+            !(isset($grant['type']) && $grant['type'] === 'implicit') &&
             (isset($grant['scope']) && $grant['scope']) &&
             (isset($app['scope']) && $app['scope']) &&
             !$scopeClass->isSubset($app['scope'], $grant['scope'])
@@ -87,9 +97,11 @@ class Ticket implements TicketInterface
             $exp = min($exp, $grant['exp']);
         }
 
+        $appId = (isset($grant['type']) && $grant['type'] === 'implicit') ? null : $app['id'];
+
         $ticket = [
             'exp' => $exp,
-            'app' => $app['id'],
+            'app' => $appId,
             'scope' => $scope
         ];
 
@@ -99,7 +111,9 @@ class Ticket implements TicketInterface
         }
 
         // Defaults to true
-        if (isset($this->options['delegate']) && $this->options['delegate'] === false) {
+        if ((isset($this->options['delegate']) && $this->options['delegate'] === false) ||
+            (isset($grant['type']) && $grant['type'] === 'implicit') // Disable delegation for implicit grants
+        ) {
             $ticket['delegate'] = false;
         }
 
@@ -108,6 +122,10 @@ class Ticket implements TicketInterface
 
     public function reissue($parentTicket, $grant)
     {
+        if ($grant) {
+            $grant['type'] = (isset($grant['type'])) ? $grant['type'] : 'rsvp';
+        }
+
         if (!$parentTicket && $parentTicket !== []) {
             throw new ServerException('Invalid parent ticket object');
         }
@@ -153,7 +171,8 @@ class Ticket implements TicketInterface
             (
                 !(isset($grant['id']) && $grant['id']) ||
                 !(isset($grant['user']) && $grant['user']) ||
-                !(isset($grant['exp']) && $grant['exp'])
+                !(isset($grant['exp']) && $grant['exp']) ||
+                !in_array($grant['type'], $this->grantTypes)
             )
         ) {
             throw new ServerException('Invalid grant object');
@@ -208,7 +227,8 @@ class Ticket implements TicketInterface
 
         // Defaults to true
         if ((isset($this->options['delegate']) && $this->options['delegate'] === false) ||
-            (isset($parentTicket['delegate']) && $parentTicket['delegate'] === false)
+            (isset($parentTicket['delegate']) && $parentTicket['delegate'] === false) ||
+            (isset($grant['type']) && $grant['type'] === 'implicit') // Disable delegation for implicit grants
         ) {
             $ticket['delegate'] = false;
         }

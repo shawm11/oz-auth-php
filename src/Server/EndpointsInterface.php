@@ -44,8 +44,8 @@ interface EndpointsInterface
     public function reissue($request, $payload, $options);
 
     /**
-     * Authenticate an application request and if valid and exchange the
-     * provided RSVP with a user ticket
+     * Authenticate an application request. If valid, the application exchanges
+     * the provided RSVP with a user ticket
      *
      * @param  array  $request  Request data, which contains `method`, `url`,
      *                          `host`, `port`, `authorization`, and
@@ -58,4 +58,18 @@ interface EndpointsInterface
      * @return array  A user ticket for the client (application) to use
      */
     public function rsvp($request, $payload, $options);
+
+    /**
+     * Issue a user ticket to the application using the set of user credentials
+     * given in the payload.
+     *
+     * @param  array  $request  Request data, which contains `method`, `url`,
+     *                          `host`, `port`, `authorization`, and
+     *                          `contentType`
+     * @param  array  $payload  Parsed request body that must contain `rsvp`
+     * @param  array  $options  Configuration options
+     * @throws ServerException
+     * @return array  A user ticket for the client (application) to use
+     */
+    public function user($request, $payload, $options);
 }

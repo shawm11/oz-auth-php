@@ -1281,4 +1281,649 @@ class EndpointsTest extends TestCase
             });
         });
     }
+
+    public function testUser()
+    {
+        $this->describe('Endpoints::user()', function () {
+
+            $this->it('overrides defaults (user credentials grant)', function () {
+                $grant = [
+                    'exp' => (new HawkUtils)->now() + 60000
+                ];
+                $options = [
+                    'encryptionPassword' => $this->encryptionPassword,
+                    'grant' => $grant,
+                    'loadAppFunc' => $this->options['loadAppFunc'],
+                    'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                        $grant = $grantObj;
+                        $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                        return $grant['id'];
+                    },
+                    'verifyUserFunc' => function ($userCreds) {
+                        return 'john'; // User ID
+                    },
+                    'ticket' => [
+                        'iron' => IronOptions::$defaults
+                    ]
+                ];
+                $userCreds = [
+                    'username' => 'johns_account',
+                    'password' => 'j0hns_p4$$w0rd'
+                ];
+
+                $req = [
+                    'host' => 'example.com',
+                    'port' => 443,
+                    'method' => 'POST',
+                    'url' => '/oz/user',
+                    'authorization' => (new Client)->header(
+                        'https://example.com/oz/user',
+                        'POST',
+                        $this->appTicket
+                    )['header']
+                ];
+
+                expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notEmpty();
+            });
+
+            $this->it('overrides defaults (implicit grant)', function () {
+                $grant = [
+                    'exp' => (new HawkUtils)->now() + 60000
+                ];
+                $options = [
+                    'encryptionPassword' => $this->encryptionPassword,
+                    'grant' => $grant,
+                    'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                        $grant = $grantObj;
+                        $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                        return $grant['id'];
+                    },
+                    'verifyUserFunc' => function ($userCreds) {
+                        return 'john'; // User ID
+                    },
+                    'ticket' => [
+                        'iron' => IronOptions::$defaults
+                    ]
+                ];
+                $userCreds = [
+                    'username' => 'johns_account',
+                    'password' => 'j0hns_p4$$w0rd'
+                ];
+
+                $req = [
+                    'host' => 'example.com',
+                    'port' => 443,
+                    'method' => 'POST',
+                    'url' => '/oz/user'
+                ];
+
+                expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notEmpty();
+            });
+
+            $this->it('sets grant type to `user_credentials` if app authenticates', function () {
+                $grant = [
+                    'exp' => (new HawkUtils)->now() + 60000
+                ];
+                $options = [
+                    'encryptionPassword' => $this->encryptionPassword,
+                    'grant' => $grant,
+                    'loadAppFunc' => $this->options['loadAppFunc'],
+                    'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                        $grant = $grantObj;
+                        $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                        return $grant['id'];
+                    },
+                    'verifyUserFunc' => function ($userCreds) {
+                        return 'john'; // User ID
+                    },
+                    'ticket' => [
+                        'iron' => IronOptions::$defaults
+                    ]
+                ];
+                $userCreds = [
+                    'username' => 'johns_account',
+                    'password' => 'j0hns_p4$$w0rd'
+                ];
+
+                $req = [
+                    'host' => 'example.com',
+                    'port' => 443,
+                    'method' => 'POST',
+                    'url' => '/oz/user',
+                    'authorization' => (new Client)->header(
+                        'https://example.com/oz/user',
+                        'POST',
+                        $this->appTicket
+                    )['header']
+                ];
+
+                (new Endpoints)->user($req, ['user' => $userCreds], $options);
+
+                expect($grant['type'])->equals('user_credentials');
+            });
+
+            $this->it('sets grant type to `implicit` if app does not authenticate', function () {
+                $grant = [
+                    'exp' => (new HawkUtils)->now() + 60000
+                ];
+                $options = [
+                    'encryptionPassword' => $this->encryptionPassword,
+                    'grant' => $grant,
+                    'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                        $grant = $grantObj;
+                        $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                        return $grant['id'];
+                    },
+                    'verifyUserFunc' => function ($userCreds) {
+                        return 'john'; // User ID
+                    },
+                    'ticket' => [
+                        'iron' => IronOptions::$defaults
+                    ]
+                ];
+                $userCreds = [
+                    'username' => 'johns_account',
+                    'password' => 'j0hns_p4$$w0rd'
+                ];
+
+                $req = [
+                    'host' => 'example.com',
+                    'port' => 443,
+                    'method' => 'POST',
+                    'url' => '/oz/user'
+                ];
+
+                (new Endpoints)->user($req, ['user' => $userCreds], $options);
+
+                expect($grant['type'])->equals('implicit');
+            });
+
+            $this->it('fails on app error', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'Nope.',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'loadAppFunc' => function () {
+                                throw new ServerException('Nope.');
+                            },
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user',
+                            'authorization' => (new Client)->header(
+                                'https://example.com/oz/user',
+                                'POST',
+                                $this->appTicket
+                            )['header']
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+
+            $this->it('fails on invalid app', function () {
+                $this->assertThrowsWithMessage(
+                    ForbiddenException::class,
+                    'Invalid application',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'loadAppFunc' => function () {
+                                return null;
+                            },
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user',
+                            'authorization' => (new Client)->header(
+                                'https://example.com/oz/user',
+                                'POST',
+                                $this->appTicket
+                            )['header']
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+
+            $this->it('fails on missing payload', function () {
+                $this->assertThrowsWithMessage(
+                    BadRequestException::class,
+                    'Missing required payload',
+                    function() {
+                        (new Endpoints)->user([], null, []);
+                    }
+                );
+            });
+
+            $this->it('fails on attempted user credentials grant if not allowed', function () {
+                $this->assertThrowsWithMessage(
+                    UnauthorizedException::class,
+                    'User credentials grant not allowed',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'loadAppFunc' => $this->options['loadAppFunc'],
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            },
+                            'allowedGrantTypes' => ['rsvp']
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user',
+                            'authorization' => (new Client)->header(
+                                'https://example.com/oz/user',
+                                'POST',
+                                $this->appTicket
+                            )['header']
+                        ];
+
+                        expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notEmpty();
+                    }
+                );
+            });
+
+            $this->it('fails on attempted implicit grant if not allowed', function () {
+                $this->assertThrowsWithMessage(
+                    UnauthorizedException::class,
+                    'Implicit grant not allowed',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            },
+                            'allowedGrantTypes' => ['rsvp']
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user'
+                        ];
+
+                        expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notEmpty();
+                    }
+                );
+            });
+
+            $this->it('fails on use of user ticket', function () {
+                $this->assertThrowsWithMessage(
+                    UnauthorizedException::class,
+                    'User ticket cannot be used on an application endpoint',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'loadAppFunc' => $this->options['loadAppFunc'],
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req1 = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user'
+                        ];
+
+                        $userTicket = (new Endpoints)->user($req1, ['user' => $userCreds], $options);
+
+                        $req2 = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user',
+                            'authorization' => (new Client)->header(
+                                'https://example.com/oz/user',
+                                'POST',
+                                $userTicket
+                            )['header']
+                        ];
+
+                        expect((new Endpoints)->user($req2, ['user' => $userCreds], $options))->notEmpty();
+                    }
+                );
+            });
+
+            $this->it('fails on user credentials verification error', function () {
+                $this->assertThrowsWithMessage(
+                    UnauthorizedException::class,
+                    'Incorrect password',
+                    function () {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                throw new UnauthorizedException('Incorrect password');
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user'
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+
+            $this->it('fails on invalid grant options (missing)', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'Invalid grant options',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user'
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+
+            $this->it('fails on invalid grant options (exp)', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'Invalid grant object',
+                    function() {
+                        $grant = [
+                            'scope' => ['a']
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user',
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+
+            $this->it('fails on invalid grant options (scope)', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'scope not an array',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000,
+                            'scope' => 'a'
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                $grant = $grantObj;
+                                $grant['id'] = 'a1b2c3d4e5f6g7h8i9j0';
+                                return $grant['id'];
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user'
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+
+            $this->it('fails on invalid stored grant ID (missing)', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'Invalid stored grant ID',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                return null;
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user'
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+
+            $this->it('fails on invalid stored grant ID (non-string value)', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'Invalid stored grant ID',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                return 123;
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user'
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+
+            $this->it('fails on invalid stored grant ID (error)', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'Boom!',
+                    function() {
+                        $grant = [
+                            'exp' => (new HawkUtils)->now() + 60000
+                        ];
+                        $options = [
+                            'encryptionPassword' => $this->encryptionPassword,
+                            'grant' => $grant,
+                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                                throw new ServerException('Boom!');
+                            },
+                            'verifyUserFunc' => function ($userCreds) {
+                                return 'john'; // User ID
+                            }
+                        ];
+                        $userCreds = [
+                            'username' => 'johns_account',
+                            'password' => 'j0hns_p4$$w0rd'
+                        ];
+
+                        $req = [
+                            'host' => 'example.com',
+                            'port' => 443,
+                            'method' => 'POST',
+                            'url' => '/oz/user'
+                        ];
+
+                        (new Endpoints)->user($req, ['user' => $userCreds], $options);
+                    }
+                );
+            });
+        });
+    }
 }

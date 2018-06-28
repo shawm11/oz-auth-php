@@ -22,13 +22,15 @@ class Connection implements ConnectionInterface
     protected $defaults = [
         'endpoints' => [
             'app' => '/oz/app',
-            'reissue' => '/oz/reissue'
+            'reissue' => '/oz/reissue',
+            'user' => '/oz/user'
         ]
     ];
 
     protected $settings;
 
     protected $appTicket = null;
+    protected $userTicket = null;
 
     public function __construct($settings, HawkClientInterface $hawkClient = null)
     {
@@ -92,6 +94,46 @@ class Connection implements ConnectionInterface
         }
 
         return $reissued;
+    }
+
+    public function requestUserTicket($userCredentials, $flow = 'auto')
+    {
+        $uri = $this->settings['uri'] . $this->settings['endpoints']['user'];
+        $headers = [];
+
+        /*
+         * Application authentication
+         */
+
+        if (($this->settings['credentials'] && $flow !== 'implicit') ||
+            $flow === 'user_credentials'
+        ) {
+            if (!$this->appTicket) {
+                $this->requestAppTicket();
+            }
+
+            try {
+                $headers['Authorization'] = (new Client($this->hawkClient))->header(
+                    $uri,
+                    'POST',
+                    $this->settings['credentials']
+                );
+            } catch (\Exception $e) {
+                throw new ClientException($e->getMessage(), $e->getCode(), $e);
+            }
+        }
+
+        /*
+         * Make request
+         */
+
+        $response = $this->httpRequest('POST', $uri, $headers, ['user' => $userCredentials]);
+
+        if ($response['statusCode'] === 200) {
+            $this->userTicket = json_decode($response['body'], true);
+        }
+
+        return $response;
     }
 
     /**
@@ -177,10 +219,16 @@ class Connection implements ConnectionInterface
      * @param  string  $uri  URI the request should be made to
      * @param  array  $headers  Request headers
      * @param  string  $payload  Request body
-     * @return array  Contains the status code, response body, and headers
+     * @return array  The response, which contains the status code, response
+     *                body, and headers
      */
     protected function httpRequest($method, $uri, $headers = [], $payload = null)
     {
+        if (gettype($payload) === 'array') {
+            $headers['Content-Type'] = 'application/json';
+            $payload = json_encode($payload);
+        }
+
         $response = \Httpful\Request::init($method)
                                     ->uri($uri)
                                     ->addHeaders($headers)

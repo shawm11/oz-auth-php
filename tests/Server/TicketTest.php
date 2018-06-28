@@ -113,6 +113,19 @@ class TicketTest extends TestCase
                 );
             });
 
+            $this->it('errors on invalid grant (invalid type)', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'Invalid grant object',
+                    function() {
+                        (new Ticket($this->password))->issue(
+                            ['id' => 'abc'],
+                            ['id' => '123', 'user' => 'steve', 'exp' => 1442690715989, 'type' => 'x']
+                        );
+                    }
+                );
+            });
+
             $this->it('errors on invalid grant (scope outside app)', function () {
                 $this->assertThrowsWithMessage(
                     ServerException::class,
@@ -298,6 +311,19 @@ class TicketTest extends TestCase
                     'Invalid grant object',
                     function() {
                         (new Ticket($this->password))->reissue([], ['id' => 'abc', 'user' => 'steve']);
+                    }
+                );
+            });
+
+            $this->it('errors on invalid grant (missing exp)', function () {
+                $this->assertThrowsWithMessage(
+                    ServerException::class,
+                    'Invalid grant object',
+                    function() {
+                        (new Ticket($this->password))->reissue(
+                            [],
+                            ['id' => 'abc', 'user' => 'steve', 'exp' => 1442690715989, 'type' => 'x']
+                        );
                     }
                 );
             });

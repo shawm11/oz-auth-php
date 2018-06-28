@@ -15,10 +15,13 @@ Table of Contents
         - [`app` (`Endpoints` Class) Parameters](#app-endpoints-class-parameters)
 
     -   [`reissue($request, $payload, $options)`](#reissuerequest-payload-options)
-        - [`reissue` (`Server` Class) Parameters](#reissue-server-class-parameters)
+        - [`reissue` (`Endpoints` Class) Parameters](#reissue-endpoints-class-parameters)
 
     -   [`rsvp($request, $payload, $options)`](#rsvprequest-payload-options)
-        - [`rsvp` (`Server` Class) Parameters](#rsvp-server-class-parameters)
+        - [`rsvp` (`Endpoints` Class) Parameters](#rsvp-endpoints-class-parameters)
+
+    -   [`user($request, $payload, $options)`](#userrequest-payload-options)
+        - [`user` (`Endpoints` Class) Parameters](#user-endpoints-class-parameters)
 
 -   [`Server\Server` Class](#serverserver-class)
     -   [`Server\Server` Constructor](#serverserver-constructor)
@@ -82,6 +85,9 @@ Table of Contents
 
     -   [`reissue($ticket)`](#reissueticket)
         - [`reissue` (`Connection` Class) Parameters](#reissue-connection-class-parameters)
+
+    -   [`requestUserTicket($userCredentials, $flow)`](#requestuserticketusercredentials-flow)
+        - [`requestUserTicket` Parameters](#requestuserticket-parameters)
 
 -   [`Client\Client` Class](#clientclient-class)
     -   [`Client\Client` Constructor](#clientclient-constructor)
@@ -222,7 +228,7 @@ Reissue an existing ticket (the ticket used to authenticate the request).
 
 Returns the reissued [ticket](#ticket) as an array.
 
-#### `reissue` (`Server` Class) Parameters
+#### `reissue` (`Endpoints` Class) Parameters
 
 1.  _array_ `$request` — (Required) Request data. Contains the following:
 
@@ -236,7 +242,7 @@ Returns the reissued [ticket](#ticket) as an array.
 
     -   _integer_ `port` — (Required) Port number the request was sent to
 
-    -   _string_ `authorization` — (Optional) Value of the `Authorization`
+    -   _string_ `authorization` — (Required) Value of the `Authorization`
         header in the request.
 
     -   _string_ `contentType` — (Optional) Payload content type. It is usually
@@ -278,10 +284,16 @@ Returns the reissued [ticket](#ticket) as an array.
         -   _string_ `integrity` — Password string used for HMAC creation and
             verification
 
-    -   _callable_ `loadAppFunc` — (Required) Function for looking up the
-        application credentials based on the provided credentials ID. This is
-        often done by looking up the application credentials in a database. The
-        function must have the following:
+    -   _array_ `decryptionPasswords` — (Optional) List of possible passwords
+        that could have been used for ticket encryption. If this option is
+        given, the `encryptionPassword` must be an array with an `id` value that
+        is a key for this array. For password rotation.
+
+    -   _callable_ `loadAppFunc` — (Optional if using the [Implicit
+        Workflow](implicit-workflow.md)) Function for looking up the application
+        credentials based on the provided credentials ID. This is often done by
+        looking up the application credentials in a database. The function must
+        have the following:
 
         -   Parameter: _string_ `$id` — (Required) Unique ID for the application
             that is used to look up the application's credentials.
@@ -303,19 +315,7 @@ Returns the reissued [ticket](#ticket) as an array.
         -   Returns: _array_ — (Required) Set of credentials that contains the
             following:
 
-            -   _array_ `grant` — (Required)
-
-                -   `id` — (Required) Unique ID for the grant
-
-                -   `app` — (Required) Application ID
-
-                -   `user` — (Required) User ID
-
-                -   `exp` — (Required) Grant expiration time in milliseconds
-                    since January 1, 1970.
-
-                -   `scope` — (Required) Scope granted by the user to the
-                    application
+            -   _array_ `grant` — (Required) [Grant array](#grant)
 
             -   _array_ `ext` — (Optional) Used to include custom server data in
                 the ticket and response. Contains the following:
@@ -362,7 +362,7 @@ with a user ticket.
 
 Returns the user [ticket](#ticket) as an array.
 
-#### `rsvp` (`Server` Class) Parameters
+#### `rsvp` (`Endpoints` Class) Parameters
 
 1.  _array_ `$request` — (Required) Request data. Contains the following:
 
@@ -414,7 +414,161 @@ Returns the user [ticket](#ticket) as an array.
         -   _string_ `integrity` — Password string used for HMAC creation and
             verification
 
-    -   _callable_ `loadAppFunc` — (Required) Function for looking up the
+    -   _array_ `decryptionPasswords` — (Optional) List of possible passwords
+        that could have been used for ticket encryption. If this option is
+        given, the `encryptionPassword` must be an array with an `id` value that
+        is a key for this array. For password rotation.
+
+    -   _callable_ `loadAppFunc` — (Optional if using the [Implicit
+        Workflow](implicit-workflow.md)) Function for looking up the application
+        credentials based on the provided credentials ID. This is often done by
+        looking up the application credentials in a database. The function must
+        have the following:
+
+        -   Parameter: _string_ `$id` — (Required) Unique ID for the application
+            that is used to look up the application's credentials.
+
+        -   Returns: _array_ — (Required) Set of credentials that contains the
+            following:
+
+            -   _string_ `key` — (Required) Secret key for the application
+
+            -   _string_ `algorithm` — (Required) Algorithm to be used for HMAC.
+                Must be either `sha1` or `sha256`.
+
+    -   _callable_ `loadAppFunc` — (Optional if using the [Implicit
+        Workflow](implicit-workflow.md)) Function for looking up the application
+        credentials based on the provided credentials ID. This is often done by
+        looking up the application credentials in a database. The function must
+        have the following:
+
+        -   Parameter: _string_ `$id` — (Required) Unique ID for the grant.
+
+        -   Returns: _array_ — (Required) Set of credentials that contains the
+            following:
+
+            -   _array_ `grant` — (Required) [Grant array](#grant)
+
+            -   _array_ `ext` — (Optional) Used to include custom server data in
+                the ticket and response. Contains the following:
+
+                -   _array_ `public` — (Optional) Associative array that will be
+                    included in the response under `ticket.ext` and in the
+                    encoded ticket as `ticket.ext.public`.
+
+                -   _array_ `private` — (Optional) Associative array that will
+                    only be included in the encoded ticket as
+                    `ticket.ext.private`
+
+    -   _array_ `ticket` — (Optional) [Ticket options](#ticket-options) used for
+        parsing and issuance
+
+    -   _array_ `hawk` — (Optional) Hawk options, which include the following:
+
+        -   _string_ `host` — (Optional) Host of the server (e.g. example.com).
+            Overrides the `host` in the `$request` parameter.
+
+        -   _integer_ `port` — (Optional) Port number. Overrides the `port` in
+            the `$request` parameter.
+
+        -   _integer_ `timestampSkewSec` — (Optional, default: `60`)
+            Amount of time (in seconds) the client and server timestamps can
+            differ (usually because of network latency)
+
+        -   _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
+            milliseconds) of the server's local time compared to the client's
+            local time
+
+        -   _string_ `payload` — (Optional) UTF-8-encoded request body (or
+            "payload"). Only used for payload validation.
+
+        -   _callable_ `nonceFunc` — (Optional) Function for checking the
+            generated nonce (**n**umber used **once**) that is used to make the
+            MAC unique even if given the same data. It must throw an error if
+            the nonce check fails.
+
+### `user($request, $payload, $options)`
+
+Issue a user ticket to the application using the set of user credentials given
+in the payload. Only used for the [User Credentials](user-credentials-workflow.md)
+and [Implicit](implicit-workflow.md) Oz workflows.
+
+Returns the user [ticket](#ticket) as an array.
+
+#### `user` Parameters
+
+1.  _array_ `$request` — (Required) Request data. Contains the following:
+
+    -   _string_ `method` — (Required) HTTP method of the request
+
+    -   _string_ `url` — (Optional) URL (without the host and port) the request
+        was sent to
+
+    -   _string_ `host` — (Required) Host of the server the request was sent to
+        (e.g. example.com)
+
+    -   _integer_ `port` — (Required) Port number the request was sent to
+
+    -   _string_ `authorization` — (Optional) Value of the `Authorization`
+        header in the request.
+
+    -   _string_ `contentType` — (Optional) Payload content type. It is usually
+        the value of the `Content-Type` header in the request. Only used for
+        payload validation.
+
+1.  _array_ `$payload` — (Required) Parsed request body that may contain their
+    following:
+
+    - _any_ `user` — (Required) User credentials. Usually an array (parsed JSON)
+      or a string. Example: `['username' => 'john', 'password' => 'p4$$w0rd']`
+
+1.  _array_ `$options` — (Required) Configuration options that include the
+    following:
+
+    -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
+        password string or associative array that contains:
+
+        -   _string_ `id` — Unique identifier (consisting of only underscores
+            (`_`), letters, and numbers) for the password for when there are
+            multiple possible passwords. Used for password rotation.
+
+        -   _string_ `secret` — Password string used for both encrypting the
+            object and integrity (HMAC creation and verification)
+
+        OR
+
+        -   _string_ `id` —  Unique identifier (consisting of only
+            underscores (`_`), letters, and numbers) for the password for when
+            there are multiple possible passwords. Used for password rotation.
+
+        -   _string_ `encryption` — Password string used for encrypting the
+            object
+
+        -   _string_ `integrity` — Password string used for HMAC creation and
+            verification
+
+    -   _array_ `decryptionPasswords` — (Optional) List of possible passwords
+        that could have been used for ticket encryption. If this option is
+        given, the `encryptionPassword` must be an array with an `id` value that
+        is a key for this array. For password rotation.
+
+    -   _array_ `grant` — (Required) Options used to create the grant. Contains
+        the following:
+
+        -   `exp` — (Required) Grant expiration time in milliseconds since
+            January 1, 1970.
+
+        -   `scope` — (Optional) Scope granted by the user to the application
+
+    -   _array_ `allowedGrantTypes`— (Optional) List of [grant](#grant) types
+        (or Oz workflows) that are allowed. If `user_credentials` is not in this
+        array, then the [User Credentials Workflow](user-credentials-workflow.md)
+        is disabled. If `implicit` is not in this array, then the [Implicit
+        Workflow](implicit-workflow.md) is disabled.
+        Default: `['rsvp', 'user_credentials', 'implicit']`
+
+    -   _callable_ `loadAppFunc` — (Required if using the [User Credentials
+        Workflow](#user-credentials-workflow.md)) Function for looking up the
         application credentials based on the provided credentials ID. This is
         often done by looking up the application credentials in a database. The
         function must have the following:
@@ -430,39 +584,19 @@ Returns the user [ticket](#ticket) as an array.
             -   _string_ `algorithm` — (Required) Algorithm to be used for HMAC.
                 Must be either `sha1` or `sha256`.
 
-    -   _callable_ `loadGrantFunc` — (Required) Function for looking up the
-        grant. This is often done by looking up the grant in a database. The
-        function must have the following:
+    -   _callable_ `verifyUserFunc`— (Required) Function for verifying the user
+        using the user credentials. The function must have the following:
 
-        -   Parameter: _string_ `$id` — (Required) Unique ID for the grant.
+        -   Parameter: _string_ or _array_ `$userCredentials` — (Required)
+            User's credentials
 
-        -   Returns: _array_ — (Required) Set of credentials that contains the
-            following:
+        -   Returns: _string_ — (Required) User ID
 
-            -   _array_ `grant` — (Required)
+    -   _callable_ `storeGrantFunc` — (Required) Function for storing the grant
+        that is created. The function must have the following:
 
-                -   `id` — (Required) Unique ID for the grant
-
-                -   `app` — (Required) Application ID
-
-                -   `user` — (Required) User ID
-
-                -   `exp` — (Required) Grant expiration time in milliseconds
-                    since January 1, 1970.
-
-                -   `scope` — (Required) Scope granted by the user to the
-                    application
-
-            -   _array_ `ext` — (Optional) Used to include custom server data in
-                the ticket and response. Contains the following:
-
-                -   _array_ `public` — (Optional) Associative array that will be
-                    included in the response under `ticket.ext` and in the
-                    encoded ticket as `ticket.ext.public`.
-
-                -   _array_ `private` — (Optional) Associative array that will
-                    only be included in the encoded ticket as
-                    `ticket.ext.private`
+        - Parameter: _string_ `$id` — (Required) Unique ID for the grant.
+        - Returns: _string_ — (Required) Grant's unique ID
 
     -   _array_ `ticket` — (Optional) [Ticket options](#ticket-options) used for
         parsing and issuance
@@ -548,26 +682,10 @@ Returns the following if authentication is successful.
         the value of the `Content-Type` header in the request. Only used for
         payload validation.
 
-1.  _string_ or _array_ `$encryptionPassword` — (Required) Can be either a
-    password string or associative array that contains:
-
-    -   _string_ `id` — Unique identifier (consisting of only underscores
-        (`_`), letters, and numbers) for the password for when there are
-        multiple possible passwords. Used for password rotation.
-
-    -   _string_ `secret` — Password string used for both encrypting the
-        object and integrity (HMAC creation and verification)
-
-    OR
-
-    -   _string_ `id` —  Unique identifier (consisting of only
-        underscores (`_`), letters, and numbers) for the password for when there
-        are multiple possible passwords. Used for password rotation.
-
-    -   _string_ `encryption` — Password string used for encrypting the object
-
-    -   _string_ `integrity` — Password string used for HMAC creation and
-        verification
+1.  _string_ or _array_ `$encryptionPassword` — (Required) Password (as a
+    string) used for ticket encryption or a list of possible passwords (as an
+    array) that could have been used for ticket encryption (for password
+    rotation)
 
 1.  _array_ `$options` — (Required) Configuration options that include the
     following:
@@ -640,8 +758,9 @@ Returns a new application or user [ticket](#ticket) as an array.
 
 #### `issue` Parameters
 
-1.  _array_ `$app` — (Required) [App credentials](#app) of the application the
-    application ticket will be issued to
+1.  _array_ `$app` — (Required if not using the [Implicit
+    Workflow](implicit-workflow.md)) [App credentials](#app) of the application
+    the application ticket will be issued to
 
 1.  _array_ `$grant` — (Optional) [Grant](#grant) for the application
 
@@ -831,7 +950,8 @@ resources.
     -   _string_ `uri` — (Required) Server full root URI without path (e.g.
         '<https://example.com>')
 
-    -   _array_ `credentials` — (Required) Application's Hawk credentials, which
+    -   _array_ `credentials` — (Required if not using the [Implicit
+        Workflow](implicit-workflow.md)) Application's Hawk credentials, which
         include the following:
 
         -   _string_ `key` — Secret key for the application
@@ -904,6 +1024,36 @@ Returns the reissued [ticket](#ticket) as an array.
 #### `reissue` (`Connection` Class) Parameters
 
 1. _array_ `$ticket` — (Required) Ticket being reissued
+
+### `requestUserTicket($userCredentials, $flow)`
+
+Request a user ticket using the given user credentials.
+
+Returns the response as an array that contains the following:
+
+- _integer_ `statusCode` — Status code
+- _string_ `body` — Response body
+- _array_ `headers` — Response headers
+
+#### `requestUserTicket` Parameters
+
+1.  _string_ or _array_ `$userCredentials` — (Required) User's credentials
+
+1.  _string_ `$flow` — (Optional) Type of Oz flow to use to attempt to retrieve
+    a user ticket. Must be one of the following:
+
+    -   `auto` — (Default) Automatically determine the flow being used based on
+        the application credentials in the settings that were set in the
+        [constructor](#clientconnection-class). If the application credentials
+        are set, then the  [User Credentials](user-credentials-workflow.md) Flow
+        will be used. If the application credentials are NOT set, then the
+        [Implicit flow](implicit-workflow.md) will be used.
+
+    -   `user_credentials` — Attempt to retrieve user ticket with application
+        authentication in the [User Credentials](user-credentials-workflow.md)
+
+    -   `implicit` — Attempt to retrieve user ticket WITHOUT application
+        authentication in the [Implicit flow](implicit-workflow.md)
 
 `Client\Client` Class
 ---------------------
@@ -1013,7 +1163,14 @@ application ticket.
 -   _float_ `exp` — (Required) Grant expiration time in milliseconds since
     January 1, 1970
 
--   _array_ `scope` — (Required) Scope granted by the user to the application
+-   _array_ `scope` — (Optional) Scope granted by the user to the application
+
+-   _string_ `type` — (Optional) Type of grant. In other words, how the grant
+    was obtained. It can be one of the following values:
+
+    - `rsvp` — (Default) Grant was obtained using the [RSVP Workflow](rsvp-workflow-without-delegation.md)
+    - `user_credentials` — Grant was obtained using the [User Credentials](user-credentials-workflow.md)
+    - `implicit` — Grant was obtained using the [Implicit Workflow](implicit-workflow.md)
 
 ### Ticket
 
