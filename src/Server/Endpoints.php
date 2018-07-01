@@ -57,9 +57,12 @@ class Endpoints implements EndpointsInterface
         $payload = $payload ? $payload : [];
 
         $encryptionPassword = isset($options['encryptionPassword']) ? $options['encryptionPassword'] : null;
+        $decryptionPasswords = isset($options['decryptionPasswords'])
+            ? $options['decryptionPasswords']
+            : $encryptionPassword;
 
         $ticket = (new Server($this->hawkServer))
-                    ->authenticate($request, $encryptionPassword, false, $options)['ticket'];
+                    ->authenticate($request, $decryptionPasswords, false, $options)['ticket'];
 
         /*
          * Load grant
@@ -148,9 +151,12 @@ class Endpoints implements EndpointsInterface
         }
 
         $encryptionPassword = isset($options['encryptionPassword']) ? $options['encryptionPassword'] : null;
+        $decryptionPasswords = isset($options['decryptionPasswords'])
+            ? $options['decryptionPasswords']
+            : $encryptionPassword;
 
         $ticket = (new Server($this->hawkServer))
-                    ->authenticate($request, $encryptionPassword, true, $options)['ticket'];
+                    ->authenticate($request, $decryptionPasswords, true, $options)['ticket'];
 
         if (isset($ticket['user']) && $ticket['user']) {
             throw new UnauthorizedException('User ticket cannot be used on an application endpoint');
@@ -229,12 +235,15 @@ class Endpoints implements EndpointsInterface
         }
 
         $encryptionPassword = isset($options['encryptionPassword']) ? $options['encryptionPassword'] : null;
+        $decryptionPasswords = isset($options['decryptionPasswords'])
+            ? $options['decryptionPasswords']
+            : $encryptionPassword;
         $ticket = [];
 
         if ($isAuthRequest) {
             $ticket = (new Server($this->hawkServer))->authenticate(
                 $request,
-                $encryptionPassword,
+                $decryptionPasswords,
                 true,
                 $options
             )['ticket'];
@@ -279,8 +288,9 @@ class Endpoints implements EndpointsInterface
             throw new ServerException('Invalid grant options');
         }
 
-        $grant = $options['grant'];
-
+        $grant = [];
+        $grant['exp'] = empty($options['grant']['exp']) ? null : $options['grant']['exp'];
+        $grant['scope'] = empty($options['grant']['scope']) ? [] : $options['grant']['scope'];
         $grant['user'] = $userId;
         $grant['app'] = $app ? $app['id'] : null;
         $grant['type'] = $app ? 'user_credentials' : 'implicit';
