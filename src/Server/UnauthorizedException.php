@@ -9,18 +9,19 @@ class UnauthorizedException extends ServerException
      *
      * @var string
      */
-    protected $wwwAuthenticateHeaderAttributes;
+    protected $wwwAuthenticateHeaderAttributes = [];
 
     /**
      * @param string  $message  The Exception message to throw. It is also
      *                          included in the `WWW-Authenticate` header.
      * @param array  $wwwAuthenticateHeaderAttributes  Associative array of keys
-     *                                                 & values to include in
+     *                                                 & values the include in
      *                                                 the `WWW-Authenticate`
-     *                                                 header
+     *                                                 header in the format:
+     *                                                 `<key>:"<value>"`
      * @param integer  $code  HTTP status code that the response should have
-     * @param \Throwable  $previous  The previous exception used for exception
-     *                               chaining
+     * @param \Throwable  $previous  The previous exception used for the
+     *                               exception chaining
      */
     public function __construct($message = '', $wwwAuthenticateHeaderAttributes = [], $code = 401, $previous = null)
     {
@@ -30,7 +31,7 @@ class UnauthorizedException extends ServerException
     }
 
     /**
-     * Get the associative array of keys  & values the include in the
+     * Get the associative array of keys & values included in the
      * `WWW-Authenticate`
      *
      * @return array
@@ -56,8 +57,8 @@ class UnauthorizedException extends ServerException
             $wwwAuthenticateHeader .= " $key=\"$value\",";
         }
 
-        if ($message) {
-            $wwwAuthenticateHeader .= " error=\"$message\"";
+        if ($this->message) {
+            $wwwAuthenticateHeader .= " error=\"$this->message\"";
         } else {
             // Remove comma at the end
             $wwwAuthenticateHeader = rtrim($wwwAuthenticateHeader, ',');
