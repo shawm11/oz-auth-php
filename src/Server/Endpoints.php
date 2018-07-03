@@ -68,7 +68,7 @@ class Endpoints implements EndpointsInterface
          * Load grant
          */
 
-        $ticketGrant = (isset($ticket['grant']) && $ticket['grant']) ? $ticket['grant'] : null;
+        $ticketGrant = empty($ticket['grant']) ? null : $ticket['grant'];
         $grantType = null;
 
         if ($ticketGrant) {
@@ -81,7 +81,7 @@ class Endpoints implements EndpointsInterface
             if (!$grant ||
                 ($grant['app'] !== $ticket['app'] && $grant['app'] !== $ticketDlg) ||
                 $grant['user'] !== $ticket['user'] ||
-                !(isset($grant['exp']) && $grant['exp']) ||
+                empty($grant['exp']) ||
                 $grant['exp'] <= (new HawkUtils)->now()
             ) {
                 throw new UnauthorizedException('Invalid grant');
@@ -104,11 +104,11 @@ class Endpoints implements EndpointsInterface
                 $ticketOptions['ext'] = $ext;
             }
 
-            if ($grantType !== 'implicit' && isset($payload['issueTo']) && $payload['issueTo']) {
+            if ($grantType !== 'implicit' && !empty($payload['issueTo'])) {
                 $ticketOptions['issueTo'] = $payload['issueTo'];
             }
 
-            if (isset($payload['scope']) && $payload['scope']) {
+            if (!empty($payload['scope'])) {
                 $ticketOptions['scope'] = $payload['scope'];
             }
 
@@ -126,9 +126,7 @@ class Endpoints implements EndpointsInterface
                 throw new UnauthorizedException('Invalid application');
             }
 
-            if ((isset($payload['issueTo']) && $payload['issueTo']) &&
-                !(isset($app['delegate']) && $app['delegate'])
-            ) {
+            if (!empty($payload['issueTo']) && empty($app['delegate'])) {
                 throw new ForbiddenException('Application has no delegation rights');
             }
         }
@@ -158,7 +156,7 @@ class Endpoints implements EndpointsInterface
         $ticket = (new Server($this->hawkServer))
                     ->authenticate($request, $decryptionPasswords, true, $options)['ticket'];
 
-        if (isset($ticket['user']) && $ticket['user']) {
+        if (!empty($ticket['user'])) {
             throw new UnauthorizedException('User ticket cannot be used on an application endpoint');
         }
 
@@ -192,7 +190,7 @@ class Endpoints implements EndpointsInterface
 
         if (!$grant ||
             $grant['app'] !== $ticket['app'] ||
-            !(isset($grant['exp']) && $grant['exp']) ||
+            empty($grant['exp']) ||
             $grant['exp'] <= $now ||
             $grant['type'] !== 'rsvp'
         ) {
@@ -248,7 +246,7 @@ class Endpoints implements EndpointsInterface
                 $options
             )['ticket'];
 
-            if (isset($ticket['user']) && $ticket['user']) {
+            if (!empty($ticket['user'])) {
                 throw new UnauthorizedException('User ticket cannot be used on an application endpoint');
             }
         }
@@ -284,7 +282,7 @@ class Endpoints implements EndpointsInterface
          * Create grant
          */
 
-        if (!(isset($options['grant']) && $options['grant'])) {
+        if (empty($options['grant'])) {
             throw new ServerException('Invalid grant options');
         }
 

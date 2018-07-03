@@ -36,7 +36,7 @@ class Ticket implements TicketInterface
             ? $iron
             : (new \Shawm11\Iron\Iron(\Shawm11\Iron\IronOptions::$defaults));
 
-        if (isset($options['iron']) && $options['iron']) {
+        if (!empty($options['iron'])) {
             $this->iron->setOptions($options['iron']);
         }
     }
@@ -48,16 +48,16 @@ class Ticket implements TicketInterface
         }
 
         if (!(isset($grant['type']) && $grant['type'] === 'implicit') &&
-            !($app && (isset($app['id']) && $app['id']))
+            !($app && !empty($app['id']))
         ) {
             throw new ServerException('Invalid application object');
         }
 
         if (($grant || $grant === []) &&
             (
-                !(isset($grant['id']) && $grant['id']) ||
-                !(isset($grant['user']) && $grant['user']) ||
-                !(isset($grant['exp']) && $grant['exp']) ||
+                empty($grant['id']) ||
+                empty($grant['user']) ||
+                empty($grant['exp']) ||
                 !in_array($grant['type'], $this->grantTypes)
             )
         ) {
@@ -68,17 +68,17 @@ class Ticket implements TicketInterface
             throw new ServerException('Invalid encryption password');
         }
 
-        $scope = ($grant && isset($grant['scope']) && $grant['scope'])
+        $scope = ($grant && !empty($grant['scope']))
             ? $grant['scope']
-            : ((isset($app['scope']) && $app['scope']) ? $app['scope'] : []);
+            : (empty($app['scope']) ? [] : $app['scope']);
         $scopeClass = new Scope;
 
         $scopeClass->validate($scope);
 
         if ($grant &&
             !(isset($grant['type']) && $grant['type'] === 'implicit') &&
-            (isset($grant['scope']) && $grant['scope']) &&
-            (isset($app['scope']) && $app['scope']) &&
+            !empty($grant['scope']) &&
+            !empty($app['scope']) &&
             !$scopeClass->isSubset($app['scope'], $grant['scope'])
         ) {
             throw new ServerException('Grant scope is not a subset of the application scope');
@@ -89,9 +89,7 @@ class Ticket implements TicketInterface
          */
 
         $exp = (new HawkUtils)->now()
-                + ((isset($this->options['ttl']) && $this->options['ttl'])
-                    ? $this->options['ttl']
-                    : $this->defaults['ticketTTL']);
+                + (empty($this->options['ttl']) ? $this->defaults['ticketTTL'] : $this->options['ttl']);
 
         if ($grant) {
             $exp = min($exp, $grant['exp']);
@@ -150,14 +148,14 @@ class Ticket implements TicketInterface
             }
         }
 
-        if (isset($this->options['delegate']) && $this->options['delegate'] &&
+        if (!empty($this->options['delegate']) &&
             isset($parentTicket['delegate']) && $parentTicket['delegate'] === false
         ) {
             throw new ForbiddenException('Cannot override ticket delegate restriction');
         }
 
-        if (isset($this->options['issueTo']) && $this->options['issueTo']) {
-            if (isset($parentTicket['dlg']) && $parentTicket['dlg']) {
+        if (!empty($this->options['issueTo'])) {
+            if (!empty($parentTicket['dlg'])) {
                 throw new BadRequestException('Cannot re-delegate');
             }
 
@@ -169,18 +167,18 @@ class Ticket implements TicketInterface
 
         if (($grant || $grant === []) &&
             (
-                !(isset($grant['id']) && $grant['id']) ||
-                !(isset($grant['user']) && $grant['user']) ||
-                !(isset($grant['exp']) && $grant['exp']) ||
+                empty($grant['id']) ||
+                empty($grant['user']) ||
+                empty($grant['exp']) ||
                 !in_array($grant['type'], $this->grantTypes)
             )
         ) {
             throw new ServerException('Invalid grant object');
         }
 
-        if ($grant || (isset($parentTicket['grant']) && $parentTicket['grant'])) {
+        if ($grant || !empty($parentTicket['grant'])) {
             if (!$grant ||
-                !(isset($parentTicket['grant']) && $parentTicket['grant']) ||
+                empty($parentTicket['grant']) ||
                 $parentTicket['grant'] !== $grant['id']
             ) {
                 throw new ServerException('Parent ticket grant does not match options.grant');
@@ -192,9 +190,7 @@ class Ticket implements TicketInterface
          */
 
         $exp = (new HawkUtils)->now()
-                + ((isset($this->options['ttl']) && $this->options['ttl'])
-                    ? $this->options['ttl']
-                    : $this->defaults['ticketTTL']);
+                + (empty($this->options['ttl']) ? $this->defaults['ticketTTL'] : $this->options['ttl']);
 
         if ($grant) {
             $exp = min($exp, $grant['exp']);
@@ -202,15 +198,11 @@ class Ticket implements TicketInterface
 
         $ticket = [
             'exp' => $exp,
-            'app' => (isset($this->options['issueTo']) && $this->options['issueTo'])
-                ? $this->options['issueTo']
-                : $parentTicket['app'],
+            'app' => empty($this->options['issueTo']) ? $parentTicket['app'] : $this->options['issueTo'],
             'scope' => $optionScope ? $optionScope : $parentScope
         ];
 
-        if (!(isset($this->options['ext']) && $this->options['ext']) &&
-            (isset($parentTicket['ext']) && $parentTicket['ext'])
-        ) {
+        if (empty($this->options['ext']) && !empty($parentTicket['ext'])) {
             $this->options['ext'] = $parentTicket['ext'];
         }
 
@@ -219,7 +211,7 @@ class Ticket implements TicketInterface
             $ticket['user'] = $grant['user'];
         }
 
-        if (isset($this->options['issueTo']) && $this->options['issueTo']) {
+        if (!empty($this->options['issueTo'])) {
             $ticket['dlg'] = $parentTicket['app'];
         } elseif (isset($parentTicket['dlg']) && $parentTicket['dlg']) {
             $ticket['dlg'] = $parentTicket['dlg'];
@@ -238,11 +230,11 @@ class Ticket implements TicketInterface
 
     public function rsvp($app, $grant)
     {
-        if (!$app || !(isset($app['id']) && $app['id'])) {
+        if (!$app || empty($app['id'])) {
             throw new ServerException('Invalid application object');
         }
 
-        if (!$grant || !(isset($grant['id']) && $grant['id'])) {
+        if (!$grant || empty($grant['id'])) {
             throw new ServerException('Invalid grant object');
         }
 
@@ -250,7 +242,7 @@ class Ticket implements TicketInterface
             throw new ServerException('Invalid encryption password');
         }
 
-        $this->options['ttl'] = (isset($this->options['ttl']) && $this->options['ttl'])
+        $this->options['ttl'] = !empty($this->options['ttl'])
             ? $this->options['ttl']
             : $this->defaults['rsvpTTL'];
 
@@ -283,7 +275,7 @@ class Ticket implements TicketInterface
          * Generate ticket secret
          */
 
-        $numOfBytes = (isset($this->options['keyBytes']) && $this->options['keyBytes'])
+        $numOfBytes = !empty($this->options['keyBytes'])
             ? $this->options['keyBytes']
             : $this->defaults['keyBytes'];
 
@@ -298,7 +290,7 @@ class Ticket implements TicketInterface
         }
 
         $ticket['key'] = $random;
-        $ticket['algorithm'] = (isset($this->options['hmacAlgorithm']) && $this->options['hmacAlgorithm'])
+        $ticket['algorithm'] =!empty($this->options['hmacAlgorithm'])
             ? $this->options['hmacAlgorithm']
             : $this->defaults['hmacAlgorithm'];
 
@@ -306,7 +298,7 @@ class Ticket implements TicketInterface
          * Process ext data
          */
 
-        if (isset($this->options['ext']) && $this->options['ext']) {
+        if (!empty($this->options['ext'])) {
             $ticket['ext'] = [];
 
             /*
@@ -338,7 +330,7 @@ class Ticket implements TicketInterface
          * Hide private ext data
          */
 
-        if (isset($ticket['ext']) && $ticket['ext']) {
+        if (!empty($ticket['ext'])) {
             if (isset($ticket['ext']['public'])) {
                 $ticket['ext'] = $ticket['ext']['public'];
             } else {
