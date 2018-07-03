@@ -160,16 +160,16 @@ Returns the application [ticket](#ticket) for the client as an array.
     -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
         password string or associative array that contains:
 
-        -   _string_ `id` — Unique identifier (consisting of only underscores
-            (`_`), letters, and numbers) for the password for when there are
-            multiple possible passwords. Used for password rotation.
+        -   _string_ or _integer_ `id` — Unique identifier (consisting of only
+            underscores (`_`), letters, and numbers) for the password for when
+            there are multiple possible passwords. Used for password rotation.
 
         -   _string_ `secret` — Password string used for both encrypting the
             object and integrity (HMAC creation and verification)
 
         OR
 
-        -   _string_ `id` —  Unique identifier (consisting of only
+        -   _string_ or _integer_ `id` — Unique identifier (consisting of only
             underscores (`_`), letters, and numbers) for the password for when
             there are multiple possible passwords. Used for password rotation.
 
@@ -265,16 +265,16 @@ Returns the reissued [ticket](#ticket) as an array.
     -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
         password string or associative array that contains:
 
-        -   _string_ `id` — Unique identifier (consisting of only underscores
-            (`_`), letters, and numbers) for the password for when there are
-            multiple possible passwords. Used for password rotation.
+        -   _string_ or _integer_ `id` — Unique identifier (consisting of only
+            underscores (`_`), letters, and numbers) for the password for when
+            there are multiple possible passwords. Used for password rotation.
 
         -   _string_ `secret` — Password string used for both encrypting the
             object and integrity (HMAC creation and verification)
 
         OR
 
-        -   _string_ `id` —  Unique identifier (consisting of only
+        -   _string_ or _integer_ `id` — Unique identifier (consisting of only
             underscores (`_`), letters, and numbers) for the password for when
             there are multiple possible passwords. Used for password rotation.
 
@@ -395,16 +395,16 @@ Returns the user [ticket](#ticket) as an array.
     -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
         password string or associative array that contains:
 
-        -   _string_ `id` — Unique identifier (consisting of only underscores
-            (`_`), letters, and numbers) for the password for when there are
-            multiple possible passwords. Used for password rotation.
+        -   _string_ or _integer_ `id` — Unique identifier (consisting of only
+            underscores (`_`), letters, and numbers) for the password for when
+            there are multiple possible passwords. Used for password rotation.
 
         -   _string_ `secret` — Password string used for both encrypting the
             object and integrity (HMAC creation and verification)
 
         OR
 
-        -   _string_ `id` —  Unique identifier (consisting of only
+        -   _string_ or _integer_ `id` — Unique identifier (consisting of only
             underscores (`_`), letters, and numbers) for the password for when
             there are multiple possible passwords. Used for password rotation.
 
@@ -528,16 +528,16 @@ Returns the user [ticket](#ticket) as an array.
     -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
         password string or associative array that contains:
 
-        -   _string_ `id` — Unique identifier (consisting of only underscores
-            (`_`), letters, and numbers) for the password for when there are
-            multiple possible passwords. Used for password rotation.
+        -   _string_ or _integer_ `id` — Unique identifier (consisting of only
+            underscores (`_`), letters, and numbers) for the password for when
+            there are multiple possible passwords. Used for password rotation.
 
         -   _string_ `secret` — Password string used for both encrypting the
             object and integrity (HMAC creation and verification)
 
         OR
 
-        -   _string_ `id` —  Unique identifier (consisting of only
+        -   _string_ or _integer_ `id` — Unique identifier (consisting of only
             underscores (`_`), letters, and numbers) for the password for when
             there are multiple possible passwords. Used for password rotation.
 
@@ -727,16 +727,16 @@ Ticket issuance, parsing, encoding, and re-issuance utilities.
 1.  _string_ or _array_ `$encryptionPassword` — (Required) Can be either a
     password string or associative array that contains:
 
-    -   _string_ `id` — Unique identifier (consisting of only underscores
-        (`_`), letters, and numbers) for the password for when there are
-        multiple possible passwords. Used for password rotation.
+    -   _string_ or _integer_ `id` — Unique identifier (consisting of only
+        underscores (`_`), letters, and numbers) for the password for when there
+        are multiple possible passwords. Used for password rotation.
 
     -   _string_ `secret` — Password string used for both encrypting the
         object and integrity (HMAC creation and verification)
 
     OR
 
-    -   _string_ `id` —  Unique identifier (consisting of only
+    -   _string_ or _integer_ `id` — Unique identifier (consisting of only
         underscores (`_`), letters, and numbers) for the password for when there
         are multiple possible passwords. Used for password rotation.
 
