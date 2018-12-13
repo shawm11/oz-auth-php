@@ -25,6 +25,8 @@ Table of Contents
 
 -   [Development Tasks CLI Commands](#development-tasks-cli-commands)
 
+-   [Changelog](#changelog)
+
 -   [Git Hooks](#git-hooks)
     - [Installing Hooks](#installing-hooks)
 
@@ -120,8 +122,6 @@ The `<type>` must be one of the following:
 
 -   **perf**: A code change that improves performance
 
--   **security**: A code change that improves security
-
 -   **refactor**: A code change that neither fixes a bug nor adds a feature
 
 -   **style**: Changes that do not affect the meaning of the code (white-space,
@@ -204,6 +204,14 @@ Robo commands and their descriptions.
 ```shell
 "./vendor/bin/robo"
 ```
+
+Changelog
+---------
+
+The `CHANGELOG.md` file is automatically generated from the commit messages and
+the repository tags when creating a release using [development task CLI commands](#development-tasks-cli-commands).
+Installing the [conventional-changelog-cli](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-cli),
+Node/NPM package is required to generate the `CHANGELOG.md` file successfully.
 
 Git Hooks
 ---------

@@ -35,6 +35,7 @@ class RoboFile extends \Robo\Tasks
         $composerVersion = $this->getComposerVersion();
         $composerVersion->inc('major');
         $this->setComposerVersion($composerVersion);
+        // Update CHANGELOG
     }
 
     /**
@@ -55,6 +56,14 @@ class RoboFile extends \Robo\Tasks
         $composerVersion = $this->getComposerVersion();
         $composerVersion->inc('patch');
         $this->setComposerVersion($composerVersion);
+    }
+
+    /**
+     * Generate the CHANGELOG file. Overwrites the existing CHANGELOG file.
+     */
+    public function changelogGenerate()
+    {
+        return $this->_exec('conventional-changelog -p angular -i CHANGELOG.md -s -r 1');
     }
 
     /**
@@ -140,6 +149,7 @@ class RoboFile extends \Robo\Tasks
                           ->exec('"./vendor/bin/robo" test')
                           ->exec('"./vendor/bin/robo" git:stash-pop')
                           ->exec('"./vendor/bin/robo" bump:major')
+                          ->exec('"./vendor/bin/robo" changelog:generate')
                           ->exec('"./vendor/bin/robo" bump:commit')
                           ->exec('"./vendor/bin/robo" git:push-master')
                           ->run();
@@ -167,6 +177,7 @@ class RoboFile extends \Robo\Tasks
                           ->exec('"./vendor/bin/robo" test')
                           ->exec('"./vendor/bin/robo" git:stash-pop')
                           ->exec('"./vendor/bin/robo" bump:minor')
+                          ->exec('"./vendor/bin/robo" changelog:generate')
                           ->exec('"./vendor/bin/robo" bump:commit')
                           ->exec('"./vendor/bin/robo" git:push-master')
                           ->run();
@@ -194,6 +205,7 @@ class RoboFile extends \Robo\Tasks
                           ->exec('"./vendor/bin/robo" test')
                           ->exec('"./vendor/bin/robo" git:stash-pop')
                           ->exec('"./vendor/bin/robo" bump:patch')
+                          ->exec('"./vendor/bin/robo" changelog:generate')
                           ->exec('"./vendor/bin/robo" bump:commit')
                           ->exec('"./vendor/bin/robo" git:push-master')
                           ->run();

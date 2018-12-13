@@ -40,6 +40,7 @@ Getting Started
 - JSON PHP Extension
 - cURL PHP Extension (Only if using the Oz client)
 - [Composer](https://getcomposer.org/)
+- Node 6.9.0+ (Only for development)
 
 ### Installation
 
