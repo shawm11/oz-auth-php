@@ -16,8 +16,8 @@ Table of Contents
     - [Installation](#installation)
 
 -   [Usage Examples](#usage-examples)
-    - [Server](#server)
-    - [Client](#client)
+    - [Server Usage Examples](#server-usage-examples)
+    - [Client Usage Examples](#client-usage-examples)
 
 -   [Documentation](#documentation)
 
@@ -50,250 +50,51 @@ Download and install using [Composer](https://getcomposer.org/):
 composer require shawm11/oz-auth-php
 ```
 
+Workflows
+---------
+
+This package includes two workflows that are not part of the
+[official Oz web authorization protocol](https://github.com/hueniverse/oz)
+yet. These two new workflows are the [User Credentials Workflow](docs/user-credentials-workflow.md)
+and the [Implicit Workflow](docs/implicit-workflow.md). The standard Oz workflow
+that is specifed by the official protocal is referred to as the
+["RSVP workflow"](docs/rsvp-workflow-without-delegation.md).
+
+You can read more about the [proposal](https://github.com/hueniverse/oz/issues/67)
+to include the User Credentials workflow and the Implicit workflow into the
+official Oz protocol.
+
 Usage Examples
 --------------
 
-The examples in this section are not functional, but should be enough to show
-you how to use this package.
+### Server Usage Examples
 
-### Server
+- [RSVP Workflow — Server](docs/usage-examples/rsvp-workflow-server.md)
+- [User Credentials Workflow — Server](docs/usage-examples/user-credentials-workflow-server.md)
+- [Implicit Workflow — Server](docs/usage-examples/implicit-workflow-server.md)
+- [All Workflows — Server](docs\usage-examples\all-workflows-client.md)
 
-Because PHP is a language most commonly used for server logic, the "Server"
-usage is more common than the "Client" usage.
+### Client Usage Examples
 
-```php
-<?php
-
-use Shawm11\Oz\Server\Endpoints as OzEndpoints;
-use Shawm11\Oz\Server\Server as OzServer;
-use Shawm11\Oz\Server\ServerException as OzServerException;
-use Shawm11\Oz\Server\BadRequestException as OzBadRequestException;
-use Shawm11\Oz\Server\UnauthorizedException as OzUnauthorizedException;
-use Shawm11\Oz\Server\ForbiddenException as OzForbiddenException;
-use Shawm11\Oz\Server\InternalException as OzInternalException;
-
-/*
- * A fictional function that handles an authenticated request to a resource
- */
-function handleAuthRequest() {
-    // Pretend to somehow get the request data
-	$requestData = [
-		'method' => 'GET',
-		'url' => '/resource/4?a=1&b=2',
-		'host' => 'example.com',
-		'port' => 8080,
-		'authorization' => 'Hawk id="Fe26.2**some-user-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
-	];
-	$encryptionPassword = 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters';
-
-	$ticket = (new OzServer)->authenticate($requestData, $encryptionPassword);
-
-	// Authentication successful! Now do some stuff with the ticket...
-}
-
-/*
- * A fictional function that handle requests to /oz/app
- */
-function handleAppRequest() {
-    $appTicket = [];
-	// Pretend to somehow get the request data
-	$requestData = [
-		'method' => 'GET',
-		'url' => '/resource/4?a=1&b=2',
-		'host' => 'example.com',
-		'port' => 8080,
-		'authorization' => 'Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
-	];
-	$options = [
-		'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
-		// Function for retrieving app credentials
-		'loadAppFunc' => function ($id) { // This is required
-			// Pretend to somehow retrieve the app credentials using the given ID ($id)
-			$appCredentials = [
-				'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
-				'algorithm' => 'sha256'
-			];
-
-			return $appCredentials;
-		}
-	];
-
-    try {
-        $appTicket = (new OzEndpoints)->app($requestData, $options);
-    } catch (OzServerException $e) {
-        $httpStatusCode = $e->getCode();
-        // Send error response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    }
-
-    // Maybe do some other stuff before sending the response
-
-	// A fictional function that sends a response containing the ticket with an
-	// HTTP code of 200
-	send(200, $ticket);
-}
-
-/*
- * A fictional function that handles requests to /oz/reissue
- */
-function handleReissueRequest() {
-    $reissuedTicket = [];
-	// Pretend to somehow get the request data
-	$requestData = [
-		'method' => 'GET',
-		'url' => '/resource/4?a=1&b=2',
-		'host' => 'example.com',
-		'port' => 8080,
-		'authorization' => 'Hawk id="Fe26.2**some-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
-	];
-	$options = [
-		'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
-		// Function for retrieving app credentials
-		'loadAppFunc' => function ($id) {
-			// Pretend to somehow retrieve the credentials using the given ID ($id)
-			$appCredentials = [
-				'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
-				'algorithm' => 'sha256'
-			];
-
-			return $appCredentials;
-		},
-		// Function for retrieving grant
-		'loadGrantFunc' => function ($id) {
-			// Pretend to somehow retrieve grant using the given ID ($id)
-			$grant = [
-				'id' => $id,
-				'app' => '123',
-				'user' => '456',
-				'exp' => 1352535473414,
-				'scope' => ['b']
-			]
-		}
-	];
-
-    try {
-        $reissuedTicket = (new OzEndpoints)->reissue($requestData, [], $options);
-    } catch (OzServerException $e) {
-        $httpStatusCode = $e->getCode();
-        // Send error response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    }
-
-    // Maybe do some other stuff before sending the response
-
-	// A fictional function that sends a response containing the ticket with an
-	// HTTP code of 200
-	send(200, $ticket);
-}
-
-/*
- * A fictional function that handles requests to /oz/rsvp
- */
-function handleRsvpRequest() {
-    $userTicket = [];
-	// Pretend to somehow get the request data
-	$requestData = [
-		'method' => 'GET',
-		'url' => '/resource/4?a=1&b=2',
-		'host' => 'example.com',
-		'port' => 8080,
-		'authorization' => 'Hawk id="Fe26.2**some-app-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
-	];
-	// Pretend to somehow get the request body
-	$requestBody = [
-		'rsvp' => 'some_iron_string_that_was_issued_by_the_server_when_the_user_approved_the_scope'
-	];
-
-	$options = [ // This is required
-		'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
-		// Function for retrieving app credentials
-		'loadAppFunc' => function ($id) {
-			// Pretend to somehow retrieve the credentials using the given ID ($id)
-			$appCredentials = [
-				'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
-				'algorithm' => 'sha256'
-			];
-
-			return $appCredentials;
-		},
-		// Function for retrieving grant
-		'loadGrantFunc' => function ($id) {  // This is required
-			// Pretend to somehow retrieve grant using the given ID ($id)
-			$grant = [
-				'id' => $id,
-				'app' => '123',
-				'user' => '456',
-				'exp' => 1352535473414,
-				'scope' => ['b']
-			]
-		}
-	];
-
-    try {
-        $userTicket = (new OzEndpoints)->rsvp($requestData, $requestBody, $options);
-    } catch (OzServerException $e) {
-        $httpStatusCode = $e->getCode();
-        // Send error response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
-        return;
-    }
-
-    // Maybe do some other stuff before sending the response
-
-	// A fictional function that sends a response containing the ticket with an
-	// HTTP code of 200
-	send(200, $ticket);
-}
-```
-
-### Client
-
-```php
-<?php
-
-use Shawm11\Oz\Client\Connection as OzConnection;
-use Shawm11\Oz\Client\ClientException as OzClientException;
-
-/*
- * A fictional function that makes an authenticated request to the server
- */
-function makeRequest() {
-    $response = [];
-	$options = [
-		'uri' => 'http://example.com/resource?a=b',
-		// Client's application Hawk credentials
-		'credentials' => [
-			'id' => 'dh37fgj492je',
-            'key' => 'aoijedoaijsdlaksjdl',
-            'algorithm' => 'sha256'
-		]
-	];
-
-    try {
-		// Send request & wait for response
-        $response = (new OzConnection($options))->app($requestData);
-    } catch (OzClientException $e) {
-        echo 'ERROR: ' . $e->getMessage();
-        return;
-    }
-
-	$result = $response['result']; // an array if the response body is JSON, otherwise a string
-	$code = $response['code']; // integer
-	$ticket = $response['ticket']; // array
-
-    // Do some more stuff
-}
-```
+- [RSVP Workflow — Client](docs/usage-examples/rsvp-workflow-client.md)
+- [User Credentials Workflow — Client](docs/usage-examples/user-credentials-workflow-client.md)
+- [Implicit Workflow — Client](docs/usage-examples/implicit-workflow-client.md)
+- [All Workflows — Client](docs\usage-examples\all-workflows-client.md)
 
 Documentation
 -------------
 
 -   [API Reference](docs/api-reference.md) — Details about the API
 
--   [Oz Workflow (Without Delegation)](docs/oz-workflow-without-delegation.md) —
-    General overview of the Oz workflow when delegation is not being used
+-   [RSVP Workflow (Without Delegation)](docs/rsvp-workflow-without-delegation.md) —
+    General overview of the RSVP (standard) workflow when delegation is not
+    being used
+
+-   [User Credentials Workflow](docs/user-credentials-workflow.md) — General
+    overview of the User Credentials workflow
+
+-   [Implicit Workflow](docs/implicit-workflow.md) — General overview of the
+    Implicit workflow
 
 Security Considerations
 -----------------------

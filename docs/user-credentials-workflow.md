@@ -1,6 +1,8 @@
 User Credentials Workflow
 =========================
 
+**NOTICE**: This workflow is not part of the official Oz protocol.
+
 Table of Contents
 -----------------
 
@@ -78,11 +80,6 @@ Steps of the Workflow
     -   _NOTE: An application should NEVER store a user's credentials. When an
         application obtains the user ticket, it should immediately discard the
         user credentials._
-
-    -   _QUESTION: Should the user credentials be encrypted using the
-        application ticket secret? If so, how? The only reason for doing this is
-        so SSL/TLS is not the only protection of the user credentials in the
-        transmission._
 
 1.  Application: Can now use the user [ticket](api-reference.md#ticket) to
     access the User's resources

@@ -1,6 +1,8 @@
 Implicit Workflow
 =================
 
+**NOTICE**: This workflow is not part of the official Oz protocol.
+
 Table of Contents
 -----------------
 
@@ -100,7 +102,8 @@ Additional Security Considerations
 ----------------------------------
 
 Same as the [User Credentials Workflow](https://gist.github.com/shawm11/76c2bd908f585ed7d4dcf2372dea25e1).
-In short, user credentials must be sent by the client to the server using SSL/TLS.
+In short, user credentials must be sent by the client to the server using
+SSL/TLS.
 
 Vocabulary
 ----------
