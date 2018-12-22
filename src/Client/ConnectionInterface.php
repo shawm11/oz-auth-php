@@ -29,7 +29,10 @@ interface ConnectionInterface
     public function request($path, $ticket, $options = []);
 
     /**
-     * Request a protected resource using a shared application ticket
+     * Request a protected resource using an application ticket that is
+     * automatically retrieved (if it has not been previously retrieved) using
+     * the application credentials given in the Connection settings. **ONLY FOR
+     * THE RSVP AND USER CREDENTIAL FLOWS.**
      *
      * @param  string  $path  URL of the request relative to the host (e.g.
      *                        `/resource`)
@@ -51,7 +54,19 @@ interface ConnectionInterface
     public function reissue($ticket);
 
     /**
-     * Request a user ticket using the given user credentials
+     * Request an application ticket using the application credentials given in
+     * the settings when the object instance was created. **ONLY FOR THE RSVP
+     * AND USER CREDENTIAL FLOWS.**
+     *
+     * @throws ClientException
+     * @return array  The response, which contains the status code, response
+     *                body, and headers
+     */
+    public function requestAppTicket();
+
+    /**
+     * Request a user ticket using the given user credentials. **ONLY FOR THE
+     * IMPLICIT AND USER CREDENTIALS FLOWS.**
      *
      * @param  mixed  $userCredentials
      * @param  string  $flow  Type of Oz flow to use to attempt to retrieve a

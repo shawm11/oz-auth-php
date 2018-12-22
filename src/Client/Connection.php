@@ -27,9 +27,25 @@ class Connection implements ConnectionInterface
         ]
     ];
 
+    /**
+     * Connection settings
+     *
+     * @var array
+     */
     protected $settings;
 
+    /**
+     * Application ticket
+     *
+     * @var array|null
+     */
     protected $appTicket = null;
+
+    /**
+     * User ticket
+     *
+     * @var array|null
+     */
     protected $userTicket = null;
 
     public function __construct($settings, HawkClientInterface $hawkClient = null)
@@ -74,9 +90,7 @@ class Connection implements ConnectionInterface
 
     public function app($path, $options = [])
     {
-        if (!$this->appTicket) {
-            $this->requestAppTicket();
-        }
+        $this->setAppTicket();
 
         $response = $this->request($path, $this->appTicket, $options);
         $this->appTicket = $response['ticket']; // In case ticket was refreshed
@@ -86,7 +100,7 @@ class Connection implements ConnectionInterface
 
     public function reissue($ticket)
     {
-        $response = $this->makeRequest('POST', $this->settings['endpoints']['reissue'], null, $reissued);
+        $response = $this->makeRequest('POST', $this->settings['endpoints']['reissue'], null, $ticket);
         $reissued = $response['result'];
 
         if ($response['code'] !== 200) {
@@ -94,6 +108,33 @@ class Connection implements ConnectionInterface
         }
 
         return $reissued;
+    }
+
+    public function requestAppTicket()
+    {
+        $uri = $this->settings['uri'] . $this->settings['endpoints']['app'];
+
+        try {
+            $header = (new Client($this->hawkClient))->header(
+                $uri,
+                'POST',
+                $this->settings['credentials']
+            );
+        } catch (\Exception $e) {
+            throw new ClientException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        $response = $this->httpRequest('POST', $uri, ['Authorization' => $header]);
+
+        if ($response['code'] === 200) {
+            $this->appTicket = $response['body'];
+        }
+
+        return [
+            'code' => $response['code'],
+            'result' => $response['body'],
+            'headers' => $response['headers']
+        ];
     }
 
     public function requestUserTicket($userCredentials, $flow = 'auto')
@@ -105,18 +146,21 @@ class Connection implements ConnectionInterface
          * Application authentication
          */
 
+        $this->settings['credentials'] = isset($this->settings['credentials'])
+            ?  $this->settings['credentials']
+            : null;
+
         if (($this->settings['credentials'] && $flow !== 'implicit') ||
             $flow === 'user_credentials'
         ) {
-            if (!$this->appTicket) {
-                $this->requestAppTicket();
-            }
+            $this->setAppTicket();
 
+            // Set authorization header using application ticket
             try {
                 $headers['Authorization'] = (new Client($this->hawkClient))->header(
                     $uri,
                     'POST',
-                    $this->settings['credentials']
+                    $this->appTicket
                 );
             } catch (\Exception $e) {
                 throw new ClientException($e->getMessage(), $e->getCode(), $e);
@@ -129,11 +173,34 @@ class Connection implements ConnectionInterface
 
         $response = $this->httpRequest('POST', $uri, $headers, ['user' => $userCredentials]);
 
-        if ($response['statusCode'] === 200) {
-            $this->userTicket = json_decode($response['body'], true);
+        if ($response['code'] === 200) {
+            $this->userTicket = $response['body'];
         }
 
-        return $response;
+        return [
+            'code' => $response['code'],
+            'result' => $response['body'],
+            'headers' => $response['headers']
+        ];
+    }
+
+    /**
+     * Check if the application ticket is set. If not set, request an
+     * application ticket using the application credentials
+     *
+     * @throws ClientException
+     */
+    protected function setAppTicket()
+    {
+        if (!$this->appTicket) {
+            $appTicketResponse = $this->requestAppTicket();
+
+            if ($appTicketResponse['code'] !== 200) {
+                throw new ClientException('Client registration failed with unexpected response');
+            }
+
+            $this->appTicket = $appTicketResponse['result'];
+        }
     }
 
     /**
@@ -179,37 +246,9 @@ class Connection implements ConnectionInterface
         }
 
         return [
-            'code' => $response['statusCode'],
-            'result' => json_decode($response['body'], true)
+            'code' => $response['code'],
+            'result' => $response['body']
         ];
-    }
-
-    /**
-     * Request an application ticket and set the $appTicket to the response.
-     *
-     * @throws ClientException
-     */
-    protected function requestAppTicket()
-    {
-        $uri = $this->settings['uri'] . $this->settings['endpoints']['app'];
-
-        try {
-            $header = (new Client($this->hawkClient))->header(
-                $uri,
-                'POST',
-                $this->settings['credentials']
-            );
-        } catch (\Exception $e) {
-            throw new ClientException($e->getMessage(), $e->getCode(), $e);
-        }
-
-        $response = $this->httpRequest('POST', $uri, ['Authorization' => $header]);
-
-        if ($response['statusCode'] !== 200) {
-            throw new ClientException('Client registration failed with unexpected response');
-        }
-
-        $this->appTicket = json_decode($response['body'], true);
     }
 
     /**
@@ -233,11 +272,11 @@ class Connection implements ConnectionInterface
                                     ->uri($uri)
                                     ->addHeaders($headers)
                                     ->body($payload)
-                                    ->autoParse(false)
+                                    ->autoParse()
                                     ->send();
 
         return [
-            'statusCode' => $response->code,
+            'code' => $response->code,
             'body' => $response->body,
             'headers' => $response->headers->toArray()
         ];

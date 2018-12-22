@@ -86,6 +86,8 @@ Table of Contents
     -   [`reissue($ticket)`](#reissueticket)
         - [`reissue` (`Connection` Class) Parameters](#reissue-connection-class-parameters)
 
+    -   [`requestAppTicket()`](#requestappticket)
+
     -   [`requestUserTicket($userCredentials, $flow)`](#requestuserticketusercredentials-flow)
         - [`requestUserTicket` Parameters](#requestuserticket-parameters)
 
@@ -595,8 +597,8 @@ Returns the user [ticket](#ticket) as an array.
     -   _callable_ `storeGrantFunc` — (Required) Function for storing the grant
         that is created. The function must have the following:
 
-        - Parameter: _string_ `$id` — (Required) Unique ID for the grant.
-        - Returns: _string_ — (Required) Grant's unique ID
+        - Parameter: _array_ `$grant` — (Required) [Grant](#grant) to store
+        - Returns: _string_ — (Required) Grant's unique ID created by the server
 
     -   _array_ `ticket` — (Optional) [Ticket options](#ticket-options) used for
         parsing and issuance
@@ -942,7 +944,7 @@ resources.
         Includes the following:
 
         -   _string_ `app` — (Optional) Application credentials endpoint.
-           Defaults to `/oz/app`.
+            Defaults to `/oz/app`.
 
         -   _string_ `reissue` — (Optional) Ticket reissue endpoint. Defaults to
             `/oz/reissue`.
@@ -992,7 +994,10 @@ Returns an array that contains the following:
 
 ### `app($path, $options)`
 
-Request a protected resource using a shared application ticket.
+Request a protected resource using an application ticket that is automatically
+retrieved (if it has not been previously retrieved) using the application
+credentials given in the `Connection` settings. **ONLY FOR THE RSVP AND USER
+CREDENTIALS FLOWS.**
 
 Returns an array that contains the following:
 
@@ -1025,14 +1030,27 @@ Returns the reissued [ticket](#ticket) as an array.
 
 1. _array_ `$ticket` — (Required) Ticket being reissued
 
-### `requestUserTicket($userCredentials, $flow)`
+### `requestAppTicket()`
 
-Request a user ticket using the given user credentials.
+Request an application ticket using the application credentials given in the
+settings when the object instance was created. **ONLY FOR THE RSVP AND USER
+CREDENTIAL FLOWS.**
 
 Returns the response as an array that contains the following:
 
-- _integer_ `statusCode` — Status code
-- _string_ `body` — Response body
+- _integer_ `code` — HTTP status code
+- _string_ `result` — Response body. The application ticket if successful.
+- _array_ `headers` — Response headers
+
+### `requestUserTicket($userCredentials, $flow)`
+
+Request a user ticket using the given user credentials. **ONLY FOR THE IMPLICIT
+AND USER CREDENTIALS FLOWS.**
+
+Returns the response as an array that contains the following:
+
+- _integer_ `code` — HTTP status code
+- _string_ `result` — Response body. The user ticket if successful.
 - _array_ `headers` — Response headers
 
 #### `requestUserTicket` Parameters
