@@ -84,8 +84,6 @@ Usage Examples
 Documentation
 -------------
 
--   [API Reference](docs/api-reference.md) — Details about the API
-
 -   [RSVP Workflow (Without Delegation)](docs/rsvp-workflow-without-delegation.md) —
     General overview of the RSVP (standard) workflow when delegation is not
     being used
@@ -95,6 +93,17 @@ Documentation
 
 -   [Implicit Workflow](docs/implicit-workflow.md) — General overview of the
     Implicit workflow
+    
+### API Reference
+
+-   [Server API](docs/api-reference/server-api.md) — API reference for the
+    classes in the `Shawm11\Oz\Server` namespace
+
+-   [Client API](docs/api-reference/server-api.md) — API reference for the
+    classes in the `Shawm11\Oz\Client` namespace
+
+-   [Shared Arrays](docs/api-reference/shared-arrays.md) — Details about
+    collections of data used in other parts of the API
 
 Security Considerations
 -----------------------

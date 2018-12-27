@@ -1,5 +1,5 @@
-API Reference
-=============
+Server API Reference
+====================
 
 Table of Contents
 -----------------
@@ -8,8 +8,8 @@ Table of Contents
 
 -   [Namespace](#namespace)
 
--   [`Server\Endpoints` Class](#serverendpoints-class)
-    -   [`Server\Endpoints` Constructor](#serverendpoints-constructor)
+-   [`Endpoints` Class](#endpoints-class)
+    -   [`Endpoints` Constructor](#endpoints-constructor)
 
     -   [`app($request, $options)`](#apprequest-options)
         - [`app` (`Endpoints` Class) Parameters](#app-endpoints-class-parameters)
@@ -23,14 +23,14 @@ Table of Contents
     -   [`user($request, $payload, $options)`](#userrequest-payload-options)
         - [`user` (`Endpoints` Class) Parameters](#user-endpoints-class-parameters)
 
--   [`Server\Server` Class](#serverserver-class)
-    -   [`Server\Server` Constructor](#serverserver-constructor)
+-   [`Server` Class](#server-class)
+    -   [`Server` Constructor](#server-constructor)
 
     -   [`authenticate($request, $encryptionPassword, $checkExpiration, $options)`](#authenticaterequest-encryptionpassword-checkexpiration-options)
         - [`authenticate` (`Server` Class) Parameters](#authenticate-server-class-parameters)
 
--   [`Server\Ticket` Class](#serverticket-class)
-    -   [`Server\Ticket` Constructor](#serverticket-constructor)
+-   [`Ticket` Class](#ticket-class)
+    -   [`Ticket` Constructor](#ticket-constructor)
 
     -   [`issue($app, $grant)`](#issueapp-grant)
         - [`issue` Parameters](#issue-parameters)
@@ -47,7 +47,7 @@ Table of Contents
     -   [`parse($id)`](#parseid)
         - [`generate` Parameters](#generate-parameters)
 
--   [`Server\Scope` Class](#serverscope-class)
+-   [`Scope` Class](#scope-class)
     -   [`validate($scope)`](#validatescope)
         - [`validate` Parameters](#validate-parameters)
 
@@ -57,53 +57,22 @@ Table of Contents
     -   [`isEqual($one, $two)`](#isequalone-two)
         - [`isEqual` Parameters](#isequal-parameters)
 
--   [`Server\ServerException` Class](#serverserverexception-class)
+-   [`ServerException` Class](#serverexception-class)
 
--   [`Server\BadRequestException` Class](#serverbadrequestexception-class)
+-   [`BadRequestException` Class](#badrequestexception-class)
     - [`getCode()` (`BadRequestException` Class)](#getcode-badrequestexception-class)
     - [`getMessage()` (`BadRequestException` Class)](#getmessage-badrequestexception-class)
 
--   [`Server\UnauthorizedException` Class](#serverunauthorizedexception-class)
-    - [`Server\UnauthorizedException` Constructor](#serverunauthorizedexception-constructor)
+-   [`UnauthorizedException` Class](#unauthorizedexception-class)
+    - [`UnauthorizedException` Constructor](#unauthorizedexception-constructor)
     - [`getCode()` (`UnauthorizedException` Class)](#getcode-unauthorizedexception-class)
     - [`getMessage()` (`UnauthorizedException` Class)](#getmessage-unauthorizedexception-class)
     - [`getWwwAuthenticateHeaderAttributes()`](#getwwwauthenticateheaderattributes)
     - [`getWwwAuthenticateHeader()`](#getwwwauthenticateheader)
 
--   [`Server\ForbiddenException` Class](#serverforbiddenexception-class)
+-   [`ForbiddenException` Class](#forbiddenexception-class)
     - [`getCode()` (`ForbiddenException` Class)](#getcode-forbiddenexception-class)
     - [`getMessage()` (`ForbiddenException` Class)](#getmessage-forbiddenexception-class)
-
--   [`Client\Connection` Class](#clientconnection-class)
-    -   [`Client\Connection` Constructor](#clientconnection-constructor)
-
-    -   [`request($path, $ticket, $options)`](#requestpath-ticket-options)
-        - [`request` Parameters](#request-parameters)
-
-    -   [`app($path, $options)`](#apppath-options)
-        - [`app` (`Connection` Class) Parameters](#app-connection-class-parameters)
-
-    -   [`reissue($ticket)`](#reissueticket)
-        - [`reissue` (`Connection` Class) Parameters](#reissue-connection-class-parameters)
-
-    -   [`requestAppTicket()`](#requestappticket)
-
-    -   [`requestUserTicket($userCredentials, $flow)`](#requestuserticketusercredentials-flow)
-        - [`requestUserTicket` Parameters](#requestuserticket-parameters)
-
--   [`Client\Client` Class](#clientclient-class)
-    -   [`Client\Client` Constructor](#clientclient-constructor)
-
-    -   [`header($uri, $method, $ticket, $options)`](#headeruri-method-ticket-options)
-        - [`header` Parameters](#header-parameters)
-
--   [`Client\ClientException` Class](#clientclientexception-class)
-
--   [Shared Arrays](#shared-arrays)
-    - [App](#app)
-    - [Grant](#grant)
-    - [Ticket](#ticket)
-    - [Ticket Options](#ticket-options)
 
 Word Usage
 ----------
@@ -113,16 +82,16 @@ In this document the words "client" and "application" are interchangeable.
 Namespace
 ---------
 
-All classes and sub-namespaces are within the `Shawm11\Oz` namespace.
+All classes and sub-namespaces are within the `Shawm11\Oz\Server` namespace.
 
-`Server\Endpoints` Class
-------------------------
+`Endpoints` Class
+-----------------
 
 Contains the endpoint methods that provide a HTTP request handler
 implementations which are designed to be plugged into a framework such as
 [Laravel](https://laravel.com/) or [CodeIgniter](https://www.codeigniter.com/).
 
-### `Server\Endpoints` Constructor
+### `Endpoints` Constructor
 
 1.  _Shawm11\\Hawk\\Server\\ServerInterface_ `$hawkServer` — (Optional) Hawk
     Server instance to be used
@@ -133,7 +102,8 @@ implementations which are designed to be plugged into a framework such as
 
 Authenticate an application request, and if valid, issues an application ticket.
 
-Returns the application [ticket](#ticket) for the client as an array.
+Returns the application [ticket](shared-arrays.md#ticket) for the client as an
+array.
 
 #### `app` (`Endpoints` Class) Parameters
 
@@ -197,8 +167,8 @@ Returns the application [ticket](#ticket) for the client as an array.
             -   _string_ `algorithm` — (Required) Algorithm to be used for HMAC.
                 Must be either `sha1` or `sha256`.
 
-    -   _array_ `ticket` — (Optional) [Ticket options](#ticket-options) used for
-        parsing and issuance
+    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+        used for parsing and issuance
 
     -   _array_ `hawk` — (Optional) Hawk options, which include the following:
 
@@ -228,7 +198,7 @@ Returns the application [ticket](#ticket) for the client as an array.
 
 Reissue an existing ticket (the ticket used to authenticate the request).
 
-Returns the reissued [ticket](#ticket) as an array.
+Returns the reissued [ticket](shared-arrays.md#ticket) as an array.
 
 #### `reissue` (`Endpoints` Class) Parameters
 
@@ -292,10 +262,10 @@ Returns the reissued [ticket](#ticket) as an array.
         is a key for this array. For password rotation.
 
     -   _callable_ `loadAppFunc` — (Optional if using the [Implicit
-        Workflow](implicit-workflow.md)) Function for looking up the application
-        credentials based on the provided credentials ID. This is often done by
-        looking up the application credentials in a database. The function must
-        have the following:
+        Workflow](../implicit-workflow.md)) Function for looking up the
+        application credentials based on the provided credentials ID. This is
+        often done by looking up the application credentials in a database. The
+        function must have the following:
 
         -   Parameter: _string_ `$id` — (Required) Unique ID for the application
             that is used to look up the application's credentials.
@@ -317,7 +287,7 @@ Returns the reissued [ticket](#ticket) as an array.
         -   Returns: _array_ — (Required) Set of credentials that contains the
             following:
 
-            -   _array_ `grant` — (Required) [Grant array](#grant)
+            -   _array_ `grant` — (Required) [Grant array](shared-arrays.md#grant)
 
             -   _array_ `ext` — (Optional) Used to include custom server data in
                 the ticket and response. Contains the following:
@@ -330,8 +300,8 @@ Returns the reissued [ticket](#ticket) as an array.
                     only be included in the encoded ticket as
                     `ticket.ext.private`
 
-    -   _array_ `ticket` — (Optional) [Ticket options](#ticket-options) used for
-        parsing and issuance
+    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+        used for parsing and issuance
 
     -   _array_ `hawk` — (Optional) Hawk options, which include the following:
 
@@ -362,7 +332,7 @@ Returns the reissued [ticket](#ticket) as an array.
 Authenticate an application request and if valid and exchange the provided RSVP
 with a user ticket.
 
-Returns the user [ticket](#ticket) as an array.
+Returns the user [ticket](shared-arrays.md#ticket) as an array.
 
 #### `rsvp` (`Endpoints` Class) Parameters
 
@@ -422,10 +392,10 @@ Returns the user [ticket](#ticket) as an array.
         is a key for this array. For password rotation.
 
     -   _callable_ `loadAppFunc` — (Optional if using the [Implicit
-        Workflow](implicit-workflow.md)) Function for looking up the application
-        credentials based on the provided credentials ID. This is often done by
-        looking up the application credentials in a database. The function must
-        have the following:
+        Workflow](../implicit-workflow.md)) Function for looking up the
+        application credentials based on the provided credentials ID. This is
+        often done by looking up the application credentials in a database. The
+        function must have the following:
 
         -   Parameter: _string_ `$id` — (Required) Unique ID for the application
             that is used to look up the application's credentials.
@@ -439,17 +409,17 @@ Returns the user [ticket](#ticket) as an array.
                 Must be either `sha1` or `sha256`.
 
     -   _callable_ `loadAppFunc` — (Optional if using the [Implicit
-        Workflow](implicit-workflow.md)) Function for looking up the application
-        credentials based on the provided credentials ID. This is often done by
-        looking up the application credentials in a database. The function must
-        have the following:
+        Workflow](../implicit-workflow.md)) Function for looking up the
+        application credentials based on the provided credentials ID. This is
+        often done by looking up the application credentials in a database. The
+        function must have the following:
 
         -   Parameter: _string_ `$id` — (Required) Unique ID for the grant.
 
         -   Returns: _array_ — (Required) Set of credentials that contains the
             following:
 
-            -   _array_ `grant` — (Required) [Grant array](#grant)
+            -   _array_ `grant` — (Required) [Grant array](shared-arrays.md#grant)
 
             -   _array_ `ext` — (Optional) Used to include custom server data in
                 the ticket and response. Contains the following:
@@ -462,8 +432,8 @@ Returns the user [ticket](#ticket) as an array.
                     only be included in the encoded ticket as
                     `ticket.ext.private`
 
-    -   _array_ `ticket` — (Optional) [Ticket options](#ticket-options) used for
-        parsing and issuance
+    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+        used for parsing and issuance
 
     -   _array_ `hawk` — (Optional) Hawk options, which include the following:
 
@@ -492,10 +462,10 @@ Returns the user [ticket](#ticket) as an array.
 ### `user($request, $payload, $options)`
 
 Issue a user ticket to the application using the set of user credentials given
-in the payload. Only used for the [User Credentials](user-credentials-workflow.md)
-and [Implicit](implicit-workflow.md) Oz workflows.
+in the payload. Only used for the [User Credentials](../user-credentials-workflow.md)
+and [Implicit](../implicit-workflow.md) Oz workflows.
 
-Returns the user [ticket](#ticket) as an array.
+Returns the user [ticket](shared-arrays.md#ticket) as an array.
 
 #### `user` Parameters
 
@@ -562,15 +532,15 @@ Returns the user [ticket](#ticket) as an array.
 
         -   `scope` — (Optional) Scope granted by the user to the application
 
-    -   _array_ `allowedGrantTypes`— (Optional) List of [grant](#grant) types
-        (or Oz workflows) that are allowed. If `user_credentials` is not in this
-        array, then the [User Credentials Workflow](user-credentials-workflow.md)
+    -   _array_ `allowedGrantTypes`— (Optional) List of [grant](shared-arrays.md#grant)
+        types (or Oz workflows) that are allowed. If `user_credentials` is not
+        in this array, then the [User Credentials Workflow](../user-credentials-workflow.md)
         is disabled. If `implicit` is not in this array, then the [Implicit
-        Workflow](implicit-workflow.md) is disabled.
+        Workflow](../implicit-workflow.md) is disabled.
         Default: `['rsvp', 'user_credentials', 'implicit']`
 
     -   _callable_ `loadAppFunc` — (Required if using the [User Credentials
-        Workflow](#user-credentials-workflow.md)) Function for looking up the
+        Workflow](../user-credentials-workflow.md)) Function for looking up the
         application credentials based on the provided credentials ID. This is
         often done by looking up the application credentials in a database. The
         function must have the following:
@@ -597,11 +567,14 @@ Returns the user [ticket](#ticket) as an array.
     -   _callable_ `storeGrantFunc` — (Required) Function for storing the grant
         that is created. The function must have the following:
 
-        - Parameter: _array_ `$grant` — (Required) [Grant](#grant) to store
-        - Returns: _string_ — (Required) Grant's unique ID created by the server
+        -   Parameter: _array_ `$grant` — (Required) [Grant](shared-arrays.md#grant)
+            to store
 
-    -   _array_ `ticket` — (Optional) [Ticket options](#ticket-options) used for
-        parsing and issuance
+        -   Returns: _string_ — (Required) Grant's unique ID created by the
+            server
+
+    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+        used for parsing and issuance
 
     -   _array_ `hawk` — (Optional) Hawk options, which include the following:
 
@@ -627,12 +600,12 @@ Returns the user [ticket](#ticket) as an array.
             MAC unique even if given the same data. It must throw an error if
             the nonce check fails.
 
-`Server\Server` Class
----------------------
+`Server` Class
+--------------
 
 Server implementation utilities.
 
-### `Server\Server` Constructor
+### `Server` Constructor
 
 1. _Shawm11\\Hawk\\Server\\ServerInterface_ `$hawkServer` — (Optional) Hawk
    Server instance to be used
@@ -658,8 +631,8 @@ Returns the following if authentication is successful.
     - _string_ `nonce` — Nonce used to create the `mac`
     - _string_ `hash` — Payload hash. Only used for payload validation.
     - _string_ `ext` — Extra application-specific data
-    - _string_ `app` — Application ID. Only used with [Oz](https://github.com/hueniverse/oz).
-    - _string_ `dlg` — 'delegated-by' attribute. Only used with [Oz](https://github.com/hueniverse/oz).
+    - _string_ `app` — Application ID
+    - _string_ `dlg` — 'delegated-by' attribute. Only used with delegation.
     - _string_ `mac` — HMAC digest of the other items in this array
     - _string_ `id` — Client's unique Hawk ID
 
@@ -678,7 +651,7 @@ Returns the following if authentication is successful.
     -   _integer_ `port` — (Required) Port number the request was sent to
 
     -   _string_ `authorization` — (Optional) Value of the `Authorization`
-        header in the request. See [`header()` for the `Client` class](#headeruri-method-options).
+        header in the request. See [`header()` for the `Client` class](client-api.md#headeruri-method-ticket-options).
 
     -   _string_ `contentType` — (Optional) Payload content type. It is usually
         the value of the `Content-Type` header in the request. Only used for
@@ -692,8 +665,8 @@ Returns the following if authentication is successful.
 1.  _array_ `$options` — (Required) Configuration options that include the
     following:
 
-    -   _array_ `ticket` — (Optional) [Ticket options](#ticket-options) used for
-        parsing and issuance
+    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+        used for parsing and issuance
 
     -   _array_ `hawk` — (Optional) Hawk options, which include the following:
 
@@ -719,12 +692,12 @@ Returns the following if authentication is successful.
             MAC unique even if given the same data. It must throw an error if
             the nonce check fails.
 
-`Server\Ticket` Class
----------------------
+`Ticket` Class
+--------------
 
 Ticket issuance, parsing, encoding, and re-issuance utilities.
 
-### `Server\Ticket` Constructor
+### `Ticket` Constructor
 
 1.  _string_ or _array_ `$encryptionPassword` — (Required) Can be either a
     password string or associative array that contains:
@@ -747,8 +720,8 @@ Ticket issuance, parsing, encoding, and re-issuance utilities.
     -   _string_ `integrity` — Password string used for HMAC creation and
         verification
 
-1.  _array_ `$options` — (Optional) [Ticket options](#ticket-options) used for
-    parsing and issuance
+1.  _array_ `$options` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+    used for parsing and issuance
 
 1.  _Shawm11\\Iron\\IronInterface_ `$iron` — (Optional) Iron instance to be used
 
@@ -756,53 +729,56 @@ Ticket issuance, parsing, encoding, and re-issuance utilities.
 
 Issue a new application or user ticket.
 
-Returns a new application or user [ticket](#ticket) as an array.
+Returns a new application or user [ticket](shared-arrays.md#ticket) as an array.
 
 #### `issue` Parameters
 
 1.  _array_ `$app` — (Required if not using the [Implicit
-    Workflow](implicit-workflow.md)) [App credentials](#app) of the application
-    the application ticket will be issued to
+    Workflow](../implicit-workflow.md)) [App credentials](shared-arrays.md#app)
+    of the application the ticket will be issued to
 
-1.  _array_ `$grant` — (Optional) [Grant](#grant) for the application
+1.  _array_ `$grant` — (Optional) [Grant](shared-arrays.md#grant) for the
+    application
 
 ### `reissue($parentTicket, $grant)`
 
 Reissue an application or user ticket.
 
-Returns the reissued [ticket](#ticket) as an array.
+Returns the reissued [ticket](shared-arrays.md#ticket) as an array.
 
 #### `reissue` (`Ticket` Class) Parameters
 
-1.  _array_ `$parentTicket` — (Required) [Ticket](#ticket) to be reissued
+1.  _array_ `$parentTicket` — (Required) [Ticket](shared-arrays.md#ticket) to be
+    reissued
 
-1.  _array_ `$grant` — (Optional) [Grant](#grant) for the application the ticket
-    is being (re)issued to
+1.  _array_ `$grant` — (Optional) [Grant](shared-arrays.md#grant) for the
+    application the ticket is being (re)issued to
 
 ### `rsvp($app, $grant)`
 
 Generate an RSVP string representing a user grant.
 
-Returns a user [ticket](#ticket) as an array for the application to use
+Returns a user [ticket](shared-arrays.md#ticket) as an array for the application
+to use
 
 #### `rsvp` (`Ticket` Class) Parameters
 
-1.  _array_ `$app` — (Required) [App credentials](#app) of the application the
-    user ticket will be issued to
+1.  _array_ `$app` — (Required) [App credentials](shared-arrays.md#app) of the
+    application the user ticket will be issued to
 
-1.  _array_ `$grant` — (Required) [Grant](#grant) for the application. The grant
-    is not allowed to be `null`.
+1.  _array_ `$grant` — (Required) [Grant](shared-arrays.md#grant) for the
+    application. The grant is not allowed to be `null`.
 
 ### `generate($ticket)`
 
 Add the cryptographic properties to a ticket and prepare the ticket response.
 
-Returns the completed [ticket](#ticket) as an array.
+Returns the completed [ticket](shared-arrays.md#ticket) as an array.
 
 #### `generate` Parameters
 
-1. _array_ `$ticket` — (Required) Incomplete [ticket](#ticket) that only
-   contains the following:
+1. _array_ `$ticket` — (Required) Incomplete [ticket](shared-arrays.md#ticket)
+   that only contains the following:
    - `exp`
    - `app`
    - `user`
@@ -814,15 +790,15 @@ Returns the completed [ticket](#ticket) as an array.
 
 Decode a ticket ID (an iron-sealed string) into a ticket.
 
-Returns the [ticket](#ticket) (as an array) that was encoded in the given
-string.
+Returns the [ticket](shared-arrays.md#ticket) (as an array) that was encoded in
+the given string.
 
 #### `parse` Parameters
 
 1. _string_ `$id` — (Required) Ticket ID which is the encoded ticket
 
-`Server\Scope` Class
---------------------
+`Scope` Class
+-------------
 
 Scope manipulation utilities.
 
@@ -856,16 +832,16 @@ Returns a boolean that indicates if `$one` is equal to `$two`.
 1. _array_ `$one` — (Required) First of the two scopes being compared
 1. _array_ `$two` — (Required) Second of the two scopes being compared
 
-`Server\ServerException` Class
-------------------------------
+`ServerException` Class
+-----------------------
 
 The exception that is thrown when there is a _server_ Oz error.
 
-`Server\BadRequestException` Class
-----------------------------------
+`BadRequestException` Class
+---------------------------
 
-A type of `Server\ServerException` exception that represents an HTTP
-`400 Bad Request` server response.
+A type of `ServerException` exception that represents an HTTP `400 Bad Request`
+server response.
 
 ### `getCode()` (`BadRequestException` Class)
 
@@ -876,13 +852,13 @@ always `400`, as an integer.
 
 Inherited method from PHP's `Exception` class. Gives the error message text.
 
-`Server\UnauthorizedException` Class
-------------------------------------
+`UnauthorizedException` Class
+-----------------------------
 
-A type of `Server\ServerException` exception that represents an HTTP
-`401 Unauthorized` server response.
+A type of `ServerException` exception that represents an HTTP `401 Unauthorized`
+server response.
 
-### `Server\UnauthorizedException` Constructor
+### `UnauthorizedException` Constructor
 
 1.  _string_ `$message` — (Optional) Exception message to throw. It is also
     included in the `WWW-Authenticate` header.
@@ -915,11 +891,11 @@ Get the associative array of keys and values included in the HTTP
 Get the value the HTTP `WWW-Authenticate` header should be set to in the
 server's response.
 
-`Server\Forbidden` Class
-------------------------
+`Forbidden` Class
+-----------------
 
-A type of `Server\ServerException` exception that represents an HTTP
-`403 Forbidden` server response.
+A type of `ServerException` exception that represents an HTTP `403 Forbidden`
+server response.
 
 ### `getCode()` (`Forbidden` Class)
 
@@ -929,332 +905,3 @@ always `403`, as an integer.
 ### `getMessage()` (`Forbidden` Class)
 
 Inherited method from PHP's `Exception` class. Gives the error message text.
-
-`Client\Connection` Class
--------------------------
-
-An Oz client connection manager that provides easier access to protected
-resources.
-
-### `Client\Connection` Constructor
-
-1.  _array_ `$settings` — (Required) Configuration. Includes the following:
-
-    -   _array_ `endpoints` — (Optional) Server Oz protocol endpoint paths.
-        Includes the following:
-
-        -   _string_ `app` — (Optional) Application credentials endpoint.
-            Defaults to `/oz/app`.
-
-        -   _string_ `reissue` — (Optional) Ticket reissue endpoint. Defaults to
-            `/oz/reissue`.
-
-    -   _string_ `uri` — (Required) Server full root URI without path (e.g.
-        '<https://example.com>')
-
-    -   _array_ `credentials` — (Required if not using the [Implicit
-        Workflow](implicit-workflow.md)) Application's Hawk credentials, which
-        include the following:
-
-        -   _string_ `key` — Secret key for the application
-
-        -   _string_ `algorithm` — Algorithm to be used for HMAC. Must be an
-            algorithm in the [`$algorithms` array property of the `Crypto` class](#algorithms-property).
-
-1.  _Shawm11\\Hawk\\Client\\ClientInterface_ `$hawkClient` — (Optional) Hawk
-    Client instance to be used
-
-### `request($path, $ticket, $options)`
-
-Request a protected resource.
-
-Returns an array that contains the following:
-
--   _integer_ `code` — HTTP response code
-
--   _array_ `result` — Requested resource (parsed to array if JSON)
-
--   _ticket_ `ticket` — Ticket used to make the request, or a reissued ticket if
-    the ticket used to make the request expired
-
-#### `request` Parameters
-
-1.  _string_ `$path` — (Required) URL of the request relative to the host (e.g.
-    `/resource`)
-
-1.  _array_ `$ticket` — (Required) Application or user ticket for the client. If
-    the ticket is expired, there will be an attempt to automatically refresh it.
-
-1.  _array_ `$options` — (Optional) Configuration. May include the following:
-
-    -   _string_ `method` — (Optional) HTTP method. Defaults to `'GET'`.
-
-    -   _string_ or _array_ `payload` — (Optional) Request payload. Defaults to
-        no payload.
-
-### `app($path, $options)`
-
-Request a protected resource using an application ticket that is automatically
-retrieved (if it has not been previously retrieved) using the application
-credentials given in the `Connection` settings. **ONLY FOR THE RSVP AND USER
-CREDENTIALS FLOWS.**
-
-Returns an array that contains the following:
-
--   _integer_ `code` — HTTP response code
-
--   _array_ `result` — Requested resource (parsed to array if JSON)
-
--   _ticket_ `ticket` — Ticket used to make the request, or a reissued ticket if
-    the ticket used to make the request expired
-
-#### `app` (`Connection` Class) Parameters
-
-1.  _string_ `$path` — (Required) URL of the request relative to the host (e.g.
-    `/resource`)
-
-1.  _array_ `$options` — (Optional) Configuration. May include the following:
-
-    -   _string_ `method` — (Optional) HTTP method. Defaults to `'GET'`.
-
-    -   _string_ or _array_ `payload` — (Optional) Request payload. Defaults to
-        no payload.
-
-### `reissue($ticket)`
-
-Reissue (refresh) a ticket.
-
-Returns the reissued [ticket](#ticket) as an array.
-
-#### `reissue` (`Connection` Class) Parameters
-
-1. _array_ `$ticket` — (Required) Ticket being reissued
-
-### `requestAppTicket()`
-
-Request an application ticket using the application credentials given in the
-settings when the object instance was created. **ONLY FOR THE RSVP AND USER
-CREDENTIAL FLOWS.**
-
-Returns the response as an array that contains the following:
-
-- _integer_ `code` — HTTP status code
-- _string_ `result` — Response body. The application ticket if successful.
-- _array_ `headers` — Response headers
-
-### `requestUserTicket($userCredentials, $flow)`
-
-Request a user ticket using the given user credentials. **ONLY FOR THE IMPLICIT
-AND USER CREDENTIALS FLOWS.**
-
-Returns the response as an array that contains the following:
-
-- _integer_ `code` — HTTP status code
-- _string_ `result` — Response body. The user ticket if successful.
-- _array_ `headers` — Response headers
-
-#### `requestUserTicket` Parameters
-
-1.  _string_ or _array_ `$userCredentials` — (Required) User's credentials
-
-1.  _string_ `$flow` — (Optional) Type of Oz flow to use to attempt to retrieve
-    a user ticket. Must be one of the following:
-
-    -   `auto` — (Default) Automatically determine the flow being used based on
-        the application credentials in the settings that were set in the
-        [constructor](#clientconnection-class). If the application credentials
-        are set, then the  [User Credentials](user-credentials-workflow.md) Flow
-        will be used. If the application credentials are NOT set, then the
-        [Implicit flow](implicit-workflow.md) will be used.
-
-    -   `user_credentials` — Attempt to retrieve user ticket with application
-        authentication in the [User Credentials](user-credentials-workflow.md)
-
-    -   `implicit` — Attempt to retrieve user ticket WITHOUT application
-        authentication in the [Implicit flow](implicit-workflow.md)
-
-`Client\Client` Class
----------------------
-
-Manages the ticket lifecycle and will automatically refresh the ticket when it
-expires.
-
-### `Client\Client` Constructor
-
-1. _Shawm11\\Hawk\\Client\\ClientInterface_ `$hawkClient` — (Optional) Hawk
-   Client instance to be used
-
-### `header($uri, $method, $ticket, $options)`
-
-Generate the value for an HTTP `Authorization` header for a request to the
-server.
-
-Returns an array that contains the following:
-
--   _string_ `header` — Value for the `Authorization` header for the client's
-    request to the server.
-
--   _array_ `artifacts` — Components used to construct the request including the
-    `Authorization` HTTP header. It includes the following:
-
-    - _string_ `method` — Request method
-    - _string_ `host` — Request host
-    - _string_ `port` — Request port
-    - _string_ `resource` — URL of the request relative to the host
-    - _string_ `ts` — Timestamp (as milliseconds since January 1, 1970)
-    - _string_ `nonce` — Nonce used to create the `mac`
-    - _string_ `hash` — Payload hash. Only used for payload validation.
-    - _string_ `ext` — Extra application-specific data
-    - _string_ `app` — Application ID. Only used with [Oz](https://github.com/hueniverse/oz).
-    - _string_ `dlg` — 'delegated-by' attribute. Only used with [Oz](https://github.com/hueniverse/oz).
-
-#### `header` Parameters
-
-1.  _string_ or _array_ `$uri` — (Required) URI (as a string) of the request or
-    an array that is the output of PHP's `parse_url()`
-
-1.  _string_ `$method` — (Required) HTTP verb of the request (e.g. `GET`,
-    `POST`)
-
-1.  _array_ `$ticket` — (Required) Application or user ticket for the client
-
-1.  _array_ `$options` — (Required) Hawk attributes that will be integrated
-    into the `Authorization` header value. It includes the following:
-
-    -   _float_ `timestamp` — (Optional) Timestamp (as milliseconds since
-        January 1, 1970)
-
-    -   _string_ `nonce` — (Optional) Nonce to be used to create the HMAC
-
-    -   _string_ `hash` — (Optional) Payload hash. Only used for payload
-        validation.
-
-    -   _string_ `payload` — (Optional) UTF-8-encoded request body (or
-        "payload"). Only used for payload validation.
-
-    -   _string_ `contentType` — (Optional) Payload content type. It is usually
-        the value of the `Content-Type` header in the request. Only used for
-        payload validation.
-
-    -   _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
-        milliseconds) of the client's local time compared to the server's local
-        time
-
-    -   _string_ `ext` — (Optional) Extra application-specific data
-
-`Client\ClientException` Class
-------------------------------
-
-The exception that is thrown when there is a _client_ Oz error.
-
-Shared Arrays
--------------
-
-### App
-
-_array_ — Set of credentials that contains the following:
-
--   _string_ `id` — (Required) Unique ID for the application
-
--   _string_ `key` — (Required) Secret key for the client
-
--   _string_ `algorithm` — (Required) Algorithm to be used for HMAC. Must be
-    either `sha1` or `sha256`.
-
--   _array_ `scope` — (Optional) Scope of the ticket to be issued
-
--   _boolean_ `delegate` — (Optional) If the application is allowed to delegate
-    a ticket to another application. Defaults to `false`.
-
-### Grant
-
-_array_ — If set, the issued ticket is going to be a user ticket, and this grant
-is going to be issued with it. If set to `null`, the issued ticket will be an
-application ticket.
-
--   _string_ `id` — (Required) Unique ID for the grant
-
--   _string_ `app` — (Required) Application ID
-
--   _string_ `user` — (Required) User ID
-
--   _float_ `exp` — (Required) Grant expiration time in milliseconds since
-    January 1, 1970
-
--   _array_ `scope` — (Optional) Scope granted by the user to the application
-
--   _string_ `type` — (Optional) Type of grant. In other words, how the grant
-    was obtained. It can be one of the following values:
-
-    - `rsvp` — (Default) Grant was obtained using the [RSVP Workflow](rsvp-workflow-without-delegation.md)
-    - `user_credentials` — Grant was obtained using the [User Credentials](user-credentials-workflow.md)
-    - `implicit` — Grant was obtained using the [Implicit Workflow](implicit-workflow.md)
-
-### Ticket
-
-_array_ — Ticket and its public properties. It contains the following:
-
--   _string_ `id` — Ticket ID used for making authenticated Hawk requests
-
--   _string_ `key` — Secret key (only known by the application and the server)
-    used to authenticate
-
--   _string_ `algorithm` — HMAC algorithm used to authenticate. Default is
-    `sha256`.
-
--   _float_ `exp` — Ticket expiration time in milliseconds since January 1, 1970
-
--   _string_ `app` — Application id the ticket was issued to
-
--   _string_ `user` — User ID if the ticket represents access to user resources.
-    If no user ID is included, the ticket allows the application access to the
-    application own resources only.
-
--   _array_ `scope` — Ticket scope. Defaults to `[]` if no scope is specified.
-
--   _array_ `grant` — If `user` is set, includes the grant ID referencing the
-    authorization granted by the user to the application. Can be a unique ID or
-    string encoding the grant information as long as the server is able to parse
-    the information later.
-
--   _boolean_ `delegate` — If `false`, the ticket cannot be delegated regardless
-    of the application permissions. Defaults to `true` which means use the
-    application permissions to delegate.
-
--   _string_ `dlg` — If the ticket is the result of access delegation, the
-    application ID of the delegating application
-
--   _array_ `ext` — Custom server public data attached to the ticket
-
-### Ticket Options
-
-_array_ — Supported ticket parsing and issuance options passed to the [Ticket](#serverticket-class)
-methods. Each [endpoint](#serverendpoints-class) utilizes a different subset of
-these options but it is safe to pass one common object to all (it will ignore
-unused options). The ticket options contain the following:
-
--   _float_ `ttl` — (Optional) Sets the ticket lifetime in milliseconds when
-    generating a ticket. Defaults to `3600000` (1 hour) for tickets and `60000`
-    (1 minutes) for RSVPs.
-
--   _boolean_ `delegate` — (Optional) If `false`, the ticket cannot be delegated
-    regardless of the application permissions. Defaults to `true` which means
-    use the application permissions to delegate.
-
--   _array_ `iron` — (Optional) Overrides the default Iron configuration
-
--   _integer_ `keyBytes` — (Optional) Hawk key length in bytes. Defaults to
-    `32`.
-
--   _string_ `hmacAlgorithm` — (Optional) Hawk HMAC algorithm. Defaults to
-    `sha256`.
-
--   _array_ `ext` — (Optional) Used to include custom server data in the ticket
-    and response. Contains the following:
-
-    -   _array_ `public` — (Optional) Associative array that will be included in
-        the response under `ticket.ext` and in the encoded ticket as
-        `ticket.ext.public`.
-
-    -   _array_ `private` — (Optional) Associative array that will only be
-        included in the encoded ticket as `ticket.ext.private`
