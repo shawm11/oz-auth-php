@@ -94,9 +94,12 @@ implementations which are designed to be plugged into a framework such as
 ### `Endpoints` Constructor
 
 1.  _Shawm11\\Hawk\\Server\\ServerInterface_ `$hawkServer` — (Optional) Hawk
-    Server instance to be used
+    Server instance to be used.. By default, an instance of the
+    `Shawm11\Hawk\Server` class is created and used.
 
-1.  _Shawm11\\Iron\\IronInterface_ `$iron` — (Optional) Iron instance to be used
+1.  _Shawm11\\Iron\\IronInterface_ `$iron` — (Optional) Iron instance to be
+    used. By default, an instance of the `Shawm11\Iron\Iron` class with the
+    default options is created and used.
 
 ### `app($request, $options)`
 
