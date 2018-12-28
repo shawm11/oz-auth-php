@@ -3,7 +3,7 @@ Oz Authorization PHP
 
 ![Version Number](https://img.shields.io/packagist/v/shawm11/oz-auth.svg)
 ![PHP Version](https://img.shields.io/packagist/php-v/shawm11/oz-auth.svg)
-[![License](https://img.shields.io/github/license/shawm11/oz-auth-php.svg)](https://github.com/shawm11/oz-auth-php/blob/master/LICENSE.md)
+[![License](https://img.shields.io/github/license/shawm11/oz-auth-php.svg)](LICENSE.md)
 
 A PHP implementation of the 5.x version of the
 [**Oz**](https://github.com/hueniverse/oz) web authorization protocol.
@@ -20,6 +20,7 @@ Table of Contents
     - [Client Usage Examples](#client-usage-examples)
 
 -   [Documentation](#documentation)
+    - [API References](#api-references)
 
 -   [Security Considerations](#security-considerations)
 
@@ -94,7 +95,7 @@ Documentation
 -   [Implicit Workflow](docs/implicit-workflow.md) — General overview of the
     Implicit workflow
     
-### API Reference
+### API References
 
 -   [Server API](docs/api-reference/server-api.md) — API reference for the
     classes in the `Shawm11\Oz\Server` namespace
