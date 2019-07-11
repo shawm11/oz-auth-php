@@ -14,9 +14,9 @@ Obtain User Ticket
 ------------------
 
 In the Implicit workflow, the user credentials (e.g. username and password) must
-be provided when attempting to obtain a user ticket. If the application Hawk
-credentials are _not_ set in the Oz connection settings, the `requestUserTicket()`
-function assumes the Implicit workflow is being used.
+be provided _in plain text_ when attempting to obtain a user ticket.
+If the application Hawk credentials are _not_ set in the Oz connection settings,
+the `requestUserTicket()` function assumes the Implicit workflow is being used.
 
 ```php
 <?php
