@@ -19,9 +19,9 @@ interface ServerInterface
      * @param  array  $request  Request data, which contains `method`, `url`,
      *                          `host`, `port`, `authorization`, and
      *                          `contentType`
-     * @param  string  $encryptionPassword  A password used to generate the
-     *                                      ticket encryption key. Must be kept
-     *                                      confidential by the server.
+     * @param  string|array  $encryptionPassword  A password used to generate
+     *                                      the ticket encryption key. Must be
+     *                                      kept confidential by the server.
      * @param  boolean  $checkExpiration  If the ticket expiration should be
      *                                    checked
      * @param  array  $options  May contain ticket configuration (`ticket`) and
