@@ -20,7 +20,7 @@ Table of Contents
     - [Referencing Issues](#referencing-issues)
   - [Example Commit Messages](#example-commit-messages)
 - [Development Tasks CLI Commands](#development-tasks-cli-commands)
-- [Changelog](#changelog)
+- [Version Bump and Changelog](#version-bump-and-changelog)
 - [Git Hooks](#git-hooks)
   - [Installing Hooks](#installing-hooks)
 
@@ -196,13 +196,14 @@ Robo commands and their descriptions.
 "./vendor/bin/robo"
 ```
 
-Changelog
----------
+Version Bump and Changelog
+--------------------------
 
-The `CHANGELOG.md` file is automatically generated from the commit messages and
-the repository tags when creating a release using [development task CLI commands](#development-tasks-cli-commands).
-Installing the [conventional-changelog-cli](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-cli),
-Node/NPM package is required to generate the `CHANGELOG.md` file successfully.
+The version is bumped automatically and the `CHANGELOG.md` file is generated
+from the commit messages using [development task CLI commands](#development-tasks-cli-commands).
+Installing the [Standard Version](https://github.com/conventional-changelog/standard-version),
+Node/NPM package is required to bump the version and generate the `CHANGELOG.md`
+file successfully.
 
 Git Hooks
 ---------
