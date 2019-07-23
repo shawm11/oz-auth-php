@@ -58,16 +58,16 @@
         },
         {
             "name": "shawm11/hawk-auth",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shawm11/hawk-auth-php.git",
-                "reference": "c3629078a86a65745f8f8ce47a962184da3492bb"
+                "reference": "b52a304888b3d99cc0238e571fd696585fc001e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shawm11/hawk-auth-php/zipball/c3629078a86a65745f8f8ce47a962184da3492bb",
-                "reference": "c3629078a86a65745f8f8ce47a962184da3492bb",
+                "url": "https://api.github.com/repos/shawm11/hawk-auth-php/zipball/b52a304888b3d99cc0238e571fd696585fc001e5",
+                "reference": "b52a304888b3d99cc0238e571fd696585fc001e5",
                 "shasum": ""
             },
             "require": {
@@ -78,10 +78,10 @@
                 "codeception/specify": "^1.1",
                 "codeception/verify": "^1.0",
                 "consolidation/robo": "^1.3",
-                "php": ">=7.0.0",
+                "php": ">=7.1.0",
+                "phpstan/phpstan": "^0.11.12",
                 "phpunit/phpunit": "^7.2",
-                "squizlabs/php_codesniffer": "^3.2",
-                "vierbergenlars/php-semver": "^3.0"
+                "squizlabs/php_codesniffer": "^3.2"
             },
             "type": "library",
             "autoload": {
@@ -94,20 +94,20 @@
                 "MIT"
             ],
             "description": "PHP implementation of the Hawk HTTP authentication scheme",
-            "time": "2018-12-28T01:25:58+00:00"
+            "time": "2019-07-23T20:00:27+00:00"
         },
         {
             "name": "shawm11/iron-crypto",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shawm11/iron-crypto-php.git",
-                "reference": "854898f24ff4eed945247452f84e9c0636c20233"
+                "reference": "ea03725dfd200b2bed8f3cd8bf5fec4c29d9cab0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shawm11/iron-crypto-php/zipball/854898f24ff4eed945247452f84e9c0636c20233",
-                "reference": "854898f24ff4eed945247452f84e9c0636c20233",
+                "url": "https://api.github.com/repos/shawm11/iron-crypto-php/zipball/ea03725dfd200b2bed8f3cd8bf5fec4c29d9cab0",
+                "reference": "ea03725dfd200b2bed8f3cd8bf5fec4c29d9cab0",
                 "shasum": ""
             },
             "require": {
@@ -118,10 +118,10 @@
                 "codeception/specify": "^1.1",
                 "codeception/verify": "^1.0",
                 "consolidation/robo": "^1.3",
-                "php": ">=7.0.0",
+                "php": ">=7.1.0",
+                "phpstan/phpstan": "^0.11.12",
                 "phpunit/phpunit": "^7.2",
-                "squizlabs/php_codesniffer": "^3.2",
-                "vierbergenlars/php-semver": "^3.0"
+                "squizlabs/php_codesniffer": "^3.2"
             },
             "type": "library",
             "autoload": {
@@ -134,7 +134,7 @@
                 "MIT"
             ],
             "description": "PHP implementation of the iron cryptographic utility",
-            "time": "2018-12-27T22:57:28+00:00"
+            "time": "2019-07-23T20:07:15+00:00"
         }
     ],
     "packages-dev": [
