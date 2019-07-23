@@ -1,3 +1,25 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [1.1.1](https://github.com/shawm11/oz-auth-php/compare/v1.1.0...v1.1.1) (2019-07-23)
+
+
+### Bug Fixes
+
+* **server:** say encryption password can be array in authenticate() ([d129d1c](https://github.com/shawm11/oz-auth-php/commit/d129d1c))
+
+
+### Build System
+
+* **composer:** update dependencies ([cd17abf](https://github.com/shawm11/oz-auth-php/commit/cd17abf))
+* **composer:** update hawk & iron ([c8033b5](https://github.com/shawm11/oz-auth-php/commit/c8033b5))
+* **robo:** add static code analysis to lint task & fix errors ([65cbaaf](https://github.com/shawm11/oz-auth-php/commit/65cbaaf))
+* **robo:** clean up RoboFile ([35a4c2c](https://github.com/shawm11/oz-auth-php/commit/35a4c2c))
+* **robo:** use Standard Version for version bumping & changelog ([89b967c](https://github.com/shawm11/oz-auth-php/commit/89b967c))
+
+
+
 # [1.1.0](https://github.com/shawm11/oz-auth-php/compare/v1.0.0-beta...v1.1.0) (2018-12-28)
 
 
@@ -24,6 +46,3 @@
 ### Features
 
 * add class and interfaces ([5aa9958](https://github.com/shawm11/oz-auth-php/commit/5aa9958))
-
-
-
