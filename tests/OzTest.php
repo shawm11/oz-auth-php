@@ -93,7 +93,7 @@ class OzTest extends TestCase
                     'exp' => (new HawkUtils)->now() + 60000
                 ];
 
-                $rsvp = (new OzTicket($encryptionPassword))->rsvp($apps['social'], $grant, $encryptionPassword);
+                $rsvp = (new OzTicket($encryptionPassword))->rsvp($apps['social'], $grant);
 
                 /*
                  * 4. After granting the app access, the user returns to the app

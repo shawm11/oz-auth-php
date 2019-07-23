@@ -70,6 +70,8 @@ class Endpoints implements EndpointsInterface
 
         $ticketGrant = empty($ticket['grant']) ? null : $ticket['grant'];
         $grantType = null;
+        $grant = null;
+        $ext = null;
 
         if ($ticketGrant) {
             $grantResult = $options['loadGrantFunc']($ticket['grant']);

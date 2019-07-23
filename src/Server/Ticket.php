@@ -41,7 +41,7 @@ class Ticket implements TicketInterface
         }
     }
 
-    public function issue($app, $grant)
+    public function issue($app, $grant = null)
     {
         if ($grant) {
             $grant['type'] = (isset($grant['type'])) ? $grant['type'] : 'rsvp';
@@ -118,7 +118,7 @@ class Ticket implements TicketInterface
         return $this->generate($ticket);
     }
 
-    public function reissue($parentTicket, $grant)
+    public function reissue($parentTicket, $grant = null)
     {
         if ($grant) {
             $grant['type'] = (isset($grant['type'])) ? $grant['type'] : 'rsvp';

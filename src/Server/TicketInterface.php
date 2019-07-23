@@ -27,7 +27,7 @@ interface TicketInterface
      * @throws ServerException
      * @return array  An application or user ticket
      */
-    public function issue($app, $grant);
+    public function issue($app, $grant = null);
 
     /**
      * Reissue an application or user ticket
@@ -38,7 +38,7 @@ interface TicketInterface
      * @throws ServerException
      * @return array  The reissued ticket
      */
-    public function reissue($parentTicket, $grant);
+    public function reissue($parentTicket, $grant = null);
 
     /**
      * Generate an RSVP string representing a user grant

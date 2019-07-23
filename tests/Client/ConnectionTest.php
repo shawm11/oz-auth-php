@@ -324,7 +324,7 @@ class ConnectionTest extends TestCase
 
     protected function fakeHttpResponse($responseBody, $statusCode = 200)
     {
-        $requestObj = new \Httpful\Request;
+        $requestObj = new \Httpful\Request; // Class is replaced by mock in tests
         $requestObj->auto_parse = false;
 
         $fakeOzResponse = new \Httpful\Response('', "HTTP/1.1 {$statusCode}", $requestObj);

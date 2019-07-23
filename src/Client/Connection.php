@@ -209,7 +209,7 @@ class Connection implements ConnectionInterface
      * @param  string  $method  HTTP method of the request
      * @param  string  $path  URL of the request relative to the host (e.g.
      *                        `/resource`)
-     * @param  string|array  $payload  Request body
+     * @param  string|array|null  $payload  Request body
      * @param  array  $ticket
      * @return array  The requested resource (parsed to array if JSON), HTTP
      *                response code, and the ticket used to make the request
@@ -257,7 +257,7 @@ class Connection implements ConnectionInterface
      * @param  string  $method  HTTP method of the request
      * @param  string  $uri  URI the request should be made to
      * @param  array  $headers  Request headers
-     * @param  string  $payload  Request body
+     * @param  array  $payload  Request body
      * @return array  The response, which contains the status code, response
      *                body, and headers
      */

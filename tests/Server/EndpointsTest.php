@@ -1059,7 +1059,7 @@ class EndpointsTest extends TestCase
                         ];
                         $options = [
                             'encryptionPassword' => $this->encryptionPassword,
-                            'loadGrantFunc' => function () use ($grant) {
+                            'loadGrantFunc' => function () {
                                 return null;
                             },
                             'loadAppFunc' => $this->options['loadAppFunc']
@@ -1175,7 +1175,7 @@ class EndpointsTest extends TestCase
                         ];
                         $options = [
                             'encryptionPassword' => $this->encryptionPassword,
-                            'loadGrantFunc' => function () use ($grant) {
+                            'loadGrantFunc' => function () {
                                 throw new ServerException('Boom!');
                             },
                             'loadAppFunc' => $this->options['loadAppFunc']
@@ -1831,7 +1831,7 @@ class EndpointsTest extends TestCase
                         $options = [
                             'encryptionPassword' => $this->encryptionPassword,
                             'grant' => $grant,
-                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                            'storeGrantFunc' => function ($grantObj) {
                                 return null;
                             },
                             'verifyUserFunc' => function ($userCreds) {
@@ -1866,7 +1866,7 @@ class EndpointsTest extends TestCase
                         $options = [
                             'encryptionPassword' => $this->encryptionPassword,
                             'grant' => $grant,
-                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                            'storeGrantFunc' => function ($grantObj) {
                                 return 123;
                             },
                             'verifyUserFunc' => function ($userCreds) {
@@ -1901,7 +1901,7 @@ class EndpointsTest extends TestCase
                         $options = [
                             'encryptionPassword' => $this->encryptionPassword,
                             'grant' => $grant,
-                            'storeGrantFunc' => function ($grantObj) use (&$grant) {
+                            'storeGrantFunc' => function ($grantObj) {
                                 throw new ServerException('Boom!');
                             },
                             'verifyUserFunc' => function ($userCreds) {
