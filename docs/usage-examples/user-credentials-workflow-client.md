@@ -47,14 +47,14 @@ function makeRequestWithUserTicket() {
     $response = [];
     $ozConnection = new OzConnection([
         // Base URI for all requests
-		'uri' => 'http://example.com/api',
-		// Client's application Hawk credentials previously issued by the server
-		'credentials' => [
-			'id' => 'dh37fgj492je',
+        'uri' => 'http://example.com/api',
+        // Client's application Hawk credentials previously issued by the server
+        'credentials' => [
+            'id' => 'dh37fgj492je',
             'key' => 'aoijedoaijsdlaksjdl',
             'algorithm' => 'sha256'
-		]
-	]);
+        ]
+    ]);
 
     try {
         $response = $ozConnection->requestUserTicket([

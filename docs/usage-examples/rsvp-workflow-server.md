@@ -36,42 +36,42 @@ use Shawm11\Oz\Server\ServerException as OzServerException;
 
 function handleAppRequest() {
     $appTicket = [];
-	// Pretend to somehow get the request data
-	$requestData = [
-		'method' => 'GET',
-		'url' => '/resource/4?a=1&b=2',
-		'host' => 'example.com',
-		'port' => 8080,
-		'authorization' => 'Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
-	];
-	$options = [
-		'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
-		// Function for retrieving app credentials
-		'loadAppFunc' => function ($id) { // This is required
-			// Pretend to somehow retrieve the app credentials using the given ID ($id)
-			$appCredentials = [
-				'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
-				'algorithm' => 'sha256'
-			];
+    // Pretend to somehow get the request data
+    $requestData = [
+        'method' => 'GET',
+        'url' => '/resource/4?a=1&b=2',
+        'host' => 'example.com',
+        'port' => 8080,
+        'authorization' => 'Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
+    ];
+    $options = [
+        'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
+        // Function for retrieving app credentials
+        'loadAppFunc' => function ($id) { // This is required
+            // Pretend to somehow retrieve the app credentials using the given ID ($id)
+            $appCredentials = [
+                'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
+                'algorithm' => 'sha256'
+            ];
 
-			return $appCredentials;
-		}
-	];
+            return $appCredentials;
+        }
+    ];
 
     try {
         $appTicket = (new OzEndpoints)->app($requestData, $options);
     } catch (OzServerException $e) {
         $httpStatusCode = $e->getCode();
         // Send error response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
+        send($httpStatusCode, $e->getMessage()); // Fictional function
         return;
     }
 
     // Maybe do some other stuff before sending the response
 
-	// A fictional function that sends a response containing the ticket with an
-	// HTTP code of 200
-	send(200, $ticket);
+    // A fictional function that sends a response containing the ticket with an
+    // HTTP code of 200
+    send(200, $ticket);
 }
 ```
 
@@ -96,57 +96,57 @@ use Shawm11\Oz\Server\ServerException as OzServerException;
 
 function handleRsvpRequest() {
     $userTicket = [];
-	// Pretend to somehow get the request data
-	$requestData = [
-		'method' => 'GET',
-		'url' => '/resource/4?a=1&b=2',
-		'host' => 'example.com',
-		'port' => 8080,
-		'authorization' => 'Hawk id="Fe26.2**some-app-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
-	];
-	// Pretend to somehow get the request body
-	$requestBody = [
-		'rsvp' => 'some_iron_string_that_was_issued_by_the_server_when_the_user_approved_the_scope'
-	];
+    // Pretend to somehow get the request data
+    $requestData = [
+        'method' => 'GET',
+        'url' => '/resource/4?a=1&b=2',
+        'host' => 'example.com',
+        'port' => 8080,
+        'authorization' => 'Hawk id="Fe26.2**some-app-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
+    ];
+    // Pretend to somehow get the request body
+    $requestBody = [
+        'rsvp' => 'some_iron_string_that_was_issued_by_the_server_when_the_user_approved_the_scope'
+    ];
 
-	$options = [ // This is required
-		'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
-		// Function for retrieving app credentials
-		'loadAppFunc' => function ($id) {
-			// Pretend to somehow retrieve the credentials using the given ID ($id)
-			$appCredentials = [
-				'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
-				'algorithm' => 'sha256'
-			];
+    $options = [ // This is required
+        'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
+        // Function for retrieving app credentials
+        'loadAppFunc' => function ($id) {
+            // Pretend to somehow retrieve the credentials using the given ID ($id)
+            $appCredentials = [
+                'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
+                'algorithm' => 'sha256'
+            ];
 
-			return $appCredentials;
-		},
-		// Function for retrieving grant
-		'loadGrantFunc' => function ($id) {  // This is required
-			// Pretend to somehow retrieve grant using the given ID ($id)
-			$grant = [
-				'id' => $id,
-				'app' => '123',
-				'user' => '456',
-				'exp' => 1352535473414,
-				'scope' => ['b']
-			]
-		}
-	];
+            return $appCredentials;
+        },
+        // Function for retrieving grant
+        'loadGrantFunc' => function ($id) {  // This is required
+            // Pretend to somehow retrieve grant using the given ID ($id)
+            $grant = [
+                'id' => $id,
+                'app' => '123',
+                'user' => '456',
+                'exp' => 1352535473414,
+                'scope' => ['b']
+            ]
+        }
+    ];
 
     try {
         $userTicket = (new OzEndpoints)->rsvp($requestData, $requestBody, $options);
     } catch (OzServerException $e) {
         $httpStatusCode = $e->getCode();
         // Send error response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
+        send($httpStatusCode, $e->getMessage()); // Fictional function
         return;
     }
 
     // Maybe do some other stuff before sending the response
 
-	// A fictional function that sends a response containing the ticket with an
-	// HTTP code of 200
-	send(200, $ticket);
+    // A fictional function that sends a response containing the ticket with an
+    // HTTP code of 200
+    send(200, $ticket);
 }
 ```

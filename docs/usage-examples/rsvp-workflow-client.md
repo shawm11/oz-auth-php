@@ -32,27 +32,27 @@ function makeRequestUsingAppTicket() {
     $response = [];
     $ozConnection = new OzConnection([
         // Base URI for all requests
-		'uri' => 'http://example.com/api',
-		// Client's application Hawk credentials previously issued by the server
-		'credentials' => [
-			'id' => 'dh37fgj492je',
+        'uri' => 'http://example.com/api',
+        // Client's application Hawk credentials previously issued by the server
+        'credentials' => [
+            'id' => 'dh37fgj492je',
             'key' => 'aoijedoaijsdlaksjdl',
             'algorithm' => 'sha256'
-		]
-	]);
+        ]
+    ]);
 
     try {
-		// Obtain an application ticket (if one has not been obtained) then
-		// request resource (GET /resource?a=b)
+        // Obtain an application ticket (if one has not been obtained) then
+        // request resource (GET /resource?a=b)
         $response = $ozConnection->app('/resource?a=b');
     } catch (OzClientException $e) {
         echo 'ERROR: ' . $e->getMessage();
         return;
     }
 
-	$result = $response['result']; // an array if the response body is JSON, otherwise a string
-	$code = $response['code']; // HTTP status code as an integer
-	$ticket = $response['ticket']; // application ticket as an array
+    $result = $response['result']; // an array if the response body is JSON, otherwise a string
+    $code = $response['code']; // HTTP status code as an integer
+    $ticket = $response['ticket']; // application ticket as an array
 
     // Do some more stuff with application ticket and server response...
 }
@@ -79,14 +79,14 @@ function makeRequestWithUserTicket() {
     $response = [];
     $ozConnection = new OzConnection([
         // Base URI for all requests
-		'uri' => 'http://example.com/api',
-		// Client's application Hawk credentials previously issued by the server
-		'credentials' => [
-			'id' => 'dh37fgj492je',
+        'uri' => 'http://example.com/api',
+        // Client's application Hawk credentials previously issued by the server
+        'credentials' => [
+            'id' => 'dh37fgj492je',
             'key' => 'aoijedoaijsdlaksjdl',
             'algorithm' => 'sha256'
-		]
-	]);
+        ]
+    ]);
 
     /*
      * Obtain an application ticket
@@ -119,9 +119,9 @@ function makeRequestWithUserTicket() {
         throw new \Exception('ERROR: ' . $e->getMessage());
     }
 
-	$result = $response['result']; // an array if the response body is JSON, otherwise a string
-	$code = $response['code']; // HTTP status code as an integer
-	$appTicket = $response['ticket']; // (possibly reissued) application ticket as an array
+    $result = $response['result']; // an array if the response body is JSON, otherwise a string
+    $code = $response['code']; // HTTP status code as an integer
+    $appTicket = $response['ticket']; // (possibly reissued) application ticket as an array
 
     // Do some more stuff...
 }
@@ -147,18 +147,18 @@ function getUserTicket() {
     $response = [];
     $ozConnection = new OzConnection([
         // Base URI for all requests
-		'uri' => 'http://example.com/api',
-		// Client's application Hawk credentials previously issued by the server
-		'credentials' => [
-			'id' => 'dh37fgj492je',
+        'uri' => 'http://example.com/api',
+        // Client's application Hawk credentials previously issued by the server
+        'credentials' => [
+            'id' => 'dh37fgj492je',
             'key' => 'aoijedoaijsdlaksjdl',
             'algorithm' => 'sha256'
-		]
-	])
+        ]
+    ])
 
     try {
-		// Obtain an application ticket (if one has not been obtained) then
-		// request user ticket using RSVP
+        // Obtain an application ticket (if one has not been obtained) then
+        // request user ticket using RSVP
         $response = $ozConnection->app('/oz/rsvp', [
             'method' => 'POST',
             'payload' => [
@@ -170,9 +170,9 @@ function getUserTicket() {
         return;
     }
 
-	$result = $response['result']; // user ticket as an array
-	$code = $response['code']; // HTTP status code as an integer
-	$ticket = $response['ticket']; // application ticket as an array
+    $result = $response['result']; // user ticket as an array
+    $code = $response['code']; // HTTP status code as an integer
+    $ticket = $response['ticket']; // application ticket as an array
 
     // Set the user ticket so it can used later
     $ozConnection->setUserTicket($result);

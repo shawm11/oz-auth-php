@@ -29,8 +29,8 @@ function makeRequestWithUserTicket() {
     $response = [];
     $ozConnection = new OzConnection([
         // Base URI for all requests
-		'uri' => 'http://example.com/api'
-	]);
+        'uri' => 'http://example.com/api'
+    ]);
 
     try {
         $response = $ozConnection->requestUserTicket([

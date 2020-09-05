@@ -43,48 +43,48 @@ use Shawm11\Oz\Server\ServerException as OzServerException;
 
 function handleRsvpRequest() {
     $userTicket = [];
-	// Pretend to somehow get the request data
-	$requestData = [
-		'method' => 'GET',
-		'url' => '/resource/4?a=1&b=2',
-		'host' => 'example.com',
-		'port' => 8080,
-		'authorization' => 'Hawk id="Fe26.2**some-app-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
-	];
-	// Pretend to somehow get the request body
-	$requestBody = [
-		'username' => 'some_user',
+    // Pretend to somehow get the request data
+    $requestData = [
+        'method' => 'GET',
+        'url' => '/resource/4?a=1&b=2',
+        'host' => 'example.com',
+        'port' => 8080,
+        'authorization' => 'Hawk id="Fe26.2**some-app-ticket-id", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="'
+    ];
+    // Pretend to somehow get the request body
+    $requestBody = [
+        'username' => 'some_user',
         'password' => 'this password is a secret'
-	];
+    ];
 
-	$options = [ // This is required
-		'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
-		// Function for retrieving grant
-		'loadGrantFunc' => function ($id) {  // This is required
-			// Pretend to somehow retrieve grant using the given ID ($id)
-			$grant = [
-				'id' => $id,
-				'app' => '123',
-				'user' => '456',
-				'exp' => 1352535473414,
-				'scope' => ['b']
-			]
-		}
-	];
+    $options = [ // This is required
+        'encryptionPassword' => 'some_separate_password_only_known_to_the_server_that_is_at_least_32_characters',
+        // Function for retrieving grant
+        'loadGrantFunc' => function ($id) {  // This is required
+            // Pretend to somehow retrieve grant using the given ID ($id)
+            $grant = [
+                'id' => $id,
+                'app' => '123',
+                'user' => '456',
+                'exp' => 1352535473414,
+                'scope' => ['b']
+            ]
+        }
+    ];
 
     try {
         $userTicket = (new OzEndpoints)->user($requestData, $requestBody, $options);
     } catch (OzServerException $e) {
         $httpStatusCode = $e->getCode();
         // Send error response...
-    	send($httpStatusCode, $e->getMessage()); // Fictional function
+        send($httpStatusCode, $e->getMessage()); // Fictional function
         return;
     }
 
     // Maybe do some other stuff before sending the response
 
-	// A fictional function that sends a response containing the ticket with an
-	// HTTP code of 200
-	send(200, $ticket);
+    // A fictional function that sends a response containing the ticket with an
+    // HTTP code of 200
+    send(200, $ticket);
 }
 ```

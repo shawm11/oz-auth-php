@@ -601,8 +601,7 @@ Returns the reissued [ticket](shared-arrays.md#ticket) as an array.
 
 Generate an RSVP string representing a user grant.
 
-Returns a user [ticket](shared-arrays.md#ticket) as an array for the application
-to use
+Returns the generated RSVP as a string.
 
 #### `rsvp` (`Ticket` Class) Parameters
 

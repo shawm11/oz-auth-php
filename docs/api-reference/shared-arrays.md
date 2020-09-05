@@ -49,7 +49,8 @@ application ticket.
 Ticket
 ------
 
-_array_ — Ticket and its public properties. It contains the following:
+_array_ — Ticket and its public properties. A ticket is actually a set of Hawk
+credential and artifacts. It contains the following:
 
 - _string_ `id` — Ticket ID used for making authenticated Hawk requests
 - _string_ `key` — Secret key (only known by the application and the server)

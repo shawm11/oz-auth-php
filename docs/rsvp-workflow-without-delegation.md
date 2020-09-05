@@ -63,7 +63,7 @@ The steps of the workflow assume that the default Oz options are used.
     - _NOTE: The method in which this is done is not part of the Oz protocol_
 
 1.  Server: Display scope (sent by the application in Step 2) and prompt user to
-	approve the scope
+    approve the scope
 
     - _NOTE: The method in which this is done is not part of the Oz protocol_
 
