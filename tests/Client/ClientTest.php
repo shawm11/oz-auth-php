@@ -1,6 +1,6 @@
 <?php
 
-namespace Shawm11\Oz\Tests;
+namespace Shawm11\Oz\Tests\Client;
 
 use PHPUnit\Framework\TestCase;
 use Shawm11\Oz\Client\Client;
@@ -10,7 +10,7 @@ class ClientTest extends TestCase
     use \Codeception\Specify;
     use \Codeception\AssertThrows;
 
-    public function testHeader()
+    public function testHeader(): void
     {
         $this->describe('Client::header()', function () {
 

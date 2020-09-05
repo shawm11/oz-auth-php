@@ -48,7 +48,7 @@ interface TicketInterface
      * @param  array  $grant  Describes the user grant. Includes `id`, `app`,
      *                        `user`, `exp`, and `scope`
      * @throws ServerException
-     * @return array  A user ticket for the client (application) to use
+     * @return string  A user ticket for the client (application) to use
      */
     public function rsvp($app, $grant);
 

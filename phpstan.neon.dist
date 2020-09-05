@@ -1,9 +1,9 @@
 parameters:
-    level: 5
-    memory: 100M
+    level: 6
     paths:
         - src
         - tests
+    checkMissingIterableValueType: false
     ignoreErrors:
         -
             message: '#Parameter \#[0-9] \$[a-zA-Z0-9]+ of method Shawm11\\Oz\\[a-zA-Z\\]+::[a-zA-Z0-9_]+\(\) expects [a-z|]+#'
@@ -14,5 +14,5 @@ parameters:
             message: '#Parameter \#[0-9] \$[a-zA-Z0-9]+ of class Shawm11\\Oz\\[a-zA-Z\\]+ constructor expects [a-z|]+#'
             path: %currentWorkingDirectory%/tests/Server/*
         - 
-            message: '#Cannot instantiate class Httpful\\Request via private constructor Httpful\\Request::__construct\(\).#'
+            message: '#Cannot instantiate class Httpful\\Request via protected constructor Httpful\\Request::__construct\(\).#'
             path: %currentWorkingDirectory%/tests/Client/ConnectionTest.php

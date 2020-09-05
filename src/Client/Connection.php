@@ -54,6 +54,9 @@ class Connection implements ConnectionInterface
         $this->hawkClient = $hawkClient ? $hawkClient : (new HawkClient);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function request($path, $ticket, $options = [])
     {
         $method = isset($options['method']) ? $options['method'] : 'GET';
@@ -88,6 +91,9 @@ class Connection implements ConnectionInterface
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function app($path, $options = [])
     {
         $this->setAppTicket();
@@ -98,6 +104,9 @@ class Connection implements ConnectionInterface
         return $response;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function reissue($ticket)
     {
         $response = $this->makeRequest('POST', $this->settings['endpoints']['reissue'], null, $ticket);
@@ -110,6 +119,9 @@ class Connection implements ConnectionInterface
         return $reissued;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function requestAppTicket()
     {
         $uri = $this->settings['uri'] . $this->settings['endpoints']['app'];
@@ -137,6 +149,9 @@ class Connection implements ConnectionInterface
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function requestUserTicket($userCredentials, $flow = 'auto')
     {
         $uri = $this->settings['uri'] . $this->settings['endpoints']['user'];
@@ -188,6 +203,7 @@ class Connection implements ConnectionInterface
      * Check if the application ticket is set. If not set, request an
      * application ticket using the application credentials
      *
+     * @return void
      * @throws ClientException
      */
     protected function setAppTicket()

@@ -12,7 +12,7 @@ class OzTest extends TestCase
 {
     use \Codeception\Specify;
 
-    public function testOz()
+    public function testOz(): void
     {
         $this->describe('Oz', function () {
 

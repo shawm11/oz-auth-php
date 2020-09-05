@@ -4,6 +4,9 @@ namespace Shawm11\Oz\Server;
 
 class Scope implements ScopeInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function validate($scope)
     {
         if (!$scope && $scope !== []) {
@@ -35,6 +38,9 @@ class Scope implements ScopeInterface
         return null;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isSubset($scope, $subset)
     {
         if (!$scope) {

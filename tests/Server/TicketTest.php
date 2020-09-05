@@ -1,6 +1,6 @@
 <?php
 
-namespace Shawm11\Oz\Tests;
+namespace Shawm11\Oz\Tests\Server;
 
 use PHPUnit\Framework\TestCase;
 use Shawm11\Oz\Server\Ticket;
@@ -15,9 +15,10 @@ class TicketTest extends TestCase
     use \Codeception\Specify;
     use \Codeception\AssertThrows;
 
+    /** @var string */
     protected $password = 'a_password_that_is_not_too_short_and_also_not_very_random_but_is_good_enough';
 
-    public function testIssue()
+    public function testIssue(): void
     {
         $this->describe('Ticket::issue()', function () {
 
@@ -169,7 +170,7 @@ class TicketTest extends TestCase
         });
     }
 
-    public function testReissue()
+    public function testReissue(): void
     {
         $this->describe('Ticket::reissue()', function () {
 
@@ -376,7 +377,7 @@ class TicketTest extends TestCase
         });
     }
 
-    public function testRsvp()
+    public function testRsvp(): void
     {
         $this->describe('Ticket::rsvp()', function () {
 
@@ -487,7 +488,7 @@ class TicketTest extends TestCase
         });
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->describe('Ticket::generate()', function () {
 
@@ -528,7 +529,7 @@ class TicketTest extends TestCase
         });
     }
 
-    public function testParse()
+    public function testParse(): void
     {
         $this->describe('Ticket::parse()', function () {
 

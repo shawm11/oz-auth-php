@@ -1,6 +1,6 @@
 <?php
 
-namespace Shawm11\Oz\Tests;
+namespace Shawm11\Oz\Tests\Server;
 
 use PHPUnit\Framework\TestCase;
 use Shawm11\Oz\Server\Endpoints;
@@ -18,6 +18,7 @@ class EndpointsTest extends TestCase
     use \Codeception\Specify;
     use \Codeception\AssertThrows;
 
+    /** @var array */
     protected $apps = [
         'social' => [
             'id' => 'social',
@@ -33,13 +34,17 @@ class EndpointsTest extends TestCase
         ]
     ];
 
+    /** @var string */
     protected $encryptionPassword = 'a_password_that_is_not_too_short_and_also_not_very_random_but_is_good_enough';
 
+    /** @var array|null */
     protected $appTicket = null;
+    /** @var array */
     protected $req;
+    /** @var array */
     protected $options;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->req = [
             'host' => 'example.com',
@@ -62,7 +67,7 @@ class EndpointsTest extends TestCase
         $this->appTicket = (new Endpoints)->app($this->req, $this->options);
     }
 
-    public function testApp()
+    public function testApp(): void
     {
         $this->describe('Endpoints::app()', function () {
 
@@ -124,7 +129,7 @@ class EndpointsTest extends TestCase
         });
     }
 
-    public function testReissue()
+    public function testReissue(): void
     {
         $this->describe('Endpoints::reissue()', function () {
 
@@ -677,7 +682,7 @@ class EndpointsTest extends TestCase
         });
     }
 
-    public function testRsvp()
+    public function testRsvp(): void
     {
         $this->describe('Endpoints::rsvp()', function () {
 
@@ -1282,7 +1287,7 @@ class EndpointsTest extends TestCase
         });
     }
 
-    public function testUser()
+    public function testUser(): void
     {
         $this->describe('Endpoints::user()', function () {
 

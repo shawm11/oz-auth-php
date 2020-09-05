@@ -11,11 +11,29 @@ use Shawm11\Hawk\Server\UnauthorizedException as HawkUnauthorizedException;
 
 class Endpoints implements EndpointsInterface
 {
+    /**
+     * Hawk server dependency
+     *
+     * @var HawkServerInterface
+     */
     protected $hawkServer;
+
+    /**
+     * Iron dependency
+     *
+     * @var IronInterface
+     */
     protected $iron;
+
+    /** @var array */
     protected $schema = [];
+
+    /** @var array */
     protected $allowedGrantTypes = ['rsvp', 'user_credentials', 'implicit'];
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(HawkServerInterface $hawkServer = null, IronInterface $iron = null)
     {
         $this->hawkServer = $hawkServer ? $hawkServer : (new HawkServer);
@@ -25,6 +43,9 @@ class Endpoints implements EndpointsInterface
             : (new \Shawm11\Iron\Iron(\Shawm11\Iron\IronOptions::$defaults));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function app($request, $options)
     {
         $loadAppFunc = isset($options['loadAppFunc']) ? $options['loadAppFunc'] : null;
@@ -52,6 +73,9 @@ class Endpoints implements EndpointsInterface
                     ->issue($credentials, null);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function reissue($request, $payload, $options)
     {
         $payload = $payload ? $payload : [];
@@ -144,6 +168,9 @@ class Endpoints implements EndpointsInterface
         return $reissue($grant, $ext); // user ticket
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rsvp($request, $payload, $options)
     {
         if (!$payload) {
@@ -212,6 +239,9 @@ class Endpoints implements EndpointsInterface
         return $ticketClass->issue($app, $grant);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function user($request, $payload, $options)
     {
         if (!$payload) {

@@ -10,13 +10,24 @@ use Shawm11\Hawk\Server\UnauthorizedException as HawkUnauthorizedException;
 
 class Server implements ServerInterface
 {
+    /**
+     * Hawk server dependency
+     *
+     * @var HawkServerInterface
+     */
     protected $hawkServer;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(HawkServerInterface $hawkServer = null)
     {
         $this->hawkServer = $hawkServer ? $hawkServer : (new HawkServer);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function authenticate($request, $encryptionPassword, $checkExpiration = true, $options = [])
     {
         if (!$encryptionPassword) {

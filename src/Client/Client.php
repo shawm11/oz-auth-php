@@ -7,6 +7,11 @@ use Shawm11\Hawk\Client\Client as HawkClient;
 
 class Client implements ClientInterface
 {
+    /**
+     * Hawk client dependency
+     *
+     * @var HawkClientInterface
+     */
     protected $hawkClient;
 
     public function __construct(HawkClientInterface $hawkClient = null)
@@ -14,6 +19,9 @@ class Client implements ClientInterface
         $this->hawkClient = $hawkClient ? $hawkClient : (new HawkClient);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function header($uri, $method, $ticket, $options = [])
     {
         $options['credentials'] = $ticket;

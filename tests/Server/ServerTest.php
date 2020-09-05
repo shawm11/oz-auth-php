@@ -1,6 +1,6 @@
 <?php
 
-namespace Shawm11\Oz\Tests;
+namespace Shawm11\Oz\Tests\Server;
 
 use PHPUnit\Framework\TestCase;
 use Shawm11\Oz\Server\Server;
@@ -15,10 +15,12 @@ class ServerTest extends TestCase
     use \Codeception\Specify;
     use \Codeception\AssertThrows;
 
+    /** @var string */
     protected $encryptionPassword = 'a_password_that_is_not_too_short_and_also_not_very_random_but_is_good_enough';
+    /** @var array */
     protected $app = ['id' => '123'];
 
-    public function testAuthenticate()
+    public function testAuthenticate(): void
     {
         $this->describe('Server::authenticate()', function () {
 

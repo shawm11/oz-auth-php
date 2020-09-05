@@ -1,6 +1,6 @@
 <?php
 
-namespace Shawm11\Oz\Tests;
+namespace Shawm11\Oz\Tests\Client;
 
 use PHPUnit\Framework\TestCase;
 use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -15,20 +15,24 @@ class ConnectionTest extends TestCase
     use \Codeception\AssertThrows;
     use MockeryPHPUnitIntegration;
 
+    /** @var array */
     protected $app = [
         'id' => 'social',
         'scope' => ['a', 'b', 'c'],
         'key' => 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
         'algorithm' => 'sha256'
     ];
+    /** @var array */
     protected $user = [
         'username' => 'user',
         'password' => 'password'
     ];
+    /** @var array */
     protected $endpointSettings;
+    /** @var \Mockery\LegacyMockInterface */
     protected $httpRequestMock;
 
-    public function setUp() {
+    public function setUp(): void {
         $this->endpointSettings = [
             'encryptionPassword' => 'passwordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpassword',
             'loadAppFunc' => function ($id) {
@@ -49,7 +53,7 @@ class ConnectionTest extends TestCase
         ];
     }
 
-    public function testRequest()
+    public function testRequest(): void
     {
         $this->describe('Connection::request()', function () {
             $this->beforeSpecify(function() {
@@ -86,7 +90,7 @@ class ConnectionTest extends TestCase
         });
     }
 
-    public function testApp()
+    public function testApp(): void
     {
         $this->describe('Connection::app()', function () {
             $this->beforeSpecify(function() {
@@ -123,7 +127,7 @@ class ConnectionTest extends TestCase
         });
     }
 
-    public function testReissue()
+    public function testReissue(): void
     {
         $this->describe('Connection::reissue()', function () {
             $this->beforeSpecify(function() {
@@ -171,7 +175,7 @@ class ConnectionTest extends TestCase
         });
     }
 
-    public function testRequestAppTicket()
+    public function testRequestAppTicket(): void
     {
         $this->describe('Connection::requestAppTicket()', function () {
             $this->beforeSpecify(function() {
@@ -204,7 +208,7 @@ class ConnectionTest extends TestCase
         });
     }
 
-    public function testRequestUserTicket()
+    public function testRequestUserTicket(): void
     {
         $this->describe('Connection::requestUserTicket()', function () {
             $this->beforeSpecify(function() {
@@ -263,6 +267,10 @@ class ConnectionTest extends TestCase
         });
     }
 
+    /**
+     * @param  \Httpful\Response|null  $httpResponse
+     * @return void
+     */
     protected function mockRequest($httpResponse = null)
     {
         $this->httpRequestMock->shouldReceive('init')->andReturn($this->httpRequestMock);
@@ -274,6 +282,15 @@ class ConnectionTest extends TestCase
         $this->httpRequestMock->shouldReceive('send')->andReturn($httpResponse);
     }
 
+    /**
+     * @param  string  $path
+     * @param  integer  $statusCode
+     * @param  array|null  $appCredentials
+     * @param  array|null  $userCredentials
+     * @param  boolean  $forceImplicitFlow
+     *
+     * @return \Httpful\Response
+     */
     protected function fakeOzResponse(
         $path,
         $statusCode = 200,
@@ -322,6 +339,13 @@ class ConnectionTest extends TestCase
         );
     }
 
+
+    /**
+     * @param  mixed  $responseBody
+     * @param  integer  $statusCode
+     *
+     * @return \Httpful\Response
+     */
     protected function fakeHttpResponse($responseBody, $statusCode = 200)
     {
         $requestObj = new \Httpful\Request; // Class is replaced by mock in tests

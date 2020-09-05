@@ -1,6 +1,6 @@
 <?php
 
-namespace Shawm11\Oz\Tests;
+namespace Shawm11\Oz\Tests\Server;
 
 use PHPUnit\Framework\TestCase;
 use Shawm11\Oz\Server\Scope;
@@ -12,7 +12,7 @@ class ScopeTest extends TestCase
     use \Codeception\Specify;
     use \Codeception\AssertThrows;
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $this->describe('Scope::validate()', function () {
 
@@ -72,7 +72,7 @@ class ScopeTest extends TestCase
         });
     }
 
-    public function testIsSubset()
+    public function testIsSubset(): void
     {
         $this->describe('Scope::isSubset()', function () {
 
@@ -99,7 +99,7 @@ class ScopeTest extends TestCase
         });
     }
 
-    public function testIsEqual()
+    public function testIsEqual(): void
     {
         $this->describe('Scope::isEqual()', function () {
             $scope = ['a', 'b', 'c'];

@@ -18,15 +18,26 @@ class Ticket implements TicketInterface
         'keyBytes' => 32, // Ticket secret size in bytes
         'hmacAlgorithm' => 'sha256'
     ];
-
+    
+    /** @var array */
     protected $grantTypes = ['rsvp', 'user_credentials', 'implicit'];
 
-    protected $iron;
-
+    /** @var string */
     protected $encryptionPassword;
 
+    /** @var array */
     protected $options;
 
+    /**
+     * Iron dependency
+     *
+     * @var IronInterface
+     */
+    protected $iron;
+
+    /**
+     * {@inheritdoc}
+     */
     public function __construct($encryptionPassword, $options = [], IronInterface $iron = null)
     {
         $this->encryptionPassword = $encryptionPassword;
@@ -41,6 +52,9 @@ class Ticket implements TicketInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function issue($app, $grant = null)
     {
         if ($grant) {
@@ -118,6 +132,9 @@ class Ticket implements TicketInterface
         return $this->generate($ticket);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function reissue($parentTicket, $grant = null)
     {
         if ($grant) {
@@ -228,6 +245,9 @@ class Ticket implements TicketInterface
         return $this->generate($ticket);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rsvp($app, $grant)
     {
         if (!$app || empty($app['id'])) {
@@ -269,6 +289,9 @@ class Ticket implements TicketInterface
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function generate($ticket)
     {
         /*
@@ -341,6 +364,9 @@ class Ticket implements TicketInterface
         return $ticket;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function parse($id)
     {
         if (!$this->encryptionPassword) {
