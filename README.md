@@ -18,6 +18,8 @@ Table of Contents
 
 <!--lint disable list-item-spacing-->
 
+- [What is Oz?](#what-is-oz)
+  - [Oz and OAuth 2.0](#oz-and-oauth-2.0)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -27,11 +29,40 @@ Table of Contents
 - [Documentation](#documentation)
   - [API References](#api-references)
 - [Security Considerations](#security-considerations)
+- [Related Projects](#related-projects)
 - [Contributing/Development](#contributingdevelopment)
 - [Versioning](#versioning)
 - [License](#license)
 
 <!--lint enable list-item-spacing-->
+
+What is Oz?
+-----------
+
+According to the [Oz README](https://github.com/outmoded/oz/blob/master/README.md)
+
+> Oz is a web authorization protocol based on industry best practices. Oz
+> combines the Hawk authentication protocol with the Iron encryption protocol
+> to provide a simple to use and secure solution for granting and authenticating
+> third-party access to an API on behalf of a user or an application.
+
+### Oz and OAuth 2.0
+
+Oz is an alternative to OAuth 1.0a and OAuth 2.0. One of the goals of Oz is make
+simple to use for the most common use cases needing little knowledge about web
+security while being flexible enough for less common use cases that may need
+more advanced web security knowledge. Oz does this by providing default options
+that are secure for the most common use cases, in other words Oz aims to be
+_secure by default_.
+
+Below is table showing the Oz workflow equivalents for the OAuth 2.0 workflows.
+
+| OAuth 2.0 Workflow                  | Oz Workflow                                      |
+| ----------------------------------- | ------------------------------------------------ |
+| Authorization Code                  | RSVP _(The only offical workflow)_               |
+| Implicit/PKCE                       | Implicit _(Not an offical workflow)_             |
+| Resource Owner Password Credentials | User Credentials _(Not an offical workflow)_     |
+| Client Credentials                  | [Hawk](https://github.com/shawm11/hawk-auth-php) |
 
 Getting Started
 ---------------
@@ -39,7 +70,7 @@ Getting Started
 ### Prerequisites
 
 - Git 2.9+
-- PHP 5.6.0+
+- PHP 7.2.0+
 - OpenSSL PHP Extension
 - JSON PHP Extension
 - cURL PHP Extension (Only if using the Oz client)
@@ -109,6 +140,18 @@ Security Considerations
 
 See the [Security Considerations](https://github.com/outmoded/oz#security-considerations)
 section of Oz's README.
+
+Related Projects
+----------------
+
+- [Hawk PHP Implementation](https://github.com/shawm11/hawk-auth-php) — PHP
+  implementation of Hawk, an HTTP authentication scheme that is alternative
+  OAuth 1.0a and OAuth 2.0 two-legged authentication.
+
+- [Iron PHP Implementation](https://github.com/shawm11/iron-crypto-php) — PHP
+  implementation of _iron_ (spelled with all lowercase), a cryptographic utility
+  for sealing a JSON object into an encapulated token. _iron_ can be considered
+  as an alternative to JSON Web Tokens (JWT).
 
 Contributing/Development
 ------------------------
