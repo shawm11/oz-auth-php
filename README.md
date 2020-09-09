@@ -48,14 +48,16 @@ According to the [Oz README](https://github.com/outmoded/oz/blob/master/README.m
 
 ### Oz and OAuth 2.0
 
-Oz is an alternative to OAuth 1.0a and OAuth 2.0. One of the goals of Oz is make
-simple to use for the most common use cases needing little knowledge about web
-security while being flexible enough for less common use cases that may need
-more advanced web security knowledge. Oz does this by providing default options
-that are secure for the most common use cases, in other words Oz aims to be
-_secure by default_.
+Oz is an alternative to OAuth 1.0a and OAuth 2.0 three-legged authorization. One
+of the goals of Oz is to be simple to use for the most common use cases without
+needing to be a web security expert while being flexible enough for less common
+use cases that may need more advanced web security knowledge. Oz does this by
+providing default options that are secure for the most common use cases, in
+other words Oz aims to be _secure by default_.
 
-Below is table showing the Oz workflow equivalents for the OAuth 2.0 workflows.
+All of the official three-legged OAuth 2.0 workflows have an equivalent Oz
+workflow. Below is table showing the Oz workflow equivalents for the OAuth 2.0
+workflows.
 
 | OAuth 2.0 Workflow                  | Oz Workflow                                      |
 | ----------------------------------- | ------------------------------------------------ |
@@ -144,14 +146,14 @@ section of Oz's README.
 Related Projects
 ----------------
 
-- [Hawk PHP Implementation](https://github.com/shawm11/hawk-auth-php) — PHP
-  implementation of Hawk, an HTTP authentication scheme that is alternative
-  OAuth 1.0a and OAuth 2.0 two-legged authentication.
+-   [Hawk PHP Implementation](https://github.com/shawm11/hawk-auth-php) — Hawk
+    is an HTTP authentication scheme that is an alternative to OAuth 1.0a and
+    OAuth 2.0 two-legged authentication.
 
-- [Iron PHP Implementation](https://github.com/shawm11/iron-crypto-php) — PHP
-  implementation of _iron_ (spelled with all lowercase), a cryptographic utility
-  for sealing a JSON object into an encapulated token. _iron_ can be considered
-  as an alternative to JSON Web Tokens (JWT).
+-   [Iron PHP Implementation](https://github.com/shawm11/iron-crypto-php) —
+    _iron_ (spelled with all lowercase), a cryptographic utility for sealing a
+    JSON object into an encapulated token. _iron_ can be considered as an
+    alternative to JSON Web Tokens (JWT).
 
 Contributing/Development
 ------------------------
