@@ -169,7 +169,7 @@ class OzTest extends TestCase
                     )['header']
                 ];
 
-                expect($ozEndpoints->reissue($req, [], $options)['id'])->notEmpty();
+                expect($ozEndpoints->reissue($req, [], $options)['id'])->notToBeEmpty();
             });
 
             $this->it('runs a full User Credentials flow', function () {
@@ -280,7 +280,7 @@ class OzTest extends TestCase
 
                 $userTicket = $ozEndpoints->user($req, $payload, $options);
 
-                expect($userTicket['app'])->notNull();
+                expect($userTicket['app'])->notToBeNull();
 
                 /*
                  * 5. The app reissues the ticket with delegation to another app
@@ -331,7 +331,7 @@ class OzTest extends TestCase
                     )['header']
                 ];
 
-                expect($ozEndpoints->reissue($req, [], $options)['id'])->notEmpty();
+                expect($ozEndpoints->reissue($req, [], $options)['id'])->notToBeEmpty();
             });
 
             $this->it('runs a full Implicit flow', function () {
@@ -381,7 +381,7 @@ class OzTest extends TestCase
 
                 $userTicket = $ozEndpoints->user($req, $payload, $options);
 
-                expect($userTicket['app'])->null();
+                expect($userTicket['app'])->toBeNull();
 
                 /*
                  * 3. The app refreshes the user ticket
@@ -409,7 +409,7 @@ class OzTest extends TestCase
                      ];
                  };
 
-                expect($ozEndpoints->reissue($req, [], $options)['id'])->notEmpty();
+                expect($ozEndpoints->reissue($req, [], $options)['id'])->notToBeEmpty();
             });
         });
     }

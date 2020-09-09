@@ -17,7 +17,7 @@ class ScopeTest extends TestCase
         $this->describe('Scope::validate()', function () {
 
             $this->it('should return null for valid scope', function () {
-                expect((new Scope)->validate(['a', 'b', 'c']))->null();
+                expect((new Scope)->validate(['a', 'b', 'c']))->toBeNull();
             });
 
             $this->it('should throw error when scope is null', function () {
@@ -80,21 +80,21 @@ class ScopeTest extends TestCase
                 $scope = ['a', 'b', 'c'];
                 $subset = ['a', 'c'];
 
-                expect((new Scope)->isSubset($scope, $subset))->true();
+                expect((new Scope)->isSubset($scope, $subset))->toBeTrue();
             });
 
             $this->it('should return false when scope is not a subset', function () {
                 $scope = ['a'];
                 $subset = ['a', 'c'];
 
-                expect((new Scope)->isSubset($scope, $subset))->false();
+                expect((new Scope)->isSubset($scope, $subset))->toBeFalse();
             });
 
             $this->it('should return false when scope is not a subset but equal length', function () {
                 $scope = ['a', 'b'];
                 $subset = ['a', 'c'];
 
-                expect((new Scope)->isSubset($scope, $subset))->false();
+                expect((new Scope)->isSubset($scope, $subset))->toBeFalse();
             });
         });
     }
@@ -105,7 +105,7 @@ class ScopeTest extends TestCase
             $scope = ['a', 'b', 'c'];
 
             $this->it('compares scopes', function ($one, $two, $result) {
-                expect((new Scope)->isEqual($one, $two))->equals($result);
+                expect((new Scope)->isEqual($one, $two))->toEqual($result);
             }, [
                 'examples' => [
                     [null, null, true],

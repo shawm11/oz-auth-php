@@ -83,9 +83,9 @@ class ConnectionTest extends TestCase
                 $connectionSettings = ['uri' => 'https://example.com', 'credentials' => $this->app];
                 $response = (new Connection($connectionSettings))->request('/test', $appTicket);
 
-                expect($response['result']['foo'])->equals('bar');
-                expect($response['code'])->equals(200);
-                expect($response['ticket'])->equals($appTicket);
+                expect($response['result']['foo'])->toEqual('bar');
+                expect($response['code'])->toEqual(200);
+                expect($response['ticket'])->toEqual($appTicket);
             });
         });
     }
@@ -107,9 +107,9 @@ class ConnectionTest extends TestCase
                 $connectionSettings = ['uri' => 'https://example.com', 'credentials' => $this->app];
                 $response = (new Connection($connectionSettings))->app('/');
 
-                expect($response['result']['id'])->notEmpty();
-                expect($response['code'])->equals(200);
-                expect($response['ticket'])->notEmpty();
+                expect($response['result']['id'])->notToBeEmpty();
+                expect($response['code'])->toEqual(200);
+                expect($response['ticket'])->notToBeEmpty();
             });
 
             $this->it('errors on invalid app response', function () {
@@ -160,7 +160,7 @@ class ConnectionTest extends TestCase
                 $connectionSettings = ['uri' => 'https://example.com', 'credentials' => $this->app];
                 $response = (new Connection($connectionSettings))->reissue($appTicket);
 
-                expect($response['id'])->notEmpty();
+                expect($response['id'])->notToBeEmpty();
             });
 
             $this->it('errors on invalid reissue response', function () use ($appTicket) {
@@ -192,8 +192,8 @@ class ConnectionTest extends TestCase
                 $connectionSettings = ['uri' => 'https://example.com', 'credentials' => $this->app];
                 $response = (new Connection($connectionSettings))->requestAppTicket();
 
-                expect($response['result']['id'])->notEmpty();
-                expect($response['code'])->equals(200);
+                expect($response['result']['id'])->notToBeEmpty();
+                expect($response['code'])->toEqual(200);
             });
 
             $this->it('errors on invalid app response', function () {
@@ -202,8 +202,8 @@ class ConnectionTest extends TestCase
                 $connectionSettings = ['uri' => 'https://example.com', 'credentials' => $this->app];
                 $response = (new Connection($connectionSettings))->requestAppTicket();
 
-                expect($response['result']['message'])->equals('some error');
-                expect($response['code'])->equals(400);
+                expect($response['result']['message'])->toEqual('some error');
+                expect($response['code'])->toEqual(400);
             });
         });
     }
@@ -241,8 +241,8 @@ class ConnectionTest extends TestCase
                 $connectionSettings = ['uri' => 'https://example.com', 'credentials' => $this->app];
                 $response = (new Connection($connectionSettings))->requestUserTicket($this->user);
 
-                expect($response['result']['id'])->notEmpty();
-                expect($response['code'])->equals(200);
+                expect($response['result']['id'])->notToBeEmpty();
+                expect($response['code'])->toEqual(200);
             });
 
             $this->it('obtains an user ticket using Implicit workflow', function () {
@@ -251,8 +251,8 @@ class ConnectionTest extends TestCase
                 $connectionSettings = ['uri' => 'https://example.com'];
                 $response = (new Connection($connectionSettings))->requestUserTicket($this->user);
 
-                expect($response['result']['id'])->notEmpty();
-                expect($response['code'])->equals(200);
+                expect($response['result']['id'])->notToBeEmpty();
+                expect($response['code'])->toEqual(200);
             });
 
             $this->it('errors on invalid user response', function () {
@@ -261,8 +261,8 @@ class ConnectionTest extends TestCase
                 $connectionSettings = ['uri' => 'https://example.com'];
                 $response = (new Connection($connectionSettings))->requestUserTicket($this->user);
 
-                expect($response['result']['message'])->equals('some error');
-                expect($response['code'])->equals(400);
+                expect($response['result']['message'])->toEqual('some error');
+                expect($response['code'])->toEqual(400);
             });
         });
     }

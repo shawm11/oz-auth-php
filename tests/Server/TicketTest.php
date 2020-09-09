@@ -51,17 +51,17 @@ class TicketTest extends TestCase
 
                 $envelope = $ticketClass->issue($app, $grant);
 
-                expect($envelope['ext'])->equals(['x' => 'welcome']);
-                expect($envelope['exp'])->equals($grant['exp']);
-                expect($envelope['scope'])->equals(['a']);
+                expect($envelope['ext'])->toEqual(['x' => 'welcome']);
+                expect($envelope['exp'])->toEqual($grant['exp']);
+                expect($envelope['scope'])->toEqual(['a']);
 
                 $ticket = $ticketClass->parse($envelope['id']);
 
-                expect($ticket['ext'])->equals($options['ext']);
+                expect($ticket['ext'])->toEqual($options['ext']);
 
                 $envelope2 = $ticketClass->reissue($ticket, $grant);
 
-                expect($envelope2['id'])->notEquals($envelope['id']);
+                expect($envelope2['id'])->notToEqual($envelope['id']);
             });
 
             $this->it('errors on missing app', function () {
@@ -187,7 +187,7 @@ class TicketTest extends TestCase
                 $ticketClass2 = new Ticket($this->password, ['issueTo' => '345', 'delegate' => false]);
                 $envelope2 = $ticketClass2->reissue($ticket, null);
 
-                expect($envelope2['delegate'])->false();
+                expect($envelope2['delegate'])->toBeFalse();
             });
 
             $this->it('errors on issueTo when delegate is not allowed', function () {
@@ -459,8 +459,8 @@ class TicketTest extends TestCase
                 $envelope = $ticketClass->rsvp($app, $grant);
                 $object = $ticketClass->parse($envelope);
 
-                expect($object['app'])->equals($app['id']);
-                expect($object['grant'])->equals($grant['id']);
+                expect($object['app'])->toEqual($app['id']);
+                expect($object['grant'])->toEqual($grant['id']);
             });
 
             $this->it('fails to construct a valid rsvp due to bad Iron options', function () {
@@ -507,7 +507,7 @@ class TicketTest extends TestCase
                 $options = ['ext' => ['public' => ['x' => 1]]];
                 $ticket = (new Ticket($this->password, $options))->generate($input);
 
-                expect($ticket['ext']['x'])->equals(1);
+                expect($ticket['ext']['x'])->toEqual(1);
             });
 
             $this->it('generates a ticket with only private ext', function () {
@@ -515,7 +515,7 @@ class TicketTest extends TestCase
                 $options = ['ext' => ['private' => ['x' => 1]]];
                 $ticket = (new Ticket($this->password, $options))->generate($input);
 
-                expect(isset($ticket['ext']['x']))->false();
+                expect(isset($ticket['ext']['x']))->toBeFalse();
             });
 
             $this->it('overrides hawk options', function () {
@@ -523,8 +523,8 @@ class TicketTest extends TestCase
                 $options = ['keyBytes' => 10, 'hmacAlgorithm' => 'something'];
                 $ticket = (new Ticket($this->password, $options))->generate($input);
 
-                expect(strlen($ticket['key']))->equals(10);
-                expect($ticket['algorithm'])->equals('something');
+                expect(strlen($ticket['key']))->toEqual(10);
+                expect($ticket['algorithm'])->toEqual('something');
             });
         });
     }

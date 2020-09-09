@@ -93,7 +93,7 @@ class EndpointsTest extends TestCase
                     ]
                 ];
 
-                expect((new Endpoints)->app($req, $options))->notEmpty();
+                expect((new Endpoints)->app($req, $options))->notToBeEmpty();
             });
 
             $this->it('fails on invalid app request (bad credentials)', function () {
@@ -152,7 +152,7 @@ class EndpointsTest extends TestCase
                     }
                 ];
 
-                expect((new Endpoints)->reissue($req, null, $options))->notEmpty();
+                expect((new Endpoints)->reissue($req, null, $options))->notToBeEmpty();
             });
 
             $this->it('overrides defaults', function () {
@@ -177,7 +177,7 @@ class EndpointsTest extends TestCase
                     ]
                 ];
 
-                expect((new Endpoints)->reissue($req, [], $options))->notEmpty();
+                expect((new Endpoints)->reissue($req, [], $options))->notToBeEmpty();
             });
 
             $this->it('reissues expired ticket', function () {
@@ -218,7 +218,7 @@ class EndpointsTest extends TestCase
 
                 usleep(2000); // Wait 2 millisecond for ticket to expire
 
-                expect((new Endpoints)->reissue($req, [], $options))->notEmpty();
+                expect((new Endpoints)->reissue($req, [], $options))->notToBeEmpty();
             });
 
             $this->it('fails on app load error', function () {
@@ -718,7 +718,7 @@ class EndpointsTest extends TestCase
                     )['header']
                 ];
 
-                expect((new Endpoints)->rsvp($req, ['rsvp' => $rsvp], $options))->notEmpty();
+                expect((new Endpoints)->rsvp($req, ['rsvp' => $rsvp], $options))->notToBeEmpty();
             });
 
             $this->it('errors on invalid authentication', function () {
@@ -1328,7 +1328,7 @@ class EndpointsTest extends TestCase
                     )['header']
                 ];
 
-                expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notEmpty();
+                expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notToBeEmpty();
             });
 
             $this->it('overrides defaults (implicit grant)', function () {
@@ -1362,7 +1362,7 @@ class EndpointsTest extends TestCase
                     'url' => '/oz/user'
                 ];
 
-                expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notEmpty();
+                expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notToBeEmpty();
             });
 
             $this->it('sets grant type to `user_credentials` if app authenticates', function () {
@@ -1404,7 +1404,7 @@ class EndpointsTest extends TestCase
 
                 (new Endpoints)->user($req, ['user' => $userCreds], $options);
 
-                expect($grant['type'])->equals('user_credentials');
+                expect($grant['type'])->toEqual('user_credentials');
             });
 
             $this->it('sets grant type to `implicit` if app does not authenticate', function () {
@@ -1440,7 +1440,7 @@ class EndpointsTest extends TestCase
 
                 (new Endpoints)->user($req, ['user' => $userCreds], $options);
 
-                expect($grant['type'])->equals('implicit');
+                expect($grant['type'])->toEqual('implicit');
             });
 
             $this->it('fails on app error', function () {
@@ -1582,7 +1582,7 @@ class EndpointsTest extends TestCase
                             )['header']
                         ];
 
-                        expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notEmpty();
+                        expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notToBeEmpty();
                     }
                 );
             });
@@ -1620,7 +1620,7 @@ class EndpointsTest extends TestCase
                             'url' => '/oz/user'
                         ];
 
-                        expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notEmpty();
+                        expect((new Endpoints)->user($req, ['user' => $userCreds], $options))->notToBeEmpty();
                     }
                 );
             });
@@ -1672,7 +1672,7 @@ class EndpointsTest extends TestCase
                             )['header']
                         ];
 
-                        expect((new Endpoints)->user($req2, ['user' => $userCreds], $options))->notEmpty();
+                        expect((new Endpoints)->user($req2, ['user' => $userCreds], $options))->notToBeEmpty();
                     }
                 );
             });

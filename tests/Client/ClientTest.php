@@ -24,7 +24,7 @@ class ClientTest extends TestCase
 
                 $header = (new Client)->header('http://example.com/oz/app', 'POST', $app);
 
-                expect($header)->notEmpty();
+                expect($header)->notToBeEmpty();
             });
         });
     }

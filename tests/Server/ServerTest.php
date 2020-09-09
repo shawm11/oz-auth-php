@@ -54,7 +54,7 @@ class ServerTest extends TestCase
                     )['header']
                 ];
 
-                expect((new Server)->authenticate($req, $this->encryptionPassword))->notEmpty();
+                expect((new Server)->authenticate($req, $this->encryptionPassword))->notToBeEmpty();
             });
 
             $this->it('authenticates a request (hawk options)', function () {
@@ -82,7 +82,7 @@ class ServerTest extends TestCase
                     ]
                 ];
 
-                expect((new Server)->authenticate($req, $this->encryptionPassword, true, $options))->notEmpty();
+                expect((new Server)->authenticate($req, $this->encryptionPassword, true, $options))->notToBeEmpty();
             });
 
             $this->it('fails to authenticate a request with bad password', function () {
