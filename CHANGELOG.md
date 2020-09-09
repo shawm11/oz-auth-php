@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/shawm11/oz-auth-php/compare/v1.1.1...v1.1.2) (2020-09-09)
+
+
+### Build System
+
+* **composer:** update dependencies ([75549d6](https://github.com/shawm11/oz-auth-php/commit/75549d6))
+* **composer:** update dependencies ([0411614](https://github.com/shawm11/oz-auth-php/commit/0411614))
+
+
+
 ### [1.1.1](https://github.com/shawm11/oz-auth-php/compare/v1.1.0...v1.1.1) (2019-07-23)
 
 
