@@ -85,7 +85,7 @@ class Endpoints implements EndpointsInterface
             ? $options['decryptionPasswords']
             : $encryptionPassword;
 
-        $ticket = (new Server($this->hawkServer))
+        $ticket = (new Server($this->hawkServer, $this->iron))
                     ->authenticate($request, $decryptionPasswords, false, $options)['ticket'];
 
         /*
@@ -182,7 +182,7 @@ class Endpoints implements EndpointsInterface
             ? $options['decryptionPasswords']
             : $encryptionPassword;
 
-        $ticket = (new Server($this->hawkServer))
+        $ticket = (new Server($this->hawkServer, $this->iron))
                     ->authenticate($request, $decryptionPasswords, true, $options)['ticket'];
 
         if (!empty($ticket['user'])) {
@@ -192,7 +192,7 @@ class Endpoints implements EndpointsInterface
         $ticketOptions = isset($options['ticket']) ? $options['ticket'] : [];
         $rsvp = isset($payload['rsvp']) ? $payload['rsvp'] : null;
 
-        $ticketClass = (new Ticket($encryptionPassword, $ticketOptions));
+        $ticketClass = (new Ticket($encryptionPassword, $ticketOptions, $this->iron));
 
         $envelope = $ticketClass->parse($rsvp);
 
@@ -271,7 +271,7 @@ class Endpoints implements EndpointsInterface
         $ticket = [];
 
         if ($isAuthRequest) {
-            $ticket = (new Server($this->hawkServer))->authenticate(
+            $ticket = (new Server($this->hawkServer, $this->iron))->authenticate(
                 $request,
                 $decryptionPasswords,
                 true,
@@ -337,6 +337,6 @@ class Endpoints implements EndpointsInterface
          * Issue ticket
          */
 
-        return (new Ticket($encryptionPassword, $ticketOptions))->issue($app, $grant);
+        return (new Ticket($encryptionPassword, $ticketOptions, $this->iron))->issue($app, $grant);
     }
 }

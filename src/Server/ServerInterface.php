@@ -2,14 +2,16 @@
 
 namespace Shawm11\Oz\Server;
 
+use Shawm11\Iron\IronInterface;
 use Shawm11\Hawk\Server\ServerInterface as HawkServerInterface;
 
 interface ServerInterface
 {
     /**
      * @param HawkServerInterface  $hawkServer  Optional Hawk Server dependency
+     * @param IronInterface  $iron  Optional Iron dependency
      */
-    public function __construct(HawkServerInterface $hawkServer = null);
+    public function __construct(HawkServerInterface $hawkServer = null, IronInterface $iron = null);
 
     /**
      * Validate an incoming request using Hawk and performs additional

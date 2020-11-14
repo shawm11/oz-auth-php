@@ -2,6 +2,7 @@
 
 namespace Shawm11\Oz\Server;
 
+use Shawm11\Iron\IronInterface;
 use Shawm11\Hawk\Server\ServerInterface as HawkServerInterface;
 use Shawm11\Hawk\Server\Server as HawkServer;
 use Shawm11\Hawk\Utils\Utils as HawkUtils;
@@ -18,11 +19,22 @@ class Server implements ServerInterface
     protected $hawkServer;
 
     /**
+     * Iron dependency
+     *
+     * @var IronInterface
+     */
+    protected $iron;
+
+    /**
      * {@inheritdoc}
      */
-    public function __construct(HawkServerInterface $hawkServer = null)
+    public function __construct(HawkServerInterface $hawkServer = null, IronInterface $iron = null)
     {
         $this->hawkServer = $hawkServer ? $hawkServer : (new HawkServer);
+
+        $this->iron = $iron
+            ? $iron
+            : (new \Shawm11\Iron\Iron(\Shawm11\Iron\IronOptions::$defaults));
     }
 
     /**
@@ -44,7 +56,7 @@ class Server implements ServerInterface
              */
 
             $ticketOptions = isset($options['ticket']) ? $options['ticket'] : null;
-            $ticket = (new Ticket($encryptionPassword, $ticketOptions))->parse($id);
+            $ticket = (new Ticket($encryptionPassword, $ticketOptions, $this->iron))->parse($id);
 
             /*
              * Check expiration
