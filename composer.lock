@@ -4265,5 +4265,5 @@
         "php": ">=7.3.0"
     },
     "plugin-api-version": "1.1.0",
-    "version": "1.1.2"
+    "version": "1.1.3"
 }
