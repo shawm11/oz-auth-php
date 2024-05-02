@@ -13,6 +13,7 @@ parameters:
         -
             message: '#Parameter \#[0-9] \$[a-zA-Z0-9]+ of class Shawm11\\Oz\\[a-zA-Z\\]+ constructor expects [a-z|]+#'
             path: %currentWorkingDirectory%/tests/Server/*
-        - 
+        -
             message: '#Cannot instantiate class Httpful\\Request via protected constructor Httpful\\Request::__construct\(\).#'
             path: %currentWorkingDirectory%/tests/Client/ConnectionTest.php
+    treatPhpDocTypesAsCertain: false

@@ -24,12 +24,12 @@ Steps of the Workflow
 
 The steps of the workflow assume that the default Oz options are used.
 
-1.  (Before the workflow starts) The application is assigned Hawk credentials,
+1. (Before the workflow starts) The application is assigned Hawk credentials,
     which include an application ID and a randomly-generated key.
 
     - _NOTE: How this is done is not part of the Oz protocol_
 
-1.  Application: Make a `POST /oz/app` request to the Server. In this request,
+1. Application: Make a `POST /oz/app` request to the Server. In this request,
     the Application…
 
     - Sends its [credentials](api-reference/shared-arrays.md#app)
@@ -38,7 +38,7 @@ The steps of the workflow assume that the default Oz options are used.
     - _NOTE: This step allows the application to manage its own resources on the
       Server_
 
-1.  Application: Make a `POST /oz/reissue` request to the Server. In this
+1. Application: Make a `POST /oz/reissue` request to the Server. In this
     request, the Application…
 
     - Sends the scope array (optional) and the application [ticket](api-reference/shared-arrays.md#ticket)
@@ -51,31 +51,31 @@ The steps of the workflow assume that the default Oz options are used.
       - This may not be necessary, especially if the application just obtained
         the ticket and it has not expired yet.
 
-1.  Application: Direct user to the server (possibly by redirecting). In this
+1. Application: Direct user to the server (possibly by redirecting). In this
     step, the Application…
 
     - Sends the scope, application [ticket](api-reference/shared-arrays.md#ticket)
       ID, and (possibly) the callback URL (URL back to app)
     - _NOTE: The method in which this is done is not part of the Oz protocol_
 
-1.  User: Log in to the server
+1. User: Log in to the server
 
     - _NOTE: The method in which this is done is not part of the Oz protocol_
 
-1.  Server: Display scope (sent by the application in Step 2) and prompt user to
+1. Server: Display scope (sent by the application in Step 2) and prompt user to
     approve the scope
 
     - _NOTE: The method in which this is done is not part of the Oz protocol_
 
-1.  User: Approve scope
+1. User: Approve scope
 
     - _NOTE: The method in which this is done is not part of the Oz protocol_
 
-1.  Server: Receive approval from user
+1. Server: Receive approval from user
 
     - _NOTE: The method in which this is done is not part of the Oz protocol_
 
-1.  Server: Generate RSVP. In this step, the Server…
+1. Server: Generate RSVP. In this step, the Server…
 
     - Gets an application ID from the request data. It is extracted from the
       [ticket](api-reference/shared-arrays.md#ticket) the application used to
@@ -84,27 +84,27 @@ The steps of the workflow assume that the default Oz options are used.
     - Creates an RSVP using application ID and [grant](api-reference/shared-arrays.md#grant)
       ID
 
-1.  User: Receive RSVP from server
+1. User: Receive RSVP from server
 
     - _NOTE: The method in which this is done is not part of the Oz protocol_
     - If the application will receive the RSVP from the server on behalf of the
       user (by redirecting back to the application), then this step is not
       necessary.
 
-1.  User: Give RSVP to application
+1. User: Give RSVP to application
 
     - _NOTE: The method in which this is done is not part of the Oz protocol_
 
-1.  Application: Make `POST /oz/rsvp` request to Server. In this request, the
+1. Application: Make `POST /oz/rsvp` request to Server. In this request, the
     Application…
 
     - Sends the RSVP
     - Get the user [ticket](api-reference/shared-arrays.md#ticket) in return
 
-1.  Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
+1. Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
     to access user resources
 
-1.  Application: If the user [ticket](api-reference/shared-arrays.md#ticket)
+1. Application: If the user [ticket](api-reference/shared-arrays.md#ticket)
     expires while the user [grant](api-reference/shared-arrays.md#grant) has not
     expired, renew the [ticket](api-reference/shared-arrays.md#ticket) by making
     a `POST /oz/reissue` request to the Server.

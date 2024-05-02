@@ -25,12 +25,12 @@ Table of Contents
 Steps of the Workflow
 ---------------------
 
-1.  (Before the workflow starts) The application is assigned Hawk credentials,
+1. (Before the workflow starts) The application is assigned Hawk credentials,
     which include an application ID and a randomly-generated key.
 
     - _NOTE: How this is done is not part of the Oz protocol_
 
-1.  Application: Make a `POST /oz/app` request to the Server. In this request,
+1. Application: Make a `POST /oz/app` request to the Server. In this request,
     the Application…
 
     - Sends its [credentials](api-reference/shared-arrays.md#app)
@@ -39,7 +39,7 @@ Steps of the Workflow
     - _NOTE: This step allows the application to manage its own resources on the
       Server_
 
-1.  Application: Make a `POST /oz/reissue` request to the Server. In this
+1. Application: Make a `POST /oz/reissue` request to the Server. In this
     request, the Application…
 
     - Sends the scope array (optional) and the application [ticket](api-reference/shared-arrays.md#ticket)
@@ -52,17 +52,17 @@ Steps of the Workflow
       - This may not be necessary, especially if the application just obtained
         the ticket and it has not expired yet.
 
-1.  Application: Ask for the User's credentials
+1. Application: Ask for the User's credentials
 
     - _NOTE: How this is done is not part of the Oz protocol_
 
-1.  User: Enter credentials
+1. User: Enter credentials
 
     - This is typically done by the user simply typing in the credentials into
       the Application.
     - _NOTE: How this is done is not part of the Oz protocol_
 
-1.  Application: Receive the User's credentials and make a `POST /oz/user`
+1. Application: Receive the User's credentials and make a `POST /oz/user`
     request to Server. In the request, the Application…
 
     - Sends the application [ticket](api-reference/shared-arrays.md#ticket) ID
@@ -73,10 +73,10 @@ Steps of the Workflow
       application obtains the user ticket, it should immediately discard the
       user credentials._
 
-1.  Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
+1. Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
     to access the User's resources
 
-1.  Application: If the User [ticket](api-reference/shared-arrays.md#ticket)
+1. Application: If the User [ticket](api-reference/shared-arrays.md#ticket)
     expires while the user [grant](api-reference/shared-arrays.md#grant) has not
     expired, renew the [ticket](api-reference/shared-arrays.md#ticket) by making
     a `POST /oz/reissue` request to the Server.

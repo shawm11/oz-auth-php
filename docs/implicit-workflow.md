@@ -19,17 +19,17 @@ Table of Contents
 Steps of the Workflow
 ---------------------
 
-1.  Application: Ask for the User's credentials
+1. Application: Ask for the User's credentials
 
     - _NOTE: How this is done is not part of the Oz protocol_
 
-1.  User: Enter credentials
+1. User: Enter credentials
 
     - This is typically done by the user simply typing in the credentials into
       the Application.
     - _NOTE: How this is done is not part of the Oz protocol_
 
-1.  Application: Receive the User's credentials and make a `POST /oz/user`
+1. Application: Receive the User's credentials and make a `POST /oz/user`
     request to Server. In the request, the Application…
 
     - Sends the application [ticket](api-reference/shared-arrays.md#ticket)
@@ -40,10 +40,10 @@ Steps of the Workflow
       application obtains the user ticket, it should immediately discard the
       user credentials._
 
-1.  Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
+1. Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
     to access the User's resources
 
-1.  Application: If the User [ticket](api-reference/shared-arrays#ticket)
+1. Application: If the User [ticket](api-reference/shared-arrays#ticket)
     expires while the user [grant](api-reference/shared-arrays.md#grant) has not
     expired, renew the [ticket](api-reference/shared-arrays#ticket) by making a
     `POST /oz/reissue` request to the Server.
