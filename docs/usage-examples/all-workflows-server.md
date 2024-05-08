@@ -1,5 +1,5 @@
-Server Usage Example (All Workflows)
-====================================
+<!-- omit in toc -->
+# Server Usage Example (All Workflows)
 
 Because PHP is a language most commonly used for server logic, the "Server"
 usage is more common than the "Client" usage.
@@ -8,14 +8,13 @@ These examples are not completely functional, but they should be enough to show
 you how to use this package. They are applicable to any of the 3 workflows
 (RSVP, User Credentials, and Implicit).
 
-Table of Contents
------------------
+<!-- omit in toc -->
+## Table of Contents
 
 - [Handle Request Authenticated Using Ticket](#handle-request-authenticated-using-ticket)
 - [Handle Reissue (`/oz/reissue`) Request](#handle-reissue-ozreissue-request)
 
-Handle Request Authenticated Using Ticket
------------------------------------------
+## Handle Request Authenticated Using Ticket
 
 A fictional function that handles a request to a resource where a ticket was
 used to authenticate.
@@ -42,8 +41,7 @@ function handleAuthRequest() {
 }
 ```
 
-Handle Reissue (`/oz/reissue`) Request
---------------------------------------
+## Handle Reissue (`/oz/reissue`) Request
 
 Use the `reissue()` function in the `Shawm11\Oz\Server\Endpoints` class to
 handle requests to the `/oz/reissue` endpoint.

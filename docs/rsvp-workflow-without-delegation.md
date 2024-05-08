@@ -1,10 +1,8 @@
-RSVP Workflow (Without Delegation)
-==================================
+<!-- omit in toc -->
+# RSVP Workflow (Without Delegation)
 
-Table of Contents
------------------
-
-<!--lint disable list-item-spacing-->
+<!-- omit in toc -->
+## Table of Contents
 
 - [Steps of the Workflow](#steps-of-the-workflow)
 - [Pros and Cons](#pros-and-cons)
@@ -19,28 +17,22 @@ Table of Contents
   - [User](#user)
   - [User Authentication](#user-authentication)
 
-Steps of the Workflow
----------------------
+## Steps of the Workflow
 
 The steps of the workflow assume that the default Oz options are used.
 
 1. (Before the workflow starts) The application is assigned Hawk credentials,
     which include an application ID and a randomly-generated key.
-
     - _NOTE: How this is done is not part of the Oz protocol_
-
-1. Application: Make a `POST /oz/app` request to the Server. In this request,
+2. Application: Make a `POST /oz/app` request to the Server. In this request,
     the Application…
-
     - Sends its [credentials](api-reference/shared-arrays.md#app)
     - Gets an application [ticket](api-reference/shared-arrays.md#ticket) in
       return
     - _NOTE: This step allows the application to manage its own resources on the
       Server_
-
-1. Application: Make a `POST /oz/reissue` request to the Server. In this
+3. Application: Make a `POST /oz/reissue` request to the Server. In this
     request, the Application…
-
     - Sends the scope array (optional) and the application [ticket](api-reference/shared-arrays.md#ticket)
       ID (as a Hawk-authenticated requested using the application ticket)
     - Gets a new application [ticket](api-reference/shared-arrays.md#ticket) in
@@ -48,69 +40,48 @@ The steps of the workflow assume that the default Oz options are used.
     - NOTES
       - This keeps the application [ticket](api-reference/shared-arrays.md#ticket)
         fresh, with a new expiration date.
-      - This may not be necessary, especially if the application just obtained
+      - This may be unnecessary, especially if the application just obtained
         the ticket and it has not expired yet.
-
-1. Application: Direct user to the server (possibly by redirecting). In this
+4. Application: Direct user to the server (possibly by redirecting). In this
     step, the Application…
-
     - Sends the scope, application [ticket](api-reference/shared-arrays.md#ticket)
       ID, and (possibly) the callback URL (URL back to app)
     - _NOTE: The method in which this is done is not part of the Oz protocol_
-
-1. User: Log in to the server
-
+5. User: Log in to the server
     - _NOTE: The method in which this is done is not part of the Oz protocol_
-
-1. Server: Display scope (sent by the application in Step 2) and prompt user to
+6. Server: Display scope (sent by the application in Step 2) and prompt user to
     approve the scope
-
     - _NOTE: The method in which this is done is not part of the Oz protocol_
-
-1. User: Approve scope
-
+7. User: Approve scope
     - _NOTE: The method in which this is done is not part of the Oz protocol_
-
-1. Server: Receive approval from user
-
+8. Server: Receive approval from user
     - _NOTE: The method in which this is done is not part of the Oz protocol_
-
-1. Server: Generate RSVP. In this step, the Server…
-
+9. Server: Generate RSVP. In this step, the Server…
     - Gets an application ID from the request data. It is extracted from the
       [ticket](api-reference/shared-arrays.md#ticket) the application used to
       authenticate.
     - Creates a [grant](api-reference/shared-arrays.md#grant)
     - Creates an RSVP using application ID and [grant](api-reference/shared-arrays.md#grant)
       ID
-
-1. User: Receive RSVP from server
-
-    - _NOTE: The method in which this is done is not part of the Oz protocol_
+10. User: Receive RSVP from server
+    - NOTE: The method in which this is done is not part of the Oz protocol_
     - If the application will receive the RSVP from the server on behalf of the
-      user (by redirecting back to the application), then this step is not
-      necessary.
-
-1. User: Give RSVP to application
-
+    user (by redirecting back to the application), then this step is
+    unnecessary.
+11. User: Give RSVP to application
     - _NOTE: The method in which this is done is not part of the Oz protocol_
-
-1. Application: Make `POST /oz/rsvp` request to Server. In this request, the
+12. Application: Make `POST /oz/rsvp` request to Server. In this request, the
     Application…
-
     - Sends the RSVP
     - Get the user [ticket](api-reference/shared-arrays.md#ticket) in return
-
-1. Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
+13. Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
     to access user resources
-
-1. Application: If the user [ticket](api-reference/shared-arrays.md#ticket)
+14. Application: If the user [ticket](api-reference/shared-arrays.md#ticket)
     expires while the user [grant](api-reference/shared-arrays.md#grant) has not
     expired, renew the [ticket](api-reference/shared-arrays.md#ticket) by making
     a `POST /oz/reissue` request to the Server.
 
-Pros and Cons
--------------
+## Pros and Cons
 
 ### Pros
 
@@ -136,8 +107,7 @@ Pros and Cons
   and standalone JavaScript web apps that do not have a server back-end (also
   known as "single-page apps").
 
-Usage
------
+## Usage
 
 The RSVP workflow is for [**application authorization**](#application-authorization),
 not [**user authentication**](#user-authentication). The most common use of this
@@ -152,8 +122,7 @@ This flow is best used when...
   secure location (e.g. a web app's back-end server) and can securely retrieve
   these credentials.
 
-Vocabulary
-----------
+## Vocabulary
 
 ### Application
 
@@ -182,6 +151,4 @@ The human who has resources stored on the [server](#server) and is using the
 ### User Authentication
 
 Verifying that a user's identity, typically by asking the user to "log in" or
-"sign in"
-
-<!--lint enable list-item-spacing-->
+"sign in".

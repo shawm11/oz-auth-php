@@ -1,12 +1,10 @@
-Implicit Workflow
-=================
+<!-- omit in toc -->
+# Implicit Workflow
 
 **NOTICE**: This workflow is not part of the official Oz protocol.
 
-Table of Contents
------------------
-
-<!--lint disable list-item-spacing-->
+<!-- omit in toc -->
+## Table of Contents
 
 - [Steps of the Workflow](#steps-of-the-workflow)
 - [Pros and Cons](#pros-and-cons)
@@ -16,22 +14,16 @@ Table of Contents
 - [Additional Security Considerations](#additional-security-considerations)
 - [Vocabulary](#vocabulary)
 
-Steps of the Workflow
----------------------
+## Steps of the Workflow
 
 1. Application: Ask for the User's credentials
-
-    - _NOTE: How this is done is not part of the Oz protocol_
-
-1. User: Enter credentials
-
-    - This is typically done by the user simply typing in the credentials into
-      the Application.
-    - _NOTE: How this is done is not part of the Oz protocol_
-
-1. Application: Receive the User's credentials and make a `POST /oz/user`
+   - _NOTE: How this is done is not part of the Oz protocol_
+2. User: Enter credentials
+   - This is typically done by the user simply typing in the credentials into
+     the Application.
+   - _NOTE: How this is done is not part of the Oz protocol_
+3. Application: Receive the User's credentials and make a `POST /oz/user`
     request to Server. In the request, the Application…
-
     - Sends the application [ticket](api-reference/shared-arrays.md#ticket)
       ID (as an authenticated request using the application ticket) and the User
       credentials
@@ -39,17 +31,14 @@ Steps of the Workflow
     - _NOTE: An application should NEVER store a user's credentials. When an
       application obtains the user ticket, it should immediately discard the
       user credentials._
-
-1. Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
-    to access the User's resources
-
-1. Application: If the User [ticket](api-reference/shared-arrays#ticket)
+4. Application: Can now use the user [ticket](api-reference/shared-arrays.md#ticket)
+   to access the User's resources
+5. Application: If the User [ticket](api-reference/shared-arrays#ticket)
     expires while the user [grant](api-reference/shared-arrays.md#grant) has not
     expired, renew the [ticket](api-reference/shared-arrays#ticket) by making a
     `POST /oz/reissue` request to the Server.
 
-Pros and Cons
--------------
+## Pros and Cons
 
 ### Pros
 
@@ -73,8 +62,7 @@ Pros and Cons
 - There is no application authentication, so the server does not know who is
   making the requests
 
-Usage
------
+## Usage
 
 This flow is best used when...
 
@@ -84,15 +72,11 @@ This flow is best used when...
 - Need simple user authentication
 - Need a solution that provides a flow that most users are familiar with
 
-Additional Security Considerations
-----------------------------------
+## Additional Security Considerations
 
 Same as the [User Credentials Workflow](user-credentials-workflow.md). In
 short, user credentials must be sent by the client to the server using SSL/TLS.
 
-Vocabulary
-----------
+## Vocabulary
 
 Same as the [User Credentials Workflow](user-credentials-workflow.md).
-
-<!--lint enable list-item-spacing-->

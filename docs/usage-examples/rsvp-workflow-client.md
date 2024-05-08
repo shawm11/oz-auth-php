@@ -1,19 +1,18 @@
-Client Usage Examples (RSVP Workflow)
-=====================================
+<!-- omit in toc -->
+# Client Usage Examples (RSVP Workflow)
 
 These examples are not completely functional, but they should be enough to show
 you how to use this package.
 
-Table of Contents
------------------
+<!-- omit in toc -->
+## Table of Contents
 
 - [Make Request with Only Application Ticket](#make-request-with-only-application-ticket)
 - [Obtain the Application Ticket and Make Request Afterwards](#obtain-the-application-ticket-and-make-request-afterwards)
 - [Obtain User Ticket Using RSVP](#obtain-user-ticket-using-rsvp)
-- [Make Request with Stored User Ticket](#request-with-stored-user-ticket)
+- [Make Request with Stored User Ticket](#make-request-with-stored-user-ticket)
 
-Make Request with Only Application Ticket
------------------------------------------
+## Make Request with Only Application Ticket
 
 The application ticket is automatically obtained when making a request (not as a
 user) using the `app()` function.
@@ -58,8 +57,7 @@ function makeRequestUsingAppTicket() {
 }
 ```
 
-Obtain the Application Ticket and Make Request Afterwards
----------------------------------------------------------
+## Obtain the Application Ticket and Make Request Afterwards
 
 In some cases, it is better to obtain the application ticket then make a request
 using that application ticket later.
@@ -127,11 +125,9 @@ function makeRequestWithUserTicket() {
 }
 ```
 
-Obtain User Ticket Using RSVP
------------------------------
+## Obtain User Ticket Using RSVP
 
-Note how the code is very similar to the code in the [Request with Only
-Application Ticket](#request-with-only-application-ticket) example.
+Note how the code is very similar to the code in the [_Make Request with Only Application Ticket_](#make-request-with-only-application-ticket) example.
 
 ```php
 <?php
@@ -183,8 +179,7 @@ function getUserTicket() {
 }
 ```
 
-Make Request with Stored User Ticket
-------------------------------------
+## Make Request with Stored User Ticket
 
 The process of making a request with a stored user ticket is the same for all of
 the workflows. See the [example of making a request with a stored user ticket

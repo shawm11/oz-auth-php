@@ -1,21 +1,18 @@
-Shared Arrays
-=============
+<!-- omit in toc -->
+# Shared Arrays
 
 The shared arrays are collections of data repeatedly used throughout various
 parts of the API. The arrays are not part of any particular class.
 
-Table of Contents
------------------
+<!-- omit in toc -->
+## Table of Contents
 
 - [App](#app)
 - [Grant](#grant)
 - [Ticket](#ticket)
 - [Ticket Options](#ticket-options)
 
-App
----
-
-<!--lint disable list-item-spacing-->
+## App
 
 _array_ — Set of credentials that contains the following:
 
@@ -27,8 +24,7 @@ _array_ — Set of credentials that contains the following:
 - _boolean_ `delegate` — (Optional) If the application is allowed to delegate a
   ticket to another application. Defaults to `false`.
 
-Grant
------
+## Grant
 
 _array_ — If set, the issued ticket is going to be a user ticket, and this grant
 is going to be issued with it. If set to `null`, the issued ticket will be an
@@ -46,8 +42,7 @@ application ticket.
   - `user_credentials` — Grant was obtained using the [User Credentials](../user-credentials-workflow.md)
   - `implicit` — Grant was obtained using the [Implicit Workflow](../implicit-workflow.md)
 
-Ticket
-------
+## Ticket
 
 _array_ — Ticket and its public properties. A ticket is actually a set of Hawk
 credential and artifacts. It contains the following:
@@ -55,7 +50,8 @@ credential and artifacts. It contains the following:
 - _string_ `id` — Ticket ID used for making authenticated Hawk requests
 - _string_ `key` — Secret key (only known by the application and the server)
   used to authenticate
-- _string_ `algorithm` — HMAC algorithm used to authenticate. Default is `sha256`.
+- _string_ `algorithm` — HMAC algorithm used to authenticate.
+  Default is `sha256`.
 - _float_ `exp` — Ticket expiration time in milliseconds since January 1, 1970
 - _string_ `app` — Application id the ticket was issued to
 - _string_ `user` — User ID if the ticket represents access to user resources.
@@ -73,8 +69,7 @@ credential and artifacts. It contains the following:
   application ID of the delegating application
 - _array_ `ext` — Custom server public data attached to the ticket
 
-Ticket Options
---------------
+## Ticket Options
 
 _array_ — Supported ticket parsing and issuance options passed to the [Ticket](server-api.md#ticket-class)
 methods. Each [endpoint](server-api.md#endpoints-class) utilizes a different
@@ -89,12 +84,12 @@ ignore unused options). The ticket options contain the following:
   the application permissions to delegate.
 - _array_ `iron` — (Optional) Overrides the default Iron configuration
 - _integer_ `keyBytes` — (Optional) Hawk key length in bytes. Defaults to `32`.
-- _string_ `hmacAlgorithm` — (Optional) Hawk HMAC algorithm. Defaults to `sha256`.
+- _string_ `hmacAlgorithm` — (Optional) Hawk HMAC algorithm.
+  Defaults to `sha256`.
 - _array_ `ext` — (Optional) Used to include custom server data in the ticket
   and response. Contains the following:
   - _array_ `public` — (Optional) Associative array that will be included in the
-    response under `ticket.ext` and in the encoded ticket as `ticket.ext.public`.
+    response under `ticket.ext` and in the encoded ticket as
+    `ticket.ext.public`.
   - _array_ `private` — (Optional) Associative array that will only be included
     in the encoded ticket as `ticket.ext.private`.
-
-<!--lint enable list-item-spacing-->

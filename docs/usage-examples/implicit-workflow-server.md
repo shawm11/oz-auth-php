@@ -1,5 +1,5 @@
-Server Usage Example (RSVP Workflow)
-====================================
+<!-- omit in toc -->
+# Server Usage Example (RSVP Workflow)
 
 Because PHP is a language most commonly used for server logic, the "Server"
 usage is more common than the "Client" usage.
@@ -7,29 +7,26 @@ usage is more common than the "Client" usage.
 These examples are not completely functional, but they should be enough to show
 you how to use this package.
 
-Table of Contents
------------------
+<!-- omit in toc -->
+## Table of Contents
 
 - [Handle Request Authenticated Using Ticket](#handle-request-authenticated-using-ticket)
 - [Handle Reissue (`/oz/reissue`) Request](#handle-reissue-ozreissue-request)
 - [Handle `/oz/user` Request](#handle-ozuser-request)
 
-Handle Request Authenticated Using Ticket
------------------------------------------
+## Handle Request Authenticated Using Ticket
 
 The process of handling a request that was authenticated using a ticket is the
 same for all of the workflows. See the [example of handling an authenticated
 request when using any of the workflows](docs/usage-examples/all-workflows-server.md#handle-request-authenticated-using-ticket).
 
-Handle Reissue (`/oz/reissue`) Request
---------------------------------------
+## Handle Reissue (`/oz/reissue`) Request
 
 The process of handling a request to reissue a ticket is the same for all of the
 workflows. See the [example of handling a request to reissue a ticket when using
 any of the workflows](docs/usage-examples/all-workflows-server.md#handle-request-authenticated-using-ticket).
 
-Handle `/oz/user` Request
--------------------------
+## Handle `/oz/user` Request
 
 As with the User Credentials workflow, use the `user()` function in the
 `Shawm11\Oz\Server\Endpoints` class to handle requests to the `/oz/user`

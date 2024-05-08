@@ -1,10 +1,8 @@
-Client API Reference
-====================
+<!-- omit in toc -->
+# Client API Reference
 
-Table of Contents
------------------
-
-<!--lint disable list-item-spacing-->
+<!-- omit in toc -->
+## Table of Contents
 
 - [Word Usage](#word-usage)
 - [Namespace](#namespace)
@@ -25,18 +23,15 @@ Table of Contents
     - [`header` Parameters](#header-parameters)
 - [`ClientException` Class](#clientexception-class)
 
-Word Usage
-----------
+## Word Usage
 
 In this document the words "client" and "application" are interchangeable.
 
-Namespace
----------
+## Namespace
 
 All classes and sub-namespaces are within the `Shawm11\Oz\Client` namespace.
 
-`Connection` Class
-------------------
+## `Connection` Class
 
 An Oz client connection manager that provides easier access to protected
 resources.
@@ -56,7 +51,7 @@ resources.
      - _string_ `key` — Secret key for the application
      - _string_ `algorithm` — Algorithm to be used for HMAC. The value must be
        either `sha256` (recommended) or `sha1`.
-1. _Shawm11\\Hawk\\Client\\ClientInterface_ `$hawkClient` — (Optional) Hawk
+2. _Shawm11\\Hawk\\Client\\ClientInterface_ `$hawkClient` — (Optional) Hawk
    Client instance to be used
 
 ### `request($path, $ticket, $options)`
@@ -74,9 +69,9 @@ Returns an array that contains the following:
 
 1. _string_ `$path` — (Required) URL of the request relative to the host (e.g.
     `/resource`)
-1. _array_ `$ticket` — (Required) Application or user ticket for the client. If
+2. _array_ `$ticket` — (Required) Application or user ticket for the client. If
     the ticket is expired, there will be an attempt to automatically refresh it.
-1. _array_ `$options` — (Optional) Configuration. May include the following:
+3. _array_ `$options` — (Optional) Configuration. May include the following:
    - _string_ `method` — (Optional) HTTP method. Defaults to `'GET'`.
    - _string_ or _array_ `payload` — (Optional) Request payload. Defaults to no
      payload.
@@ -99,7 +94,7 @@ Returns an array that contains the following:
 
 1. _string_ `$path` — (Required) URL of the request relative to the host (e.g.
     `/resource`)
-1. _array_ `$options` — (Optional) Configuration. May include the following:
+2. _array_ `$options` — (Optional) Configuration. May include the following:
    - _string_ `method` — (Optional) HTTP method. Defaults to `'GET'`.
    - _string_ or _array_ `payload` — (Optional) Request payload. Defaults to no
      payload.
@@ -140,7 +135,7 @@ Returns the response as an array that contains the following:
 #### `requestUserTicket` Parameters
 
 1. _string_ or _array_ `$userCredentials` — (Required) User's credentials
-1. _string_ `$flow` — (Optional) Type of Oz flow to use to attempt to retrieve
+2. _string_ `$flow` — (Optional) Type of Oz flow to use to attempt to retrieve
    a user ticket. Must be one of the following:
    - `auto` — (Default) Automatically determine the flow being used based on
      the application credentials in the settings that were set in the
@@ -153,8 +148,7 @@ Returns the response as an array that contains the following:
    - `implicit` — Attempt to retrieve user ticket WITHOUT application
      authentication in the [Implicit flow](../implicit-workflow.md)
 
-`Client` Class
---------------
+## `Client` Class
 
 Manages the ticket lifecycle and will automatically refresh the ticket when it
 expires.
@@ -190,9 +184,9 @@ Returns an array that contains the following:
 
 1. _string_ or _array_ `$uri` — (Required) URI (as a string) of the request or
    an array that is the output of PHP's `parse_url()`
-1. _string_ `$method` — (Required) HTTP verb of the request (e.g. `GET`, `POST`)
-1. _array_ `$ticket` — (Required) Application or user ticket for the client
-1. _array_ `$options` — (Required) Hawk attributes that will be integrated
+2. _string_ `$method` — (Required) HTTP verb of the request (e.g. `GET`, `POST`)
+3. _array_ `$ticket` — (Required) Application or user ticket for the client
+4. _array_ `$options` — (Required) Hawk attributes that will be integrated
    into the `Authorization` header value. It includes the following:
    - _float_ `timestamp` — (Optional) Timestamp (as milliseconds since
      January 1, 1970)
@@ -209,9 +203,6 @@ Returns an array that contains the following:
      time
    - _string_ `ext` — (Optional) Extra application-specific data
 
-`ClientException` Class
------------------------
+## `ClientException` Class
 
 The exception that is thrown when there is a _client_ Oz error.
-
-<!--lint enable list-item-spacing-->

@@ -1,17 +1,16 @@
-Client Usage Example (All Workflows)
-------------------------------------
+<!-- omit in toc -->
+# Client Usage Example (All Workflows)
 
 These examples are not completely functional, but they should be enough to show
 you how to use this package. They are applicable to any of the 3 workflows
 (RSVP, User Credentials, and Implicit).
 
-Table of Contents
------------------
+<!-- omit in toc -->
+## Table of Contents
 
-- [Make Request with Stored User Ticket](#request-with-stored-user-ticket)
+- [Make Request with Stored User Ticket](#make-request-with-stored-user-ticket)
 
-Make Request with Stored User Ticket
-------------------------------------
+## Make Request with Stored User Ticket
 
 Use the `request()` function to make a request using an application ticket or a
 user ticket.

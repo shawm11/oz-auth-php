@@ -1,10 +1,8 @@
-Server API Reference
-====================
+<!-- omit in toc -->
+# Server API Reference
 
-Table of Contents
------------------
-
-<!--lint disable list-item-spacing-->
+<!-- omit in toc -->
+## Table of Contents
 
 - [Word Usage](#word-usage)
 - [Namespace](#namespace)
@@ -17,7 +15,7 @@ Table of Contents
   - [`rsvp($request, $payload, $options)`](#rsvprequest-payload-options)
     - [`rsvp` (`Endpoints` Class) Parameters](#rsvp-endpoints-class-parameters)
   - [`user($request, $payload, $options)`](#userrequest-payload-options)
-    - [`user` (`Endpoints` Class) Parameters](#user-endpoints-class-parameters)
+    - [`user` Parameters](#user-parameters)
 - [`Server` Class](#server-class)
   - [`Server` Constructor](#server-constructor)
   - [`authenticate($request, $encryptionPassword, $checkExpiration, $options)`](#authenticaterequest-encryptionpassword-checkexpiration-options)
@@ -33,7 +31,7 @@ Table of Contents
   - [`generate($ticket)`](#generateticket)
     - [`generate` Parameters](#generate-parameters)
   - [`parse($id)`](#parseid)
-    - [`generate` Parameters](#generate-parameters)
+    - [`parse` Parameters](#parse-parameters)
 - [`Scope` Class](#scope-class)
   - [`validate($scope)`](#validatescope)
     - [`validate` Parameters](#validate-parameters)
@@ -51,22 +49,19 @@ Table of Contents
   - [`getMessage()` (`UnauthorizedException` Class)](#getmessage-unauthorizedexception-class)
   - [`getWwwAuthenticateHeaderAttributes()`](#getwwwauthenticateheaderattributes)
   - [`getWwwAuthenticateHeader()`](#getwwwauthenticateheader)
-- [`ForbiddenException` Class](#forbiddenexception-class)
-  - [`getCode()` (`ForbiddenException` Class)](#getcode-forbiddenexception-class)
-  - [`getMessage()` (`ForbiddenException` Class)](#getmessage-forbiddenexception-class)
+- [`Forbidden` Class](#forbidden-class)
+  - [`getCode()` (`Forbidden` Class)](#getcode-forbidden-class)
+  - [`getMessage()` (`Forbidden` Class)](#getmessage-forbidden-class)
 
-Word Usage
-----------
+## Word Usage
 
 In this document the words "client" and "application" are interchangeable.
 
-Namespace
----------
+## Namespace
 
 All classes and sub-namespaces are within the `Shawm11\Oz\Server` namespace.
 
-`Endpoints` Class
------------------
+## `Endpoints` Class
 
 Contains the endpoint methods that provide a HTTP request handler
 implementations which are designed to be plugged into a framework such as
@@ -75,8 +70,8 @@ implementations which are designed to be plugged into a framework such as
 ### `Endpoints` Constructor
 
 1. _Shawm11\\Hawk\\Server\\ServerInterface_ `$hawkServer` — (Optional) Hawk
-   Server instance to be used. By default, an instance of the `Shawm11\Hawk\Server`
-   class is created and used.
+   Server instance to be used. By default, an instance of the
+   `Shawm11\Hawk\Server` class is created and used.
 1. _Shawm11\\Iron\\IronInterface_ `$iron` — (Optional) Iron instance to be used.
    By default, an instance of the `Shawm11\Iron\Iron` class with the default
    options is created and used.
@@ -90,70 +85,65 @@ array.
 
 #### `app` (`Endpoints` Class) Parameters
 
-1.  _array_ `$request` — (Required) Request data. Contains the following:
-    - _string_ `method` — (Required) HTTP method of the request
-    - _string_ `url` — (Optional) URL (without the host and port) the request
-      was sent to
-    - _string_ `host` — (Required) Host of the server the request was sent to
-      (e.g. example.com)
-    - _integer_ `port` — (Required) Port number the request was sent to
-    - _string_ `authorization` — (Optional) Value of the `Authorization` header
-      in the request.
-    - _string_ `contentType` — (Optional) Payload content type. It is usually
-      the value of the `Content-Type` header in the request. Only used for
-      payload validation.
+1. _array_ `$request` — (Required) Request data. Contains the following:
+   - _string_ `method` — (Required) HTTP method of the request
+   - _string_ `url` — (Optional) URL (without the host and port) the request was
+     sent to
+   - _string_ `host` — (Required) Host of the server the request was sent to
+     (e.g. example.com)
+   - _integer_ `port` — (Required) Port number the request was sent to
+   - _string_ `authorization` — (Optional) Value of the `Authorization` header
+     in the request.
+   - _string_ `contentType` — (Optional) Payload content type. It is usually the
+     value of the `Content-Type` header in the request. Only used for payload
+     validation.
+2. _array_ `$options` — (Required) Configuration options that include the
+   following:
+   - _string_ or _array_ `encryptionPassword` — (Required) Can be either a
+     password string or associative array that contains:
+     - _string_ or _integer_ `id` — Unique identifier (consisting of only
+       underscores (`_`), letters, and numbers) for the password for when there
+       are multiple possible passwords. Used for password rotation.
+     - _string_ `secret` — Password string used for both encrypting the object
+       and integrity (HMAC creation and verification)
 
-1.  _array_ `$options` — (Required) Configuration options that include the
-    following:
-    -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
-        password string or associative array that contains:
-        - _string_ or _integer_ `id` — Unique identifier (consisting of only
-          underscores (`_`), letters, and numbers) for the password for when
-          there are multiple possible passwords. Used for password rotation.
-        - _string_ `secret` — Password string used for both encrypting the
-          object and integrity (HMAC creation and verification)
+      OR
 
-        OR
-
-        - _string_ or _integer_ `id` — Unique identifier (consisting of only
-          underscores (`_`), letters, and numbers) for the password for when
-          there are multiple possible passwords. Used for password rotation.
-        - _string_ `encryption` — Password string used for encrypting the object
-        - _string_ `integrity` — Password string used for HMAC creation and
-          verification
-
-    -   _callable_ `loadAppFunc` — (Required) Function for looking up the
-        application credentials based on the provided credentials ID. This is
-        often done by looking up the application credentials in a database. The
-        function must have the following:
-        - Parameter: _string_ `$id` — (Required) Unique ID for the application
-          that is used to look up the application's credentials.
-        - Returns: _array_ — (Required) Set of credentials that contains the
-          following:
-          - _string_ `key` — (Required) Secret key for the application
-          - _string_ `algorithm` — (Required) Algorithm to be used for HMAC.
-            Must be either `sha1` or `sha256`.
-
-    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
-        used for parsing and issuance
-
-    -   _array_ `hawk` — (Optional) Hawk options, which include the following:
-        - _string_ `host` — (Optional) Host of the server (e.g. example.com).
-          Overrides the `host` in the `$request` parameter.
-        - _integer_ `port` — (Optional) Port number. Overrides the `port` in the
-         `$request` parameter.
-        - _integer_ `timestampSkewSec` — (Optional, default: `60`) Amount of
-          time (in seconds) the client and server timestamps can differ (usually
-          because of network latency)
-        - _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
-          milliseconds) of the server's local time compared to the client's
-          local time
-        - _string_ `payload` — (Optional) UTF-8-encoded request body (or
-          "payload"). Only used for payload validation.
-        - _callable_ `nonceFunc` — (Optional) Function for checking the
-          generated nonce (**n**umber used **once**) that is used to make the
-          MAC unique even if given the same data. It must throw an error if the
-          nonce check fails.
+      - _string_ or _integer_ `id` — Unique identifier (consisting of only
+        underscores (`_`), letters, and numbers) for the password for when
+        there are multiple possible passwords. Used for password rotation.
+      - _string_ `encryption` — Password string used for encrypting the object
+      - _string_ `integrity` — Password string used for HMAC creation and
+        verification
+   - _callable_ `loadAppFunc` — (Required) Function for looking up the
+     application credentials based on the provided credentials ID. This is often
+     done by looking up the application credentials in a database. The function
+     must have the following:
+     - Parameter: _string_ `$id` — (Required) Unique ID for the application that
+       is used to look up the application's credentials.
+     - Returns: _array_ — (Required) Set of credentials that contains the
+       following:
+       - _string_ `key` — (Required) Secret key for the application
+       - _string_ `algorithm` — (Required) Algorithm to be used for HMAC. Must
+         be either `sha1` or `sha256`.
+   - _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+      used for parsing and issuance
+   - _array_ `hawk` — (Optional) Hawk options, which include the following:
+     - _string_ `host` — (Optional) Host of the server (e.g. example.com).
+       Overrides the `host` in the `$request` parameter.
+     - _integer_ `port` — (Optional) Port number. Overrides the `port` in the
+      `$request` parameter.
+     - _integer_ `timestampSkewSec` — (Optional, default: `60`) Amount of time
+       (in seconds) the client and server timestamps can differ (usually because
+       of network latency)
+     - _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
+       milliseconds) of the server's local time compared to the client's local
+       time
+     - _string_ `payload` — (Optional) UTF-8-encoded request body (or
+       "payload"). Only used for payload validation.
+     - _callable_ `nonceFunc` — (Optional) Function for checking the generated
+       nonce (**n**umber used **once**) that is used to make the MAC unique even
+       if given the same data. It must throw an error if the nonce check fails.
 
 ### `reissue($request, $payload, $options)`
 
@@ -163,99 +153,91 @@ Returns the reissued [ticket](shared-arrays.md#ticket) as an array.
 
 #### `reissue` (`Endpoints` Class) Parameters
 
-1.  _array_ `$request` — (Required) Request data. Contains the following:
-    - _string_ `method` — (Required) HTTP method of the request
-    - _string_ `url` — (Optional) URL (without the host and port) the request
-      was sent to
-    - _string_ `host` — (Required) Host of the server the request was sent to
-      (e.g. example.com)
-    - _integer_ `port` — (Required) Port number the request was sent to
-    - _string_ `authorization` — (Required) Value of the `Authorization`
-      header in the request.
-    - _string_ `contentType` — (Optional) Payload content type. It is usually
-      the value of the `Content-Type` header in the request. Only used for
-      payload validation.
+1. _array_ `$request` — (Required) Request data. Contains the following:
+   - _string_ `method` — (Required) HTTP method of the request
+   - _string_ `url` — (Optional) URL (without the host and port) the request
+     was sent to
+   - _string_ `host` — (Required) Host of the server the request was sent to
+     (e.g. example.com)
+   - _integer_ `port` — (Required) Port number the request was sent to
+   - _string_ `authorization` — (Required) Value of the `Authorization`
+     header in the request.
+   - _string_ `contentType` — (Optional) Payload content type. It is usually
+     the value of the `Content-Type` header in the request. Only used for
+     payload validation.
+2. _array_ `$payload` — (Optional) Parsed request body that may contain their
+   following:
+   - _string_ `issueTo` — (Optional) Application ID that can be different than
+     the one of the current application. Used to delegate access between
+     applications. Defaults to the current application.
+   - _array_ `scope` — (Optional) Scope strings which must be a subset of the
+     given ticket's granted scope. Defaults to the original ticket scope.
+3. _array_ `$options` — (Required) Configuration options that include the
+   following:
+   - string_ or _array_ `encryptionPassword` — (Required) Can be either a
+     password string or associative array that contains:
+     - _string_ or _integer_ `id` — Unique identifier (consisting of only
+       underscores (`_`), letters, and numbers) for the password for when there
+       are multiple possible passwords. Used for password rotation.
+     - _string_ `secret` — Password string used for both encrypting the object
+       and integrity (HMAC creation and verification)
 
-1.  _array_ `$payload` — (Optional) Parsed request body that may contain their
-    following:
-    - _string_ `issueTo` — (Optional) Application ID that can be different than
-      the one of the current application. Used to delegate access between
-      applications. Defaults to the current application.
-    - _array_ `scope` — (Optional) Scope strings which must be a subset of the
-      given ticket's granted scope. Defaults to the original ticket scope.
+     OR
 
-1.  _array_ `$options` — (Required) Configuration options that include the
-    following:
-    -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
-        password string or associative array that contains:
-        - _string_ or _integer_ `id` — Unique identifier (consisting of only
-          underscores (`_`), letters, and numbers) for the password for when
-          there are multiple possible passwords. Used for password rotation.
-        - _string_ `secret` — Password string used for both encrypting the
-          object and integrity (HMAC creation and verification)
-
-        OR
-
-        - _string_ or _integer_ `id` — Unique identifier (consisting of only
-          underscores (`_`), letters, and numbers) for the password for when
-          there are multiple possible passwords. Used for password rotation.
-        - _string_ `encryption` — Password string used for encrypting the object
-        - _string_ `integrity` — Password string used for HMAC creation and
-          verification
-
-    -   _array_ `decryptionPasswords` — (Optional) List of possible passwords
-        that could have been used for ticket encryption. If this option is
-        given, the `encryptionPassword` must be an array with an `id` value that
-        is a key for this array. For password rotation.
-
-    -   _callable_ `loadAppFunc` — (Optional if using the [Implicit
-        Workflow](../implicit-workflow.md)) Function for looking up the
-        application credentials based on the provided credentials ID. This is
-        often done by looking up the application credentials in a database. The
-        function must have the following:
-        - Parameter: _string_ `$id` — (Required) Unique ID for the application
-          that is used to look up the application's credentials.
-        - Returns: _array_ — (Required) Set of credentials that contains the
-          following:
-          - _string_ `key` — (Required) Secret key for the application
-          - _string_ `algorithm` — (Required) Algorithm to be used for HMAC.
-            Must be either `sha1` or `sha256`.
-
-    -   _callable_ `loadGrantFunc` — (Required) Function for looking up the
-        grant. This is often done by looking up the grant in a database. The
-        function must have the following:
-        - Parameter: _string_ `$id` — (Required) Unique ID for the grant.
-        - Returns: _array_ — (Required) Set of credentials that contains the
-          following:
-          - _array_ `grant` — (Required) [Grant array](shared-arrays.md#grant)
-          - _array_ `ext` — (Optional) Used to include custom server data in
-            the ticket and response. Contains the following:
-            - _array_ `public` — (Optional) Associative array that will be
-              included in the response under `ticket.ext` and in the encoded
-              ticket as `ticket.ext.public`.
-            - _array_ `private` — (Optional) Associative array that will only be
-              included in the encoded ticket as `ticket.ext.private`
-
-    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
-        used for parsing and issuance
-
-    -   _array_ `hawk` — (Optional) Hawk options, which include the following:
-        - _string_ `host` — (Optional) Host of the server (e.g. example.com).
-          Overrides the `host` in the `$request` parameter.
-        - _integer_ `port` — (Optional) Port number. Overrides the `port` in the
-          `$request` parameter.
-        - _integer_ `timestampSkewSec` — (Optional, default: `60`) Amount of
-          time (in seconds) the client and server timestamps can differ (usually
-          because of network latency)
-        - _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
-          milliseconds) of the server's local time compared to the client's
-          local time
-        - _string_ `payload` — (Optional) UTF-8-encoded request body (or
-          "payload"). Only used for payload validation.
-        - _callable_ `nonceFunc` — (Optional) Function for checking the
-          generated nonce (**n**umber used **once**) that is used to make the
-          MAC unique even if given the same data. It must throw an error if the
-          nonce check fails.
+     - _string_ or _integer_ `id` — Unique identifier (consisting of only
+       underscores (`_`), letters, and numbers) for the password for when there
+       are multiple possible passwords. Used for password rotation.
+     - _string_ `encryption` — Password string used for encrypting the object
+     - _string_ `integrity` — Password string used for HMAC creation and
+       verification
+   - _array_ `decryptionPasswords` — (Optional) List of possible passwords that
+     could have been used for ticket encryption. If this option is given, the
+     `encryptionPassword` must be an array with an `id` value that is a key for
+     this array. For password rotation.
+   - _callable_ `loadAppFunc` — (Optional if using the [Implicit
+     Workflow](../implicit-workflow.md)) Function for looking up the
+     application credentials based on the provided credentials ID. This is
+     often done by looking up the application credentials in a database. The
+     function must have the following:
+     - Parameter: _string_ `$id` — (Required) Unique ID for the application
+       that is used to look up the application's credentials.
+     - Returns: _array_ — (Required) Set of credentials that contains the
+       following:
+       - _string_ `key` — (Required) Secret key for the application
+       - _string_ `algorithm` — (Required) Algorithm to be used for HMAC.
+         Must be either `sha1` or `sha256`.
+   - _callable_ `loadGrantFunc` — (Required) Function for looking up the grant.
+     This is often done by looking up the grant in a database. The function must
+     have the following:
+     - Parameter: _string_ `$id` — (Required) Unique ID for the grant.
+     - Returns: _array_ — (Required) Set of credentials that contains the
+       following:
+       - _array_ `grant` — (Required) [Grant array](shared-arrays.md#grant)
+       - _array_ `ext` — (Optional) Used to include custom server data in the
+         ticket and response. Contains the following:
+       - _array_ `public` — (Optional) Associative array that will be included
+         in the response under `ticket.ext` and in the encoded ticket as
+         `ticket.ext.public`.
+       - _array_ `private` — (Optional) Associative array that will only be
+         included in the encoded ticket as `ticket.ext.private`
+   - _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+     used for parsing and issuance
+   - _array_ `hawk` — (Optional) Hawk options, which include the following:
+     - _string_ `host` — (Optional) Host of the server (e.g. example.com).
+       Overrides the `host` in the `$request` parameter.
+     - _integer_ `port` — (Optional) Port number. Overrides the `port` in the
+       `$request` parameter.
+     - _integer_ `timestampSkewSec` — (Optional, default: `60`) Amount of time
+       (in seconds) the client and server timestamps can differ (usually because
+       of network latency)
+     - _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
+       milliseconds) of the server's local time compared to the client's local
+       time
+     - _string_ `payload` — (Optional) UTF-8-encoded request body (or
+       "payload"). Only used for payload validation.
+     - _callable_ `nonceFunc` — (Optional) Function for checking the generated
+       nonce (**n**umber used **once**) that is used to make the MAC unique even
+       if given the same data. It must throw an error if the nonce check fails.
 
 ### `rsvp($request, $payload, $options)`
 
@@ -266,95 +248,88 @@ Returns the user [ticket](shared-arrays.md#ticket) as an array.
 
 #### `rsvp` (`Endpoints` Class) Parameters
 
-1.  _array_ `$request` — (Required) Request data. Contains the following:
-    - _string_ `method` — (Required) HTTP method of the request
-    - _string_ `url` — (Optional) URL (without the host and port) the request
-      was sent to
-    - _string_ `host` — (Required) Host of the server the request was sent to
-      (e.g. example.com)
-    - _integer_ `port` — (Required) Port number the request was sent to
-    - _string_ `authorization` — (Optional) Value of the `Authorization` header
-      in the request.
-    - _string_ `contentType` — (Optional) Payload content type. It is usually
-      the value of the `Content-Type` header in the request. Only used for
-      payload validation.
+1. _array_ `$request` — (Required) Request data. Contains the following:
+   - _string_ `method` — (Required) HTTP method of the request
+   - _string_ `url` — (Optional) URL (without the host and port) the request was
+     sent to
+   - _string_ `host` — (Required) Host of the server the request was sent to
+     (e.g. example.com)
+   - _integer_ `port` — (Required) Port number the request was sent to
+   - _string_ `authorization` — (Optional) Value of the `Authorization` header
+     in the request.
+   - _string_ `contentType` — (Optional) Payload content type. It is usually the
+     value of the `Content-Type` header in the request. Only used for payload
+     validation.
+2. _array_ `$payload` — (Required) Parsed request body that may contain their
+   following:
+   - _string_ `rsvp` — (Required) RSVP provided to the user to bring back to the
+     application after granting authorization
 
-1.  _array_ `$payload` — (Required) Parsed request body that may contain their
-    following:
-    - _string_ `rsvp` — (Required) RSVP provided to the user to bring back to
-      the application after granting authorization
+3. _array_ `$options` — (Required) Configuration options that include the
+   following:
+   - _string_ or _array_ `encryptionPassword` — (Required) Can be either a
+     password string or associative array that contains:
+     - _string_ or _integer_ `id` — Unique identifier (consisting of only
+       underscores (`_`), letters, and numbers) for the password for when there
+       are multiple possible passwords. Used for password rotation.
+     - _string_ `secret` — Password string used for both encrypting the object
+       and integrity (HMAC creation and verification)
 
-1.  _array_ `$options` — (Required) Configuration options that include the
-    following:
-    -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
-        password string or associative array that contains:
-        - _string_ or _integer_ `id` — Unique identifier (consisting of only
-          underscores (`_`), letters, and numbers) for the password for when
-          there are multiple possible passwords. Used for password rotation.
-        - _string_ `secret` — Password string used for both encrypting the
-          object and integrity (HMAC creation and verification)
+     OR
 
-        OR
-
-        - _string_ or _integer_ `id` — Unique identifier (consisting of only
-          underscores (`_`), letters, and numbers) for the password for when
-          there are multiple possible passwords. Used for password rotation.
-        - _string_ `encryption` — Password string used for encrypting the object
-        - _string_ `integrity` — Password string used for HMAC creation and
-          verification
-
-    -   _array_ `decryptionPasswords` — (Optional) List of possible passwords
-        that could have been used for ticket encryption. If this option is
-        given, the `encryptionPassword` must be an array with an `id` value that
-        is a key for this array. For password rotation.
-
-    -   _callable_ `loadAppFunc` — (Required) Function for looking up the
-        application credentials based on the provided credentials ID. This is
-        often done by looking up the application credentials in a database. The
-        function must have the following:
-        - Parameter: _string_ `$id` — (Required) Unique ID for the application
-          that is used to look up the application's credentials.
-        - Returns: _array_ — (Required) Set of credentials that contains the
-          following:
-          - _string_ `key` — (Required) Secret key for the application
-          - _string_ `algorithm` — (Required) Algorithm to be used for HMAC.
-            Must be either `sha1` or `sha256`.
-
-    -   _callable_ `loadGrantFunc` — (Required) Function for looking up the
-        grant. This is often done by looking up the grant in a database. The
-        function must have the following:
-        - Parameter: _string_ `$id` — (Required) Unique ID for the grant.
-        - Returns: _array_ — (Required) Set of credentials that contains the
-          following:
-          - _array_ `grant` — (Required) [Grant array](shared-arrays.md#grant)
-          - _array_ `ext` — (Optional) Used to include custom server data in the
-            ticket and response. Contains the following:
-            - _array_ `public` — (Optional) Associative array that will be
-              included in the response under `ticket.ext` and in the encoded
-              ticket as `ticket.ext.public`.
-            - _array_ `private` — (Optional) Associative array that will only be
-              included in the encoded ticket as `ticket.ext.private`
-
-    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
-        used for parsing and issuance
-
-    -   _array_ `hawk` — (Optional) Hawk options, which include the following:
-        - _string_ `host` — (Optional) Host of the server (e.g. example.com).
-          Overrides the `host` in the `$request` parameter.
-        - _integer_ `port` — (Optional) Port number. Overrides the `port` in the
-          `$request` parameter.
-        - _integer_ `timestampSkewSec` — (Optional, default: `60`) Amount of
-          time (in seconds) the client and server timestamps can differ (usually
-          because of network latency)
-        - _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
-          milliseconds) of the server's local time compared to the client's
-          local time
-        - _string_ `payload` — (Optional) UTF-8-encoded request body (or
-          "payload"). Only used for payload validation.
-        - _callable_ `nonceFunc` — (Optional) Function for checking the
-          generated nonce (**n**umber used **once**) that is used to make the
-          MAC unique even if given the same data. It must throw an error if the
-          nonce check fails.
+     - _string_ or _integer_ `id` — Unique identifier (consisting of only
+       underscores (`_`), letters, and numbers) for the password for when there
+       are multiple possible passwords. Used for password rotation.
+     - _string_ `encryption` — Password string used for encrypting the object
+     - _string_ `integrity` — Password string used for HMAC creation and
+       verification
+   - _array_ `decryptionPasswords` — (Optional) List of possible passwords
+     that could have been used for ticket encryption. If this option is given,
+     the `encryptionPassword` must be an array with an `id` value that is a key
+     for this array. For password rotation.
+   - _callable_ `loadAppFunc` — (Required) Function for looking up the
+     application credentials based on the provided credentials ID. This is often
+     done by looking up the application credentials in a database. The function
+     must have the following:
+     - Parameter: _string_ `$id` — (Required) Unique ID for the application that
+       is used to look up the application's credentials.
+     - Returns: _array_ — (Required) Set of credentials that contains the
+       following:
+       - _string_ `key` — (Required) Secret key for the application
+       - _string_ `algorithm` — (Required) Algorithm to be used for HMAC. Must
+         be either `sha1` or `sha256`.
+   - _callable_ `loadGrantFunc` — (Required) Function for looking up the grant.
+     This is often done by looking up the grant in a database. The function must
+     have the following:
+     - Parameter: _string_ `$id` — (Required) Unique ID for the grant.
+     - Returns: _array_ — (Required) Set of credentials that contains the
+       following:
+       - _array_ `grant` — (Required) [Grant array](shared-arrays.md#grant)
+       - _array_ `ext` — (Optional) Used to include custom server data in the
+         ticket and response. Contains the following:
+         - _array_ `public` — (Optional) Associative array that will be included
+           in the response under `ticket.ext` and in the encoded ticket as
+           `ticket.ext.public`.
+         - _array_ `private` — (Optional) Associative array that will only be
+           included in the encoded ticket as `ticket.ext.private`
+   - _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+     used for parsing and issuance
+   - _array_ `hawk` — (Optional) Hawk options, which include the following:
+     - _string_ `host` — (Optional) Host of the server (e.g. example.com).
+       Overrides the `host` in the `$request` parameter.
+     - _integer_ `port` — (Optional) Port number. Overrides the `port` in the
+       `$request` parameter.
+     - _integer_ `timestampSkewSec` — (Optional, default: `60`) Amount of time
+       (in seconds) the client and server timestamps can differ (usually because
+       of network latency)
+     - _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
+       milliseconds) of the server's local time compared to the client's local
+       time
+     - _string_ `payload` — (Optional) UTF-8-encoded request body (or
+       "payload"). Only used for payload validation.
+     - _callable_ `nonceFunc` — (Optional) Function for checking the generated
+       nonce (**n**umber used **once**) that is used to make the MAC unique even
+       if given the same data. It must throw an error if the nonce check fails.
 
 ### `user($request, $payload, $options)`
 
@@ -366,108 +341,98 @@ Returns the user [ticket](shared-arrays.md#ticket) as an array.
 
 #### `user` Parameters
 
-1.  _array_ `$request` — (Required) Request data. Contains the following:
-    - _string_ `method` — (Required) HTTP method of the request
-    - _string_ `url` — (Optional) URL (without the host and port) the request
-      was sent to
-    - _string_ `host` — (Required) Host of the server the request was sent to
-      (e.g. example.com)
-    - _integer_ `port` — (Required) Port number the request was sent to
-    - _string_ `authorization` — (Optional) Value of the `Authorization` header
-      in the request.
-    - _string_ `contentType` — (Optional) Payload content type. It is usually
-      the value of the `Content-Type` header in the request. Only used for
-      payload validation.
+1. _array_ `$request` — (Required) Request data. Contains the following:
+   - _string_ `method` — (Required) HTTP method of the request
+   - _string_ `url` — (Optional) URL (without the host and port) the request was
+     sent to
+   - _string_ `host` — (Required) Host of the server the request was sent to
+     (e.g. example.com)
+   - _integer_ `port` — (Required) Port number the request was sent to
+   - _string_ `authorization` — (Optional) Value of the `Authorization` header
+     in the request.
+   - _string_ `contentType` — (Optional) Payload content type. It is usually the
+     value of the `Content-Type` header in the request. Only used for payload
+     validation.
+2. _array_ `$payload` — (Required) Parsed request body that may contain their
+   following:
+   - _any_ `user` — (Required) User credentials. Usually an array (parsed JSON)
+     or a string. Example: `['username' => 'john', 'password' => 'p4$$w0rd']`
 
-1.  _array_ `$payload` — (Required) Parsed request body that may contain their
-    following:
-    - _any_ `user` — (Required) User credentials. Usually an array (parsed JSON)
-      or a string. Example: `['username' => 'john', 'password' => 'p4$$w0rd']`
+3. _array_ `$options` — (Required) Configuration options that include the
+   following:
+   - _string_ or _array_ `encryptionPassword` — (Required) Can be either a
+     password string or associative array that contains:
+     - _string_ or _integer_ `id` — Unique identifier (consisting of only
+       underscores (`_`), letters, and numbers) for the password for when there
+       are multiple possible passwords. Used for password rotation.
+     - _string_ `secret` — Password string used for both encrypting the object
+      and integrity (HMAC creation and verification)
 
-1.  _array_ `$options` — (Required) Configuration options that include the
-    following:
-    -   _string_ or _array_ `encryptionPassword` — (Required) Can be either a
-        password string or associative array that contains:
-        - _string_ or _integer_ `id` — Unique identifier (consisting of only
-          underscores (`_`), letters, and numbers) for the password for when
-          there are multiple possible passwords. Used for password rotation.
-        - _string_ `secret` — Password string used for both encrypting the
-          object and integrity (HMAC creation and verification)
+     OR
 
-        OR
+     - _string_ or _integer_ `id` — Unique identifier (consisting of only
+       underscores (`_`), letters, and numbers) for the password for when
+       there are multiple possible passwords. Used for password rotation.
+     - _string_ `encryption` — Password string used for encrypting the object
+     - _string_ `integrity` — Password string used for HMAC creation and
+       verification
+   - _array_ `decryptionPasswords` — (Optional) List of possible passwords that
+     could have been used for ticket encryption. If this option is given, the
+     `encryptionPassword` must be an array with an `id` value that is a key for
+     this array. For password rotation.
+   - _array_ `grant` — (Required) Options used to create the grant. Contains
+     the following:
+     - `exp` — (Required) Grant expiration time in milliseconds since January 1,
+       1970.
+     - `scope` — (Optional) Scope granted by the user to the application
+   - _array_ `allowedGrantTypes`— (Optional) List of [grant](shared-arrays.md#grant)
+     types (or Oz workflows) that are allowed. If `user_credentials` is not in
+     this array, then the [User Credentials Workflow](../user-credentials-workflow.md)
+     is disabled. If `implicit` is not in this array, then the
+     [Implicit Workflow](../implicit-workflow.md) is disabled.
+     Default: `['rsvp', 'user_credentials', 'implicit']`
+   - _callable_ `loadAppFunc` — (Required if using the [User Credentials
+     Workflow](../user-credentials-workflow.md)) Function for looking up the
+     application credentials based on the provided credentials ID. This is often
+     done by looking up the application credentials in a database. The function
+     must have the following:
+     - Parameter: _string_ `$id` — (Required) Unique ID for the application that
+       is used to look up the application's credentials.
+     - Returns: _array_ — (Required) Set of credentials that contains the
+       following:
+       - _string_ `key` — (Required) Secret key for the application
+       - _string_ `algorithm` — (Required) Algorithm to be used for HMAC. Must
+         be either `sha1` or `sha256`.
+   - _callable_ `verifyUserFunc`— (Required) Function for verifying the user
+     using the user credentials. The function must have the following:
+     - Parameter: _string_ or _array_ `$userCredentials` — (Required) User's
+       credentials
+     - Returns: _string_ — (Required) User ID
+   - _callable_ `storeGrantFunc` — (Required) Function for storing the grant
+     that is created. The function must have the following:
+     - Parameter: _array_ `$grant` — (Required) [Grant](shared-arrays.md#grant)
+       to store
+     - Returns: _string_ — (Required) Grant's unique ID created by the server
+   - _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+     used for parsing and issuance
+   - _array_ `hawk` — (Optional) Hawk options, which include the following:
+     - _string_ `host` — (Optional) Host of the server (e.g. example.com).
+       Overrides the `host` in the `$request` parameter.
+     - _integer_ `port` — (Optional) Port number. Overrides the `port` in the
+       `$request` parameter.
+     - _integer_ `timestampSkewSec` — (Optional, default: `60`) Amount of time
+       (in seconds) the client and server timestamps can differ (usually because
+       of network latency)
+     - _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
+       milliseconds) of the server's local time compared to the client's local
+       time
+     - _string_ `payload` — (Optional) UTF-8-encoded request body (or
+       "payload"). Only used for payload validation.
+     - _callable_ `nonceFunc` — (Optional) Function for checking the generated
+       nonce (**n**umber used **once**) that is used to make the MAC unique even
+       if given the same data. It must throw an error if the nonce check fails.
 
-        - _string_ or _integer_ `id` — Unique identifier (consisting of only
-          underscores (`_`), letters, and numbers) for the password for when
-          there are multiple possible passwords. Used for password rotation.
-        - _string_ `encryption` — Password string used for encrypting the object
-        - _string_ `integrity` — Password string used for HMAC creation and
-          verification
-
-    -   _array_ `decryptionPasswords` — (Optional) List of possible passwords
-        that could have been used for ticket encryption. If this option is
-        given, the `encryptionPassword` must be an array with an `id` value that
-        is a key for this array. For password rotation.
-
-    -   _array_ `grant` — (Required) Options used to create the grant. Contains
-        the following:
-        - `exp` — (Required) Grant expiration time in milliseconds since
-            January 1, 1970.
-        - `scope` — (Optional) Scope granted by the user to the application
-
-    -   _array_ `allowedGrantTypes`— (Optional) List of [grant](shared-arrays.md#grant)
-        types (or Oz workflows) that are allowed. If `user_credentials` is not
-        in this array, then the [User Credentials Workflow](../user-credentials-workflow.md)
-        is disabled. If `implicit` is not in this array, then the [Implicit
-        Workflow](../implicit-workflow.md) is disabled. Default: `['rsvp', 'user_credentials', 'implicit']`
-
-    -   _callable_ `loadAppFunc` — (Required if using the [User Credentials
-        Workflow](../user-credentials-workflow.md)) Function for looking up the
-        application credentials based on the provided credentials ID. This is
-        often done by looking up the application credentials in a database. The
-        function must have the following:
-        - Parameter: _string_ `$id` — (Required) Unique ID for the application
-          that is used to look up the application's credentials.
-        - Returns: _array_ — (Required) Set of credentials that contains the
-          following:
-          - _string_ `key` — (Required) Secret key for the application
-          - _string_ `algorithm` — (Required) Algorithm to be used for HMAC.
-            Must be either `sha1` or `sha256`.
-
-    -   _callable_ `verifyUserFunc`— (Required) Function for verifying the user
-        using the user credentials. The function must have the following:
-        - Parameter: _string_ or _array_ `$userCredentials` — (Required) User's
-          credentials
-        - Returns: _string_ — (Required) User ID
-
-    -   _callable_ `storeGrantFunc` — (Required) Function for storing the grant
-        that is created. The function must have the following:
-        - Parameter: _array_ `$grant` — (Required) [Grant](shared-arrays.md#grant)
-          to store
-        - Returns: _string_ — (Required) Grant's unique ID created by the server
-
-    -   _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
-        used for parsing and issuance
-
-    -   _array_ `hawk` — (Optional) Hawk options, which include the following:
-        - _string_ `host` — (Optional) Host of the server (e.g. example.com).
-          Overrides the `host` in the `$request` parameter.
-        - _integer_ `port` — (Optional) Port number. Overrides the `port` in the
-          `$request` parameter.
-        - _integer_ `timestampSkewSec` — (Optional, default: `60`) Amount of
-          time (in seconds) the client and server timestamps can differ (usually
-          because of network latency)
-        - _float_ `localtimeOffsetMsec` — (Optional, default: `0`) Offset (in
-          milliseconds) of the server's local time compared to the client's
-          local time
-        - _string_ `payload` — (Optional) UTF-8-encoded request body (or
-          "payload"). Only used for payload validation.
-        - _callable_ `nonceFunc` — (Optional) Function for checking the
-          generated nonce (**n**umber used **once**) that is used to make the
-          MAC unique even if given the same data. It must throw an error if the
-          nonce check fails.
-
-`Server` Class
---------------
+## `Server` Class
 
 Server implementation utilities.
 
@@ -476,15 +441,11 @@ Server implementation utilities.
 1. _Shawm11\\Hawk\\Server\\ServerInterface_ `$hawkServer` — (Optional) Hawk
    Server instance to be used. By default, an instance of the `Shawm11\Hawk\Server`
    class is created and used.
-1. _Shawm11\\Iron\\IronInterface_ `$iron` — (Optional) Iron instance to be used.
+2. _Shawm11\\Iron\\IronInterface_ `$iron` — (Optional) Iron instance to be used.
    By default, an instance of the `Shawm11\Iron\Iron` class with the default
    options is created and used.
 
-<!--lint disable maximum-heading-length-->
-
 ### `authenticate($request, $encryptionPassword, $checkExpiration, $options)`
-
-<!--lint enable maximum-heading-length-->
 
 Validate an incoming request using Hawk and performs additional Oz-specific
 validations. If the request is valid, an application ticket is issued.
@@ -521,10 +482,10 @@ Returns the following if authentication is successful.
    - _string_ `contentType` — (Optional) Payload content type. It is usually the
      value of the `Content-Type` header in the request. Only used for payload
      validation.
-1. _string_ or _array_ `$encryptionPassword` — (Required) Password (as a string)
+2. _string_ or _array_ `$encryptionPassword` — (Required) Password (as a string)
    used for ticket encryption or a list of possible passwords (as an array) that
    could have been used for ticket encryption (for password rotation)
-1. _array_ `$options` — (Required) Configuration options that include the
+3. _array_ `$options` — (Required) Configuration options that include the
    following:
    - _array_ `ticket` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
      used for parsing and issuance
@@ -545,20 +506,19 @@ Returns the following if authentication is successful.
        nonce (**n**umber used **once**) that is used to make the MAC unique even
        if given the same data. It must throw an error if the nonce check fails.
 
-`Ticket` Class
---------------
+## `Ticket` Class
 
 Ticket issuance, parsing, encoding, and re-issuance utilities.
 
 ### `Ticket` Constructor
 
-1.  _string_ or _array_ `$encryptionPassword` — (Required) Can be either a
-    password string or associative array that contains:
-    - _string_ or _integer_ `id` — Unique identifier (consisting of only
-      underscores (`_`), letters, and numbers) for the password for when there
-      are multiple possible passwords. Used for password rotation.
-    - _string_ `secret` — Password string used for both encrypting the
-      object and integrity (HMAC creation and verification)
+1. _string_ or _array_ `$encryptionPassword` — (Required) Can be either a
+   password string or associative array that contains:
+   - _string_ or _integer_ `id` — Unique identifier (consisting of only
+     underscores (`_`), letters, and numbers) for the password for when there
+     are multiple possible passwords. Used for password rotation.
+   - _string_ `secret` — Password string used for both encrypting the object
+     and integrity (HMAC creation and verification)
 
     OR
 
@@ -569,10 +529,10 @@ Ticket issuance, parsing, encoding, and re-issuance utilities.
     - _string_ `integrity` — Password string used for HMAC creation and
       verification
 
-1.  _array_ `$options` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
-    used for parsing and issuance
+2. _array_ `$options` — (Optional) [Ticket options](shared-arrays.md#ticket-options)
+   used for parsing and issuance
 
-1.  _Shawm11\\Iron\\IronInterface_ `$iron` — (Optional) Iron instance to be used
+3. _Shawm11\\Iron\\IronInterface_ `$iron` — (Optional) Iron instance to be used
 
 ### `issue($app, $grant)`
 
@@ -585,7 +545,7 @@ Returns a new application or user [ticket](shared-arrays.md#ticket) as an array.
 1. _array_ `$app` — (Required if not using the [Implicit Workflow](../implicit-workflow.md))
    [App credentials](shared-arrays.md#app) of the application the ticket will be
    issued to
-1. _array_ `$grant` — (Optional) [Grant](shared-arrays.md#grant) for the
+2. _array_ `$grant` — (Optional) [Grant](shared-arrays.md#grant) for the
    application
 
 ### `reissue($parentTicket, $grant)`
@@ -598,7 +558,7 @@ Returns the reissued [ticket](shared-arrays.md#ticket) as an array.
 
 1. _array_ `$parentTicket` — (Required) [Ticket](shared-arrays.md#ticket) to be
    reissued
-1. _array_ `$grant` — (Optional) [Grant](shared-arrays.md#grant) for the
+2. _array_ `$grant` — (Optional) [Grant](shared-arrays.md#grant) for the
    application the ticket is being (re)issued to
 
 ### `rsvp($app, $grant)`
@@ -611,7 +571,7 @@ Returns the generated RSVP as a string.
 
 1. _array_ `$app` — (Required) [App credentials](shared-arrays.md#app) of the
    application the user ticket will be issued to
-1. _array_ `$grant` — (Required) [Grant](shared-arrays.md#grant) for the
+2. _array_ `$grant` — (Required) [Grant](shared-arrays.md#grant) for the
    application. The grant is not allowed to be `null`.
 
 ### `generate($ticket)`
@@ -642,8 +602,7 @@ the given string.
 
 1. _string_ `$id` — (Required) Ticket ID which is the encoded ticket
 
-`Scope` Class
--------------
+## `Scope` Class
 
 Scope manipulation utilities.
 
@@ -664,7 +623,7 @@ Returns a boolean that indicates if `$subset` is fully contained with `$scope`.
 #### `isSubset` Parameters
 
 1. _array_ `$scope` — (Required) Superset scope
-1. _array_ `$subset` — (Required) Subset scope
+2. _array_ `$subset` — (Required) Subset scope
 
 ### `isEqual($one, $two)`
 
@@ -675,15 +634,13 @@ Returns a boolean that indicates if `$one` is equal to `$two`.
 #### `isEqual` Parameters
 
 1. _array_ `$one` — (Required) First of the two scopes being compared
-1. _array_ `$two` — (Required) Second of the two scopes being compared
+2. _array_ `$two` — (Required) Second of the two scopes being compared
 
-`ServerException` Class
------------------------
+## `ServerException` Class
 
 The exception that is thrown when there is a _server_ Oz error.
 
-`BadRequestException` Class
----------------------------
+## `BadRequestException` Class
 
 A type of `ServerException` exception that represents an HTTP `400 Bad Request`
 server response.
@@ -697,8 +654,7 @@ always `400`, as an integer.
 
 Inherited method from PHP's `Exception` class. Gives the error message text.
 
-`UnauthorizedException` Class
------------------------------
+## `UnauthorizedException` Class
 
 A type of `ServerException` exception that represents an HTTP `401 Unauthorized`
 server response.
@@ -724,16 +680,15 @@ Inherited method from PHP's `Exception` class. Gives the error message text.
 
 ### `getWwwAuthenticateHeaderAttributes()`
 
-Get the associative array of keys and values included in the HTTP
-`WWW-Authenticate` header should be set to in the server's response.
+Get the associative array of keys and values included in the HTTP `WWW-Authenticate`
+header should be set to in the server's response.
 
 ### `getWwwAuthenticateHeader()`
 
 Get the value the HTTP `WWW-Authenticate` header should be set to in the
 server's response.
 
-`Forbidden` Class
------------------
+## `Forbidden` Class
 
 A type of `ServerException` exception that represents an HTTP `403 Forbidden`
 server response.
@@ -746,5 +701,3 @@ always `403`, as an integer.
 ### `getMessage()` (`Forbidden` Class)
 
 Inherited method from PHP's `Exception` class. Gives the error message text.
-
-<!--lint enable list-item-spacing-->

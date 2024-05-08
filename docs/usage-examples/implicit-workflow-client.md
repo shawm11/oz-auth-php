@@ -1,22 +1,21 @@
-Client Usage Examples (User Credentials Workflow)
-=================================================
+<!-- omit in toc -->
+# Client Usage Examples (User Credentials Workflow)
 
 These examples are not completely functional, but they should be enough to show
 you how to use this package.
 
-Table of Contents
------------------
+<!-- omit in toc -->
+## Table of Contents
 
 - [Obtain User Ticket](#obtain-user-ticket)
-- [Make Request with Stored User Ticket](#request-with-stored-user-ticket)
+- [Make Request with Stored User Ticket](#make-request-with-stored-user-ticket)
 
-Obtain User Ticket
-------------------
+## Obtain User Ticket
 
 In the Implicit workflow, the user credentials (e.g. username and password) must
-be provided _in plain text_ when attempting to obtain a user ticket.
-If the application Hawk credentials are _not_ set in the Oz connection settings,
-the `requestUserTicket()` function assumes the Implicit workflow is being used.
+be provided _in plain text_ when attempting to obtain a user ticket. If the
+application Hawk credentials are _not_ set in the Oz connection settings, the
+`requestUserTicket()` function assumes the Implicit workflow is being used.
 
 ```php
 <?php
@@ -53,8 +52,7 @@ function makeRequestWithUserTicket() {
 }
 ```
 
-Make Request with Stored User Ticket
-------------------------------------
+## Make Request with Stored User Ticket
 
 The process of making a request with a stored user ticket is the same for all of
 the workflows. See the [example of making a request with a stored user ticket

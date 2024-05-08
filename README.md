@@ -1,5 +1,5 @@
-Oz Authorization PHP
-====================
+<!-- omit in toc -->
+# Oz Authorization PHP
 
 ![Version Number](https://img.shields.io/packagist/v/shawm11/oz-auth.svg)
 ![PHP Version](https://img.shields.io/packagist/php-v/shawm11/oz-auth.svg)
@@ -13,16 +13,15 @@ will not be maintained anymore, **this library will continue to be maintained**.
 The original JavaScript version of Oz was complete and only had periodic
 documentation and library dependency updates.
 
-Table of Contents
------------------
-
-<!--lint disable list-item-spacing-->
+<!-- omit in toc -->
+## Table of Contents
 
 - [What is Oz?](#what-is-oz)
-  - [Oz and OAuth 2.0](#oz-and-oauth-2.0)
+  - [Oz and OAuth 2.0](#oz-and-oauth-20)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+- [Workflows](#workflows)
 - [Usage Examples](#usage-examples)
   - [Server Usage Examples](#server-usage-examples)
   - [Client Usage Examples](#client-usage-examples)
@@ -34,10 +33,7 @@ Table of Contents
 - [Versioning](#versioning)
 - [License](#license)
 
-<!--lint enable list-item-spacing-->
-
-What is Oz?
------------
+## What is Oz?
 
 According to the [Oz README](https://github.com/outmoded/oz/blob/master/README.md)
 
@@ -66,8 +62,7 @@ workflows.
 | Resource Owner Password Credentials | User Credentials _(Not an offical workflow)_     |
 | Client Credentials                  | [Hawk](https://github.com/shawm11/hawk-auth-php) |
 
-Getting Started
----------------
+## Getting Started
 
 ### Prerequisites
 
@@ -87,8 +82,7 @@ Download and install using [Composer](https://getcomposer.org/):
 composer require shawm11/oz-auth-php
 ```
 
-Workflows
----------
+## Workflows
 
 This package includes two workflows that are not part of the
 [official Oz web authorization protocol](https://github.com/outmoded/oz). These
@@ -96,8 +90,7 @@ two new workflows are the [User Credentials Workflow](docs/user-credentials-work
 and the [Implicit Workflow](docs/implicit-workflow.md). The standard Oz workflow
 that is specifed by the official protocal is referred to as the ["RSVP workflow"](docs/rsvp-workflow-without-delegation.md).
 
-Usage Examples
---------------
+## Usage Examples
 
 ### Server Usage Examples
 
@@ -113,10 +106,7 @@ Usage Examples
 - [Implicit Workflow — Client](docs/usage-examples/implicit-workflow-client.md)
 - [All Workflows — Client](docs/usage-examples/all-workflows-client.md)
 
-Documentation
--------------
-
-<!--lint disable list-item-spacing-->
+## Documentation
 
 - [RSVP Workflow (Without Delegation)](docs/rsvp-workflow-without-delegation.md) —
   General overview of the RSVP (standard) workflow when delegation is not being
@@ -135,39 +125,31 @@ Documentation
 - [Shared Arrays](docs/api-reference/shared-arrays.md) — Details about
   collections of data used in other parts of the API
 
-<!--lint enable list-item-spacing-->
-
-Security Considerations
------------------------
+## Security Considerations
 
 See the [Security Considerations](https://github.com/outmoded/oz#security-considerations)
 section of Oz's README.
 
-Related Projects
-----------------
+## Related Projects
 
--   [Hawk PHP Implementation](https://github.com/shawm11/hawk-auth-php) — Hawk
-    is an HTTP authentication scheme that is an alternative to OAuth 1.0a and
-    OAuth 2.0 two-legged authentication.
+- [Hawk PHP Implementation](https://github.com/shawm11/hawk-auth-php) — Hawk is
+  an HTTP authentication scheme that is an alternative to OAuth 1.0a and OAuth
+  2.0 two-legged authentication.
+- [Iron PHP Implementation](https://github.com/shawm11/iron-crypto-php) — _iron_
+  (spelled with all lowercase), a cryptographic utility for sealing a JSON
+  object into an encapulated token. _iron_ can be considered as an alternative
+  to JSON Web Tokens (JWT).
 
--   [Iron PHP Implementation](https://github.com/shawm11/iron-crypto-php) —
-    _iron_ (spelled with all lowercase), a cryptographic utility for sealing a
-    JSON object into an encapulated token. _iron_ can be considered as an
-    alternative to JSON Web Tokens (JWT).
-
-Contributing/Development
-------------------------
+## Contributing/Development
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on coding style, Git
 commit message guidelines, and other development information.
 
-Versioning
-----------
+## Versioning
 
 This project using [SemVer](http://semver.org/) for versioning. For the versions
 available, see the tags on this repository.
 
-License
--------
+## License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
