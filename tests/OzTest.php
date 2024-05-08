@@ -387,27 +387,27 @@ class OzTest extends TestCase
                  * 3. The app refreshes the user ticket
                  */
 
-                 $req = [
-                     'method' => 'POST',
-                     'url' => '/oz/reissue',
-                     'host' => 'example.com',
-                     'port' => 443,
-                     'authorization' => $ozClient->header(
-                         'https://example.com/oz/reissue',
-                         'POST',
-                         $userTicket
-                     )['header']
-                 ];
+                $req = [
+                    'method' => 'POST',
+                    'url' => '/oz/reissue',
+                    'host' => 'example.com',
+                    'port' => 443,
+                    'authorization' => $ozClient->header(
+                        'https://example.com/oz/reissue',
+                        'POST',
+                        $userTicket
+                    )['header']
+                ];
 
-                 $options['loadGrantFunc'] = function ($id) use ($grant) {
-                     return [
-                         'grant' => $grant,
-                         'ext' => [
-                             'public' => 'everybody knows',
-                             'private' => 'the the dice are loaded'
-                         ]
-                     ];
-                 };
+                $options['loadGrantFunc'] = function ($id) use ($grant) {
+                    return [
+                        'grant' => $grant,
+                        'ext' => [
+                            'public' => 'everybody knows',
+                            'private' => 'the the dice are loaded'
+                        ]
+                    ];
+                };
 
                 expect($ozEndpoints->reissue($req, [], $options)['id'])->notToBeEmpty();
             });

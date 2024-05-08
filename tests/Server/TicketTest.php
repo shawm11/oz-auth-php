@@ -69,7 +69,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid application object',
                     function() {
-        	           (new Ticket($this->password))->issue(null, null);
+                        (new Ticket($this->password))->issue(null, null);
                     }
                 );
             });
@@ -79,7 +79,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid application object',
                     function() {
-        	           (new Ticket($this->password))->issue('', null);
+                        (new Ticket($this->password))->issue('', null);
                     }
                 );
             });
@@ -143,7 +143,7 @@ class TicketTest extends TestCase
                                 'exp' => 1442690715989,
                                 'scope' => ['b']
                             ]
-                      );
+                        );
                     }
                 );
             });
@@ -163,7 +163,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid encryption password',
                     function() {
-                      (new Ticket(''))->issue(['id' => 'abc'], null);
+                        (new Ticket(''))->issue(['id' => 'abc'], null);
                     }
                 );
             });
@@ -241,7 +241,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid parent ticket object',
                     function() {
-                       (new Ticket($this->password))->reissue(null, null);
+                        (new Ticket($this->password))->reissue(null, null);
                     }
                 );
             });
@@ -251,7 +251,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid encryption password',
                     function() {
-                       (new Ticket(''))->reissue([], null);
+                        (new Ticket(''))->reissue([], null);
                     }
                 );
             });
@@ -261,7 +261,7 @@ class TicketTest extends TestCase
                     ForbiddenException::class,
                     'New scope is not a subset of the parent ticket scope',
                     function() {
-                       (new Ticket($this->password, ['scope' => ['a']]))->reissue([], null);
+                        (new Ticket($this->password, ['scope' => ['a']]))->reissue([], null);
                     }
                 );
             });
@@ -271,7 +271,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'scope not an array',
                     function() {
-                       (new Ticket($this->password, ['scope' => ['a']]))->reissue(['scope' => 'a'] , null);
+                        (new Ticket($this->password, ['scope' => ['a']]))->reissue(['scope' => 'a'] , null);
                     }
                 );
             });
@@ -281,7 +281,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'scope not an array',
                     function() {
-                       (new Ticket($this->password, ['scope' => 'a']))->reissue(['scope' => ['a']] , null);
+                        (new Ticket($this->password, ['scope' => 'a']))->reissue(['scope' => ['a']] , null);
                     }
                 );
             });
@@ -564,7 +564,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid encryption password',
                     function() {
-                         (new Ticket(''))->parse('abc');
+                        (new Ticket(''))->parse('abc');
                     }
                 );
             });
