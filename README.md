@@ -8,10 +8,14 @@
 A PHP implementation of the 5.0.0 version of the [**Oz**](https://github.com/outmoded/oz)
 web authorization protocol.
 
-**NOTICE**: Although the original JavaScript version of [Oz](https://github.com/outmoded/oz)
-will not be maintained anymore, **this library will continue to be maintained**.
-The original JavaScript version of Oz was complete and only had periodic
-documentation and library dependency updates.
+> [!IMPORTANT]
+> Oz is one of those rare projects that can be considered "complete". This means
+> that changes to this repository be infrequent because only the development
+> dependencies may need to be updated once every few years.
+>
+> If there is a bug or error in the documentation, please create an
+> [issue](https://github.com/shawm11/oz-auth-php/issues). The issue will
+> receive a response or be resolved as soon as possible.
 
 <!-- omit in toc -->
 ## Table of Contents
@@ -35,7 +39,8 @@ documentation and library dependency updates.
 
 ## What is Oz?
 
-According to the [Oz README](https://github.com/outmoded/oz/blob/master/README.md)
+According to the
+[Oz README](https://github.com/outmoded/oz/blob/master/README.md):
 
 > Oz is a web authorization protocol based on industry best practices. Oz
 > combines the Hawk authentication protocol with the Iron encryption protocol
@@ -51,16 +56,16 @@ use cases that may need more advanced web security knowledge. Oz does this by
 providing default options that are secure for the most common use cases, in
 other words Oz aims to be _secure by default_.
 
-All of the official three-legged OAuth 2.0 workflows have an equivalent Oz
+All of the official three-legged OAuth 2.0 grant types have an equivalent Oz
 workflow. Below is table showing the Oz workflow equivalents for the OAuth 2.0
-workflows.
+grant types.
 
-| OAuth 2.0 Workflow                  | Oz Workflow                                      |
-| ----------------------------------- | ------------------------------------------------ |
-| Authorization Code                  | RSVP _(The only offical workflow)_               |
-| Implicit/PKCE                       | Implicit _(Not an offical workflow)_             |
-| Resource Owner Password Credentials | User Credentials _(Not an offical workflow)_     |
-| Client Credentials                  | [Hawk](https://github.com/shawm11/hawk-auth-php) |
+| OAuth 2.0 Grant Type                                                                               | Oz Workflow                                      |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| [Authorization Code](https://oauth.net/2/grant-types/authorization-code/)                          | RSVP                                             |
+| [Implicit/PKCE](https://oauth.net/2/pkce/)                                                         | Implicit _(Not an official workflow)_            |
+| [Resource Owner Password Credentials](https://datatracker.ietf.org/doc/html/rfc6749#section-1.3.3) | User Credentials _(Not an official workflow)_    |
+| [Client Credentials](https://oauth.net/2/grant-types/client-credentials/)                          | [Hawk](https://github.com/shawm11/hawk-auth-php) |
 
 ## Getting Started
 
@@ -88,7 +93,8 @@ This package includes two workflows that are not part of the
 [official Oz web authorization protocol](https://github.com/outmoded/oz). These
 two new workflows are the [User Credentials Workflow](docs/user-credentials-workflow.md)
 and the [Implicit Workflow](docs/implicit-workflow.md). The standard Oz workflow
-that is specifed by the official protocal is referred to as the ["RSVP workflow"](docs/rsvp-workflow-without-delegation.md).
+that is specified by the official protocol is referred to as the
+["RSVP workflow"](docs/rsvp-workflow-without-delegation.md).
 
 ## Usage Examples
 
@@ -137,7 +143,7 @@ section of Oz's README.
   2.0 two-legged authentication.
 - [Iron PHP Implementation](https://github.com/shawm11/iron-crypto-php) — _iron_
   (spelled with all lowercase), a cryptographic utility for sealing a JSON
-  object into an encapulated token. _iron_ can be considered as an alternative
+  object into an encapsulated token. _iron_ can be considered as an alternative
   to JSON Web Tokens (JWT).
 
 ## Contributing/Development
@@ -152,4 +158,5 @@ available, see the tags on this repository.
 
 ## License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the
+[MIT license](https://opensource.org/licenses/MIT).
