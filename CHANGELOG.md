@@ -1,3 +1,19 @@
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
+## [2.0.0](https://github.com/shawm11/oz-auth-php/compare/v1.1.4...v2.0.0) (2024-11-19)
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade dependencies ([5fabf3](https://github.com/shawm11/oz-auth-php/commit/5fabf3b4b7fe7ba295798744aab6245a7f0b15ff))
+* Upgrade nategood/httpful dependency to v1.0 for a security ([5fabf3](https://github.com/shawm11/oz-auth-php/commit/5fabf3b4b7fe7ba295798744aab6245a7f0b15ff))
+
+
+---
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
