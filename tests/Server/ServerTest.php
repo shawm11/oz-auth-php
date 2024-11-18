@@ -29,7 +29,8 @@ class ServerTest extends TestCase
                     ServerException::class,
                     'Invalid encryption password',
                     function() {
-        	           (new Server)->authenticate(null, null);
+        	            // @phpstan-ignore argument.type, argument.type
+        	            (new Server)->authenticate(null, null);
                     }
                 );
             });

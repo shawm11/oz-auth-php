@@ -152,6 +152,7 @@ class EndpointsTest extends TestCase
                     }
                 ];
 
+                // @phpstan-ignore argument.type
                 expect((new Endpoints)->reissue($req, null, $options))->notToBeEmpty();
             });
 
@@ -807,6 +808,7 @@ class EndpointsTest extends TestCase
                     BadRequestException::class,
                     'Missing required payload',
                     function() {
+                        // @phpstan-ignore argument.type
                         (new Endpoints)->rsvp([], null, []);
                     }
                 );
@@ -1538,6 +1540,7 @@ class EndpointsTest extends TestCase
                     BadRequestException::class,
                     'Missing required payload',
                     function() {
+                        // @phpstan-ignore argument.type
                         (new Endpoints)->user([], null, []);
                     }
                 );

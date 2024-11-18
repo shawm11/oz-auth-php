@@ -319,6 +319,7 @@ class ConnectionTest extends TestCase
                 $responseBody = (new Endpoints)->app($req, $this->endpointSettings);
                 break;
             case '/oz/reissue':
+                // @phpstan-ignore argument.type
                 $responseBody = (new Endpoints)->reissue($req, null, $this->endpointSettings);
                 break;
             case '/oz/user':
@@ -348,6 +349,7 @@ class ConnectionTest extends TestCase
      */
     protected function fakeHttpResponse($responseBody, $statusCode = 200)
     {
+        // @phpstan-ignore new.protectedConstructor
         $requestObj = new \Httpful\Request; // Class is replaced by mock in tests
         $requestObj->auto_parse = false;
 

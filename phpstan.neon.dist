@@ -3,17 +3,7 @@ parameters:
     paths:
         - src
         - tests
-    checkMissingIterableValueType: false
     ignoreErrors:
         -
-            message: '#Parameter \#[0-9] \$[a-zA-Z0-9]+ of method Shawm11\\Oz\\[a-zA-Z\\]+::[a-zA-Z0-9_]+\(\) expects [a-z|]+#'
-            paths:
-                - %currentWorkingDirectory%/tests/Client/*
-                - %currentWorkingDirectory%/tests/Server/*
-        -
-            message: '#Parameter \#[0-9] \$[a-zA-Z0-9]+ of class Shawm11\\Oz\\[a-zA-Z\\]+ constructor expects [a-z|]+#'
-            path: %currentWorkingDirectory%/tests/Server/*
-        -
-            message: '#Cannot instantiate class Httpful\\Request via protected constructor Httpful\\Request::__construct\(\).#'
-            path: %currentWorkingDirectory%/tests/Client/ConnectionTest.php
+            identifier: missingType.iterableValue
     treatPhpDocTypesAsCertain: false

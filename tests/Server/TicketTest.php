@@ -69,6 +69,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid application object',
                     function() {
+                        // @phpstan-ignore argument.type
                         (new Ticket($this->password))->issue(null, null);
                     }
                 );
@@ -79,6 +80,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid application object',
                     function() {
+                        // @phpstan-ignore argument.type
                         (new Ticket($this->password))->issue('', null);
                     }
                 );
@@ -241,6 +243,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid parent ticket object',
                     function() {
+                        // @phpstan-ignore argument.type
                         (new Ticket($this->password))->reissue(null, null);
                     }
                 );
@@ -386,10 +389,8 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid application object',
                     function() {
-                        (new Ticket($this->password))->rsvp(
-                            null,
-                            ['id' => '123']
-                        );
+                        // @phpstan-ignore argument.type
+                        (new Ticket($this->password))->rsvp(null, ['id' => '123']);
                     }
                 );
             });
@@ -412,10 +413,8 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Invalid grant object',
                     function() {
-                        (new Ticket($this->password))->rsvp(
-                            ['id' => '123'],
-                            null
-                        );
+                        // @phpstan-ignore argument.type
+                        (new Ticket($this->password))->rsvp(['id' => '123'], null);
                     }
                 );
             });
@@ -497,6 +496,7 @@ class TicketTest extends TestCase
                     ServerException::class,
                     'Empty password',
                     function() {
+                        // @phpstan-ignore argument.type
                         (new Ticket(null))->generate([]);
                     }
                 );

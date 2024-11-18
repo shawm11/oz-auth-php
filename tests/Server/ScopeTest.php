@@ -25,7 +25,8 @@ class ScopeTest extends TestCase
                     ServerException::class,
                     'null scope',
                     function() {
-            	       (new Scope)->validate(null);
+                        // @phpstan-ignore argument.type
+            	        (new Scope)->validate(null);
                     }
                 );
             });
@@ -35,7 +36,8 @@ class ScopeTest extends TestCase
                     ServerException::class,
                     'scope not an array',
                     function() {
-            	       (new Scope)->validate('hello');
+                        // @phpstan-ignore argument.type
+            	        (new Scope)->validate('hello');
                     }
                 );
             });
@@ -45,7 +47,7 @@ class ScopeTest extends TestCase
                     BadRequestException::class,
                     'scope item is not a string',
                     function() {
-            	      (new Scope)->validate(['a', 'b', 1]);
+            	        (new Scope)->validate(['a', 'b', 1]);
                     }
                 );
             });
@@ -55,7 +57,7 @@ class ScopeTest extends TestCase
                     BadRequestException::class,
                     'scope includes duplicated item',
                     function() {
-            	      (new Scope)->validate(['a', 'b', 'b']);
+            	        (new Scope)->validate(['a', 'b', 'b']);
                     }
                 );
             });
@@ -65,7 +67,7 @@ class ScopeTest extends TestCase
                     BadRequestException::class,
                     'scope includes null or empty string value',
                     function() {
-            	       (new Scope)->validate(['a', 'b', '']);
+            	        (new Scope)->validate(['a', 'b', '']);
                     }
                 );
             });
